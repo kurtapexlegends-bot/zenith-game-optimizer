@@ -1,0 +1,13 @@
+# Build & intermediate output
+obj/
+*.pdb
+*.suo
+*.user
+.vs/
+
+# Scratch & temporary logs
+scratch/
+*.bak
+*.backup_*
+error.log
+test_multi.ico
