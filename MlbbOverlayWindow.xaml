@@ -1,0 +1,504 @@
+<Window x:Class="ZenithOptimizer.MlbbOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Zenith MLBB Draft Assistant"
+        Width="315" Height="540"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Topmost="True"
+        ShowInTaskbar="True"
+        Background="Transparent"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        FontFamily="SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif">
+
+    <Window.Resources>
+        <!-- Apple Obsidian Frosted Glass Palette (Authentic Glassmorphism) -->
+        <SolidColorBrush x:Key="GlassBackdrop" Color="#F0090A10" />
+        <SolidColorBrush x:Key="GlassCard" Color="#80131622" />
+        <SolidColorBrush x:Key="GlassHighlight" Color="#1FFFFFFF" />
+        <SolidColorBrush x:Key="GlassSlotEmpty" Color="#4D12141F" />
+        
+        <SolidColorBrush x:Key="BorderSpecular" Color="#33FFFFFF" />
+        <SolidColorBrush x:Key="BorderGlassSubtle" Color="#1CFFFFFF" />
+        
+        <SolidColorBrush x:Key="TextPrimary" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="TextSecondary" Color="#94A3B8" />
+        <SolidColorBrush x:Key="TextMuted" Color="#64748B" />
+        
+        <!-- Apple High-Vibrancy System Tokens -->
+        <SolidColorBrush x:Key="AppleCyan" Color="#38BDF8" />
+        <SolidColorBrush x:Key="AppleEmerald" Color="#34D399" />
+        <SolidColorBrush x:Key="AppleCoral" Color="#F87171" />
+        <SolidColorBrush x:Key="AppleAmber" Color="#FBBF24" />
+        <SolidColorBrush x:Key="ApplePurple" Color="#A855F7" />
+
+        <!-- Fail-safe Resource Aliases -->
+        <SolidColorBrush x:Key="AccentGreen" Color="#34D399" />
+        <SolidColorBrush x:Key="AccentGold" Color="#FBBF24" />
+        <SolidColorBrush x:Key="AccentCyan" Color="#38BDF8" />
+        <SolidColorBrush x:Key="AccentRed" Color="#F87171" />
+        <SolidColorBrush x:Key="BorderSubtle" Color="#1CFFFFFF" />
+        <SolidColorBrush x:Key="BgSlotEmpty" Color="#4D12141F" />
+        <SolidColorBrush x:Key="BgCard" Color="#7A131622" />
+
+        <!-- Apple Glass Capsule Button -->
+        <Style x:Key="GlassCapsuleButton" TargetType="Button">
+            <Setter Property="Background" Value="#2B1E2232" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderGlassSubtle}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="7,3" />
+            <Setter Property="FontSize" Value="9" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5538BDF8" />
+                    <Setter Property="BorderBrush" Value="{StaticResource AppleCyan}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Segmented Role Pill -->
+        <Style x:Key="RoleSegmentPill" TargetType="Button">
+            <Setter Property="Background" Value="#33181D2A" />
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderGlassSubtle}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="5,2" />
+            <Setter Property="FontSize" Value="8" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="0,0,2,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4438BDF8" />
+                    <Setter Property="Foreground" Value="#FFFFFF" />
+                    <Setter Property="BorderBrush" Value="{StaticResource AppleCyan}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- 1. FULL HUD: COMPACT OBSIDIAN GLASS HUD (540px) -->
+        <Border x:Name="CardFullHud"
+                Background="{StaticResource GlassBackdrop}"
+                BorderBrush="{StaticResource BorderSpecular}"
+                BorderThickness="1"
+                CornerRadius="14"
+                Margin="2"
+                ClipToBounds="True"
+                Visibility="Visible">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="18" ShadowDepth="3" Opacity="0.85" Color="#000000" />
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" /> <!-- 0: Header & Docking -->
+                    <RowDefinition Height="Auto" /> <!-- 1: First Pick & My Role Quick Bar -->
+                    <RowDefinition Height="Auto" /> <!-- 2: 5v5 Compact Slots & Live Win Meter -->
+                    <RowDefinition Height="Auto" /> <!-- 3: Role Balance Status Pill -->
+                    <RowDefinition Height="Auto" /> <!-- 4: Compact Spotlight Search & Quick Picks -->
+                    <RowDefinition Height="*" />    <!-- 5: Dynamic Cards (Inspector OR Recommendations) -->
+                </Grid.RowDefinitions>
+
+                <!-- ROW 0: Glass Header (Draggable) -->
+                <Border Grid.Row="0"
+                        Background="#26FFFFFF"
+                        CornerRadius="13,13,0,0"
+                        Padding="8,6"
+                        BorderBrush="{StaticResource BorderGlassSubtle}"
+                        BorderThickness="0,0,0,1"
+                        MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- App Title & BlueStacks Indicator -->
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="7" Height="7" CornerRadius="3.5" Margin="0,0,5,0"
+                                    x:Name="StatusDot" Background="{StaticResource AppleEmerald}">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="#34D399" Opacity="0.9" />
+                                </Border.Effect>
+                            </Border>
+                            <TextBlock Text="ZENITH" FontWeight="Black" FontSize="11" Foreground="{StaticResource AppleCyan}" Margin="0,0,3,0" />
+                            <TextBlock Text="DRAFT" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextPrimary}" />
+                            <Border Background="#3338BDF8" CornerRadius="4" Padding="4,1" Margin="5,0,0,0">
+                                <TextBlock Text="126" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleCyan}" />
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Controls: Reset, Flip Dock, Collapse, Close -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button x:Name="BtnHeaderReset" Content="↺ Reset" Style="{StaticResource GlassCapsuleButton}" Margin="0,0,3,0" Padding="5,2" Click="BtnReset_Click" ToolTip="Reset All Draft Picks &amp; Bans" />
+                            <Button x:Name="BtnFlipDock" Content="⮂" Style="{StaticResource GlassCapsuleButton}" Margin="0,0,3,0" Width="22" Padding="0,2" Click="BtnFlipDock_Click" ToolTip="Flip Dock Left / Right" />
+                            <Button x:Name="BtnCollapse" Content="‹ Hide" Style="{StaticResource GlassCapsuleButton}" Margin="0,0,3,0" Padding="5,2" Click="BtnCollapse_Click" ToolTip="Collapse to Edge Pill" />
+                            <Button x:Name="BtnClose" Content="✕" Style="{StaticResource GlassCapsuleButton}" Width="22" Padding="0,2" Click="BtnClose_Click" ToolTip="Minimize" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ROW 1: First Pick & My Role Quick Bar -->
+                <Border Grid.Row="1" Margin="6,4,6,2" Background="{StaticResource GlassCard}"
+                        BorderBrush="{StaticResource BorderGlassSubtle}" BorderThickness="1" CornerRadius="8" Padding="5,3">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- First Pick Selector -->
+                        <Grid Grid.Row="0" Margin="0,0,0,3">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="1ST PICK:" FontSize="8" FontWeight="Black" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                <Button x:Name="BtnFirstPickAlly" Content="Our Team" Style="{StaticResource RoleSegmentPill}" Padding="5,1" FontSize="8" Click="BtnFirstPickAlly_Click" />
+                                <Button x:Name="BtnFirstPickEnemy" Content="Enemy Team" Style="{StaticResource RoleSegmentPill}" Padding="5,1" FontSize="8" Click="BtnFirstPickEnemy_Click" />
+                            </StackPanel>
+                            <TextBlock x:Name="TxtFirstPickStatus" Text="Ally Priority" FontSize="8" FontWeight="Bold" Foreground="{StaticResource AppleCyan}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <!-- My Role Selector -->
+                        <Grid Grid.Row="1">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="MY ROLE:" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleAmber}" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                <Button Content="All" Style="{StaticResource RoleSegmentPill}" Tag="All" Click="MyRole_Click" />
+                                <Button Content="Roam" Style="{StaticResource RoleSegmentPill}" Tag="Roam" Click="MyRole_Click" />
+                                <Button Content="Exp" Style="{StaticResource RoleSegmentPill}" Tag="Exp" Click="MyRole_Click" />
+                                <Button Content="Mid" Style="{StaticResource RoleSegmentPill}" Tag="Mid" Click="MyRole_Click" />
+                                <Button Content="Gold" Style="{StaticResource RoleSegmentPill}" Tag="Gold" Click="MyRole_Click" />
+                                <Button Content="Jg" Style="{StaticResource RoleSegmentPill}" Tag="Jungle" Click="MyRole_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- ROW 2: 5v5 Compact Slots & Live Win Meter -->
+                <Border Grid.Row="2" Margin="6,2,6,2" Background="{StaticResource GlassCard}"
+                        BorderBrush="{StaticResource BorderGlassSubtle}" BorderThickness="1" CornerRadius="8" Padding="5,4">
+                    <StackPanel>
+                        <!-- Live Win% Advantage Meter -->
+                        <Grid Margin="0,0,0,3">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="ALLY" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleCyan}" Margin="0,0,3,0" />
+                                <TextBlock x:Name="TxtAllyWinChance" Text="50.0%" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleCyan}" />
+                            </StackPanel>
+
+                            <TextBlock x:Name="TxtDraftAdvantage" Text="EVEN DRAFT" FontSize="8" FontWeight="Bold"
+                                       Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center" />
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock x:Name="TxtEnemyWinChance" Text="50.0%" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleCoral}" Margin="0,0,3,0" />
+                                <TextBlock Text="ENEMY" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleCoral}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Visual Proportional Gauge -->
+                        <Border Height="3" Background="#26FFFFFF" CornerRadius="1.5" Margin="0,0,0,4" ClipToBounds="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="ColAllyAdvantage" Width="50*" />
+                                    <ColumnDefinition x:Name="ColEnemyAdvantage" Width="50*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Background="{StaticResource AppleCyan}" />
+                                <Border Grid.Column="1" Background="{StaticResource AppleCoral}" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 5v5 Slots Display -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Allies -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="ALLIES" FontSize="7" FontWeight="Black" Foreground="{StaticResource AppleCyan}" Margin="1,0,0,2" />
+                                <WrapPanel x:Name="PanelAllySlots" />
+                            </StackPanel>
+
+                            <Border Grid.Column="1" Width="1" Background="{StaticResource BorderGlassSubtle}" Margin="3,0" />
+
+                            <!-- Enemies -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="ENEMIES" FontSize="7" FontWeight="Black" Foreground="{StaticResource AppleCoral}" Margin="1,0,0,2" />
+                                <WrapPanel x:Name="PanelEnemySlots" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Bans Strip -->
+                        <Grid Margin="0,3,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="BANS" FontSize="7" FontWeight="Bold" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="1,0,4,0" />
+                            <WrapPanel Grid.Column="1" x:Name="PanelBanSlots" VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ROW 3: Role Balance Status Pill -->
+                <Border Grid.Row="3" Margin="6,1,6,2" CornerRadius="6" x:Name="RoleAlertBorder"
+                        Background="#26FBBF24" BorderBrush="#40FBBF24" BorderThickness="1" Padding="5,2">
+                    <TextBlock x:Name="TxtRoleStatus" Text="Missing: Roamer / Tank • Mid / Mage"
+                               Foreground="{StaticResource AppleAmber}" FontSize="8" FontWeight="SemiBold"
+                               TextWrapping="Wrap" />
+                </Border>
+
+                <!-- ROW 4: Spotlight Search Bar & Quick Picks -->
+                <Border Grid.Row="4" Margin="6,1,6,2" Background="{StaticResource GlassCard}"
+                        BorderBrush="{StaticResource BorderGlassSubtle}" BorderThickness="1" CornerRadius="8" Padding="5">
+                    <StackPanel>
+                        <!-- Spotlight Search Bar -->
+                        <Grid Margin="0,0,0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Background="#400A0B10" BorderBrush="{StaticResource BorderSpecular}" BorderThickness="1" CornerRadius="6" Padding="5,2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="⌕" Foreground="{StaticResource TextMuted}" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                    <TextBox Grid.Column="1" x:Name="TxtHeroSearch" Background="Transparent" Foreground="#FFFFFF"
+                                             BorderThickness="0" FontSize="10" VerticalAlignment="Center"
+                                             KeyDown="TxtHeroSearch_KeyDown" TextChanged="TxtHeroSearch_TextChanged" />
+                                    <Button Grid.Column="2" x:Name="BtnClearSearch" Content="✕" FontSize="8"
+                                            Foreground="{StaticResource TextMuted}" Background="Transparent" BorderThickness="0"
+                                            Cursor="Hand" Padding="2,0" Visibility="Collapsed" Click="BtnClearSearch_Click" />
+                                </Grid>
+                            </Border>
+
+                            <Button Grid.Column="1" Content="+ Ally" Style="{StaticResource GlassCapsuleButton}" Margin="3,0,0,0" Padding="5,2" Click="BtnAddAlly_Click" />
+                            <Button Grid.Column="2" Content="+ Enemy" Style="{StaticResource GlassCapsuleButton}" Margin="2,0,0,0" Padding="5,2" Click="BtnAddEnemy_Click" />
+                            <Button Grid.Column="3" Content="+ Ban" Style="{StaticResource GlassCapsuleButton}" Margin="2,0,0,0" Padding="5,2" Click="BtnAddBan_Click" />
+                        </Grid>
+
+                        <!-- Quick Tap Suggestions -->
+                        <WrapPanel x:Name="WrapQuickSuggestions" MaxHeight="38" />
+                    </StackPanel>
+                </Border>
+
+                <!-- ROW 5: Dynamic Cards (Inspector OR Recommendations) -->
+                <Border Grid.Row="5" Margin="6,1,6,4">
+                    <Grid>
+                        <!-- A. LIVE SEARCH HERO INSPECTOR CARD (Shown when user searches) -->
+                        <Border x:Name="CardSearchInspector"
+                                Background="{StaticResource GlassCard}"
+                                BorderBrush="{StaticResource AppleCyan}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="8,6"
+                                Visibility="Collapsed">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!-- Header: Hero Name, Tier, Role, Win/Ban Rates -->
+                                <Grid Grid.Row="0">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock x:Name="TxtSearchHeroName" Text="Suyou" FontSize="12" FontWeight="Black" Foreground="{StaticResource TextPrimary}" Margin="0,0,5,0" />
+                                        <Border Background="#3338BDF8" CornerRadius="4" Padding="4,1" Margin="0,0,3,0">
+                                            <TextBlock x:Name="TxtSearchHeroTier" Text="S+" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleCyan}" />
+                                        </Border>
+                                        <Border Background="#20FFFFFF" CornerRadius="4" Padding="4,1">
+                                            <TextBlock x:Name="TxtSearchHeroRole" Text="Assassin • Jungle" FontSize="7" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Win Rate / Ban Rate Pill -->
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBlock x:Name="TxtSearchHeroWinRate" Text="53.2% WR" FontSize="8" FontWeight="Bold" Foreground="{StaticResource AppleEmerald}" Margin="0,0,5,0" />
+                                        <TextBlock x:Name="TxtSearchHeroBanRate" Text="68% Ban" FontSize="8" FontWeight="SemiBold" Foreground="{StaticResource AppleAmber}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Counters Info -->
+                                <StackPanel Grid.Row="1" Margin="0,4,0,4">
+                                    <TextBlock x:Name="TxtSearchCounters" Text="Hard counters: Ling, Fanny, Nolan" FontSize="8" Foreground="{StaticResource AppleEmerald}" TextWrapping="Wrap" Margin="0,0,0,2" />
+                                    <TextBlock x:Name="TxtSearchCounteredBy" Text="Countered by: Franco, Kaja, Khufra" FontSize="8" Foreground="{StaticResource AppleCoral}" TextWrapping="Wrap" />
+                                </StackPanel>
+
+                                <!-- Quick Pick 1-Tap Actions -->
+                                <Grid Grid.Row="2" Margin="0,2,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="BtnSearchPickAlly" Grid.Column="0" Content="+ Pick Ally" Margin="0,0,2,0"
+                                            Style="{StaticResource GlassCapsuleButton}" Background="#3338BDF8" BorderBrush="{StaticResource AppleCyan}"
+                                            Click="BtnSearchPickAlly_Click" />
+                                    <Button x:Name="BtnSearchPickEnemy" Grid.Column="1" Content="+ Pick Enemy" Margin="2,0,2,0"
+                                            Style="{StaticResource GlassCapsuleButton}" Background="#33F87171" BorderBrush="{StaticResource AppleCoral}"
+                                            Click="BtnSearchPickEnemy_Click" />
+                                    <Button x:Name="BtnSearchBan" Grid.Column="2" Content="+ Ban" Margin="2,0,0,0"
+                                            Style="{StaticResource GlassCapsuleButton}" Background="#33FBBF24" BorderBrush="{StaticResource AppleAmber}"
+                                            Click="BtnSearchBan_Click" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- B. RECOMMENDATIONS & TOURNAMENT SHORTCUTS (Default view) -->
+                        <Grid x:Name="PanelDefaultRecs" Visibility="Visible">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Quick Meta Ban Shortcuts Bar -->
+                            <Border Grid.Row="0" Margin="0,0,0,3" Background="#261E2232" CornerRadius="6" Padding="4,2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="TOP BANS:" FontSize="7" FontWeight="Black" Foreground="{StaticResource AppleCoral}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <WrapPanel Grid.Column="1" x:Name="WrapMetaBans" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Section Header -->
+                            <Grid Grid.Row="1" Margin="2,0,2,3">
+                                <TextBlock x:Name="TxtRecHeader" Text="OPTIMAL COUNTER PICKS" FontSize="8" FontWeight="Black" Foreground="{StaticResource TextPrimary}" />
+                                <TextBlock Text="SCORE • ADVANTAGE" FontSize="7" FontWeight="Bold" Foreground="{StaticResource AppleCyan}" HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <!-- Scrollable Cards -->
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl x:Name="ItemsRecommendations">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{StaticResource GlassCard}"
+                                                    BorderBrush="{StaticResource BorderGlassSubtle}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="8"
+                                                    Margin="0,0,0,3"
+                                                    Padding="7,5">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+
+                                                    <!-- Hero Name, Lane Pill & Score Badge -->
+                                                    <Grid Grid.Row="0">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding Hero.Name}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,4,0" />
+                                                            <Border Background="#3338BDF8" CornerRadius="3" Padding="3,1" Margin="0,0,3,0">
+                                                                <TextBlock Text="{Binding Hero.MplTier}" FontSize="7" FontWeight="Black" Foreground="{StaticResource AppleCyan}" />
+                                                            </Border>
+                                                            <Border Background="#20FFFFFF" CornerRadius="3" Padding="3,1">
+                                                                <TextBlock Text="{Binding RoleBadge}" FontSize="7" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" />
+                                                            </Border>
+                                                        </StackPanel>
+
+                                                        <!-- Win Rate / Score Pill -->
+                                                        <Border Background="#3334D399" BorderBrush="{StaticResource AppleEmerald}" BorderThickness="1"
+                                                                CornerRadius="6" Padding="4,1" HorizontalAlignment="Right">
+                                                            <TextBlock Text="{Binding ScoreFormatted}" FontSize="8" FontWeight="Black" Foreground="{StaticResource AppleEmerald}" />
+                                                        </Border>
+                                                    </Grid>
+
+                                                    <!-- Tactical Counter Rationale -->
+                                                    <TextBlock Grid.Row="1" Margin="0,2,0,3" Text="{Binding RecommendedReason}"
+                                                               FontSize="8" Foreground="#CBD5E1" TextWrapping="Wrap" LineHeight="11" />
+
+                                                    <!-- 1-Click Pick Triggers -->
+                                                    <Grid Grid.Row="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button Grid.Column="0" Content="+ Pick Ally" Margin="0,0,2,0"
+                                                                Style="{StaticResource GlassCapsuleButton}" Padding="0,2"
+                                                                Tag="{Binding Hero.Name}" Click="BtnPickAlly_Click" />
+                                                        <Button Grid.Column="1" Content="+ Pick Enemy" Margin="2,0,0,0"
+                                                                Style="{StaticResource GlassCapsuleButton}" Padding="0,2"
+                                                                Tag="{Binding Hero.Name}" Click="BtnPickEnemy_Click" />
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- 2. COLLAPSED MINI-PILL HANDLE (24px width) -->
+        <Border x:Name="CardMiniPill"
+                Width="24" Height="80"
+                Background="{StaticResource GlassBackdrop}"
+                BorderBrush="{StaticResource BorderSpecular}"
+                BorderThickness="1"
+                CornerRadius="10"
+                Cursor="Hand"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Visibility="Collapsed"
+                MouseLeftButtonDown="CardMiniPill_MouseLeftButtonDown"
+                ToolTip="Click to Expand MLBB Draft Assistant">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.8" Color="#000000" />
+            </Border.Effect>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border Width="5" Height="5" CornerRadius="2.5" Background="{StaticResource AppleCyan}" Margin="0,0,0,4">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="3" ShadowDepth="0" Color="#38BDF8" Opacity="0.8" />
+                    </Border.Effect>
+                </Border>
+                <TextBlock x:Name="TxtPillArrow" Text="›" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Center" />
+                <TextBlock Text="ML" FontSize="7" FontWeight="Black" Foreground="{StaticResource AppleCyan}" HorizontalAlignment="Center" Margin="0,2,0,0" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,6042 @@
+{
+  "version": "2.1.0",
+  "season": "Season 42 (Starward Decade) - Patch 2.1.95a (September 2026)",
+  "lastUpdated": "2026-09-24",
+  "heroes": [
+    {
+      "id": "aamon",
+      "name": "Aamon",
+      "primaryRole": "Assassin",
+      "secondaryRole": "Mage",
+      "lane": "Jungle",
+      "baseWinRate": 51.5,
+      "banRate": 20.0,
+      "pickRate": 6.8,
+      "mplTier": "A",
+      "mplPresence": 28.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.8,
+          "reason": "Camouflage sneak into endless glass shard execution"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.0,
+          "reason": "Scythe sweeps reveal camouflage and interrupt combo"
+        },
+        {
+          "heroName": "Radiant Armor",
+          "advantageDelta": -7.0,
+          "reason": "Drastically reduces damage of multi-shard ultimate"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 5.0,
+          "reason": "Guiding wind provides stealth entry and exit"
+        }
+      ]
+    },
+    {
+      "id": "akai",
+      "name": "Akai",
+      "primaryRole": "Tank",
+      "secondaryRole": "Fighter",
+      "lane": "Roam",
+      "baseWinRate": 50.8,
+      "banRate": 8.5,
+      "pickRate": 4.2,
+      "mplTier": "A",
+      "mplPresence": 22.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.2,
+          "reason": "Heavy Spin pins cable users against walls"
+        },
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 5.0,
+          "reason": "Spins interrupt enemy initiation"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -6.5,
+          "reason": "Time Journey purges spin completely"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -5.5,
+          "reason": "Fire pushback keeps Akai away"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Pharsa",
+          "synergyScore": 5.0,
+          "reason": "Pins targets in place for airstrikes"
+        }
+      ]
+    },
+    {
+      "id": "aldous",
+      "name": "Aldous",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 50.2,
+      "banRate": 10.0,
+      "pickRate": 4.2,
+      "mplTier": "B",
+      "mplPresence": 6.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Contract Chase flies across map to one-punch squishies"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Wind of Nature",
+          "advantageDelta": -7.5,
+          "reason": "Caps burst punch damage completely"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -6.5,
+          "reason": "Suppression grabs Aldous upon landing"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Yi Sun-shin",
+          "synergyScore": 5.5,
+          "reason": "Full map radar reveal for targeted punch execution"
+        }
+      ]
+    },
+    {
+      "id": "alice",
+      "name": "Alice",
+      "primaryRole": "Mage",
+      "secondaryRole": "Tank",
+      "lane": "Mid",
+      "baseWinRate": 51.5,
+      "banRate": 12.0,
+      "pickRate": 3.8,
+      "mplTier": "A",
+      "mplPresence": 25.0,
+      "counters": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": 5.5,
+          "reason": "Teleports into backline and sustains through basic attack burst"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.8,
+          "reason": "Passive cuts healing significantly"
+        },
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -6.5,
+          "reason": "True damage shreds massive mana HP shield"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.5,
+          "reason": "Shield and move speed boost in teamfights"
+        }
+      ]
+    },
+    {
+      "id": "alpha",
+      "name": "Alpha",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 51.5,
+      "banRate": 18.0,
+      "pickRate": 8.2,
+      "mplTier": "A",
+      "mplPresence": 32.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 5.8,
+          "reason": "Beta true damage tears through high-HP tank stats"
+        },
+        {
+          "heroName": "Uranus",
+          "advantageDelta": 5.5,
+          "reason": "True damage bypasses shield armor accumulation"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.2,
+          "reason": "Pushes Alpha away during Spear of Alpha dive"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -5.8,
+          "reason": "Anti-heal cuts swing lifesteal"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Spear combo lands on clustered targets"
+        }
+      ]
+    },
+    {
+      "id": "alucard",
+      "name": "Alucard",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 49.5,
+      "banRate": 3.2,
+      "pickRate": 6.0,
+      "mplTier": "C",
+      "mplPresence": 2.0,
+      "counters": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": 4.5,
+          "reason": "Heavy lifesteal leaps close distance on squishies"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -7.5,
+          "reason": "Massive healing reduction passive shuts down lifesteal"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -6.5,
+          "reason": "Bouncing ball stops every leap"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.0,
+          "reason": "Shield and speed steroid prevents burst death"
+        }
+      ]
+    },
+    {
+      "id": "angela",
+      "name": "Angela",
+      "primaryRole": "Support",
+      "secondaryRole": "Mage",
+      "lane": "Roam",
+      "baseWinRate": 53.1,
+      "banRate": 44.0,
+      "pickRate": 15.0,
+      "mplTier": "S",
+      "mplPresence": 72.0,
+      "counters": [
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 4.5,
+          "reason": "Puppet-on-a-string slows and kiting prevents engage"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.0,
+          "reason": "Anti-heal passive cuts Heartguard shield healing by half"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -4.8,
+          "reason": "Suppresses host target through shields"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Fanny",
+          "synergyScore": 6.5,
+          "reason": "Extreme synergy: turns Fanny into an unkillable dive machine"
+        },
+        {
+          "heroName": "Ling",
+          "synergyScore": 5.8,
+          "reason": "Shields and speeds up Ling through team fights"
+        },
+        {
+          "heroName": "Roger",
+          "synergyScore": 5.5,
+          "reason": "Wolf form + Heartguard runs down entire backlines"
+        }
+      ]
+    },
+    {
+      "id": "argus",
+      "name": "Argus",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 49.2,
+      "banRate": 5.0,
+      "pickRate": 4.0,
+      "mplTier": "C",
+      "mplPresence": 1.5,
+      "counters": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": 5.0,
+          "reason": "Eternal Evil immortality outlasts marksman burst"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -7.5,
+          "reason": "Bloody Hunt suppression holds Argus throughout immortality"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -7.0,
+          "reason": "Pushes Argus away and kites during 4 seconds of immortality"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 4.8,
+          "reason": "Keeps Argus on target while immortal"
+        }
+      ]
+    },
+    {
+      "id": "arlott",
+      "name": "Arlott",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Exp",
+      "baseWinRate": 52.4,
+      "banRate": 38.0,
+      "pickRate": 11.0,
+      "mplTier": "S",
+      "mplPresence": 68.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Infinite Demon Gaze dashes stick to backline"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 5.8,
+          "reason": "Final Slash sweeps out of air strike channel"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -7.0,
+          "reason": "Arlott's endless dashes trigger repeated Phoveus ultimate slams"
+        },
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -6.5,
+          "reason": "King's Calling completely disables Vengeance dash"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -6.0,
+          "reason": "Bouncing ball stops dash resets"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Novaria",
+          "synergyScore": 5.5,
+          "reason": "Long range poke and reveal procs Demon Gaze marks from afar"
+        },
+        {
+          "heroName": "Pharsa",
+          "synergyScore": 5.2,
+          "reason": "Final Slash pulls enemies into air strike center"
+        }
+      ]
+    },
+    {
+      "id": "atlas",
+      "name": "Atlas",
+      "primaryRole": "Tank",
+      "secondaryRole": "Support",
+      "lane": "Roam",
+      "baseWinRate": 52.3,
+      "banRate": 30.0,
+      "pickRate": 9.5,
+      "mplTier": "A",
+      "mplPresence": 52.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Ejected state speed + Fatal Links gives immobiles zero counterplay"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -8.5,
+          "reason": "Time Journey completely cancels Fatal Links throw and stun"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.0,
+          "reason": "Pushes away ejected state squid before chain hook connects"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Kadita",
+          "synergyScore": 6.2,
+          "reason": "Fatal Links gathers 5 enemies for 100% lethal Rough Waves"
+        },
+        {
+          "heroName": "Nolan",
+          "synergyScore": 5.2,
+          "reason": "Rift chain explosion instantly wipes grouped targets"
+        }
+      ]
+    },
+    {
+      "id": "aulus",
+      "name": "Aulus",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 50.8,
+      "banRate": 4.0,
+      "pickRate": 3.5,
+      "mplTier": "B",
+      "mplPresence": 8.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.5,
+          "reason": "Late-game level 12 war axe swings out-range and melt carries"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.8,
+          "reason": "Kiting prevents Aulus from reaching axe cleave distance"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.0,
+          "reason": "Anti-heal cuts power of axe lifesteal"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.0,
+          "reason": "Undying Fury cleaves through clustered enemies"
+        }
+      ]
+    },
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.0,
+      "banRate": 16.0,
+      "pickRate": 6.5,
+      "mplTier": "A",
+      "mplPresence": 30.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.8,
+          "reason": "Frost freeze field locks cable divers with cold domain"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 6.2,
+          "reason": "Revamped freeze halts wall drops immediately"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.2,
+          "reason": "Time Journey cleanses freeze freeze stuns"
+        },
+        {
+          "heroName": "Kadita",
+          "advantageDelta": -5.5,
+          "reason": "Rough Waves becomes untargetable during freeze"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.5,
+          "reason": "Frozen glacier meteor impact on clustered targets"
+        }
+      ]
+    },
+    {
+      "id": "badang",
+      "name": "Badang",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 50.8,
+      "banRate": 8.0,
+      "pickRate": 4.5,
+      "mplTier": "B",
+      "mplPresence": 12.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Wall trap into Fist Crack rapid punch execution"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -6.0,
+          "reason": "Bounces stop fist dash setup"
+        },
+        {
+          "heroName": "Wind of Nature",
+          "advantageDelta": -6.5,
+          "reason": "Immunity negates entire Fist Crack ultimate"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Moskov",
+          "synergyScore": 6.0,
+          "reason": "Badang wall provides instant wall pin for Moskov"
+        }
+      ]
+    },
+    {
+      "id": "balmond",
+      "name": "Balmond",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Tank",
+      "lane": "Jungle",
+      "baseWinRate": 50.2,
+      "banRate": 4.5,
+      "pickRate": 5.2,
+      "mplTier": "B",
+      "mplPresence": 8.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 4.8,
+          "reason": "High base spin damage and lethal execution on immobiles"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.0,
+          "reason": "Continuous pushback and slow prevents approach"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -5.2,
+          "reason": "Anti-heal stops bloodthirst recovery"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 4.8,
+          "reason": "Grouped enemies allow multi-target lethal spin"
+        }
+      ]
+    },
+    {
+      "id": "bane",
+      "name": "Bane",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Mage",
+      "lane": "Exp",
+      "baseWinRate": 50.5,
+      "banRate": 2.8,
+      "pickRate": 3.5,
+      "mplTier": "B",
+      "mplPresence": 6.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 4.5,
+          "reason": "Shark wave pushes lanes and deals heavy bounce burst"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Chou",
+          "advantageDelta": -5.2,
+          "reason": "Kicks Bane out of positioning before shark cast"
+        },
+        {
+          "heroName": "Lancelot",
+          "advantageDelta": -5.0,
+          "reason": "Invulnerability frames dodge slow ultimate"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Faramis",
+          "synergyScore": 4.5,
+          "reason": "Nether Realm sustains Bane pushing towers"
+        }
+      ]
+    },
+    {
+      "id": "barats",
+      "name": "Barats",
+      "primaryRole": "Tank",
+      "secondaryRole": "Fighter",
+      "lane": "Jungle",
+      "baseWinRate": 52.8,
+      "banRate": 35.0,
+      "pickRate": 8.0,
+      "mplTier": "S+",
+      "mplPresence": 65.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.5,
+          "reason": "Detona's Welcome swallows cable divers and spits into walls"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 6.0,
+          "reason": "Giant body blocks paths and eats assassins upon sword landing"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -8.5,
+          "reason": "True damage completely shreds 25-stack giant health pool"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -7.5,
+          "reason": "Purge negates swallow; fireballs kite dinosaur indefinitely"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 6.5,
+          "reason": "Massive dinosaur receives speed and shield to run down carries"
+        }
+      ]
+    },
+    {
+      "id": "baxia",
+      "name": "Baxia",
+      "primaryRole": "Tank",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 52.4,
+      "banRate": 20.0,
+      "pickRate": 8.0,
+      "mplTier": "A",
+      "mplPresence": 54.0,
+      "counters": [
+        {
+          "heroName": "Ruby",
+          "advantageDelta": 5.5,
+          "reason": "Inherent 50% healing reduction destroys Ruby's lifesteal"
+        },
+        {
+          "heroName": "Yu Zhong",
+          "advantageDelta": 5.8,
+          "reason": "Cuts Sha Essence healing drastically"
+        },
+        {
+          "heroName": "Estes",
+          "advantageDelta": 7.5,
+          "reason": "Passive anti-heal negates Moonlight Immersion group heals"
+        },
+        {
+          "heroName": "Angela",
+          "advantageDelta": 6.0,
+          "reason": "Cuts Love Waves healing"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -6.5,
+          "reason": "True damage ignores Baxia Mark flat damage reduction"
+        },
+        {
+          "heroName": "Lunox",
+          "advantageDelta": -6.0,
+          "reason": "Percentage magic damage shreds bowling ball roll"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Novaria",
+          "synergyScore": 4.5,
+          "reason": "Vision reveal allows long-range rolling speed initiates"
+        }
+      ]
+    },
+    {
+      "id": "beatrix",
+      "name": "Beatrix",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 51.5,
+      "banRate": 30.0,
+      "pickRate": 13.0,
+      "mplTier": "S",
+      "mplPresence": 70.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.5,
+          "reason": "Sniper Renner shots kill before Layla gets in range"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -5.8,
+          "reason": "Shadow dive bursts Beatrix before weapon swap"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.0,
+          "reason": "Bulwark reflects Renner and Nibiru barrages"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 5.0,
+          "reason": "Guiding Wind enables quick sniper repositioning"
+        }
+      ]
+    },
+    {
+      "id": "belerick",
+      "name": "Belerick",
+      "primaryRole": "Tank",
+      "secondaryRole": "None",
+      "lane": "Roam",
+      "baseWinRate": 53.7,
+      "banRate": 36.0,
+      "pickRate": 13.0,
+      "mplTier": "S+",
+      "mplPresence": 75.0,
+      "counters": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": 8.0,
+          "reason": "Deadly Thorns reflects damage back at fast-firing marksmen"
+        },
+        {
+          "heroName": "Claude",
+          "advantageDelta": 7.5,
+          "reason": "Blazing Duet triggers endless deadly thorns counter-spikes"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": 7.0,
+          "reason": "High attack speed causes Moskov to kill himself on thorns"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -7.8,
+          "reason": "Lightwheel true damage does not trigger thorns reflection"
+        },
+        {
+          "heroName": "Lunox",
+          "advantageDelta": -7.2,
+          "reason": "High % HP magic damage shreds massive health bar"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Vexana",
+          "synergyScore": 5.0,
+          "reason": "Taunt root clusters enemies for Undead Knight smash"
+        }
+      ]
+    },
+    {
+      "id": "benedetta",
+      "name": "Benedetta",
+      "primaryRole": "Assassin",
+      "secondaryRole": "Fighter",
+      "lane": "Exp",
+      "baseWinRate": 52.2,
+      "banRate": 30.0,
+      "pickRate": 9.5,
+      "mplTier": "S",
+      "mplPresence": 65.0,
+      "counters": [
+        {
+          "heroName": "Zhuxin",
+          "advantageDelta": 5.2,
+          "reason": "An Eye for an Eye parries Zhuxin airborne pull"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -6.0,
+          "reason": "Sword intent dashes trigger repeated Phoveus slams"
+        },
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -6.2,
+          "reason": "King's field completely denies passive and dash moves"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.0,
+          "reason": "Alecto: Final Blow slashes through clustered Implosion victims"
+        }
+      ]
+    },
+    {
+      "id": "brody",
+      "name": "Brody",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 52.1,
+      "banRate": 30.0,
+      "pickRate": 12.0,
+      "mplTier": "S",
+      "mplPresence": 65.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.0,
+          "reason": "Corrosive Strike stun + Abyss Impact burst wins lane easily"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Harith",
+          "advantageDelta": -5.5,
+          "reason": "Shield and dash matrix out-trades Brody slow attack windup"
+        },
+        {
+          "heroName": "Suyou",
+          "advantageDelta": -5.0,
+          "reason": "Overwhelms with stance mobility"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Khufra",
+          "synergyScore": 5.0,
+          "reason": "Stuns enable Brody to stack 4 abyss marks safely"
+        }
+      ]
+    },
+    {
+      "id": "bruno",
+      "name": "Bruno",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 52.0,
+      "banRate": 16.5,
+      "pickRate": 7.8,
+      "mplTier": "S",
+      "mplPresence": 45.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.8,
+          "reason": "Early ball bounce burst out-trades immobile marksmen"
+        },
+        {
+          "heroName": "Miya",
+          "advantageDelta": 5.0,
+          "reason": "Slide tackle interrupts engagement"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -7.5,
+          "reason": "Guardian Bulwark reflects energetic balls back"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -6.0,
+          "reason": "Shadow dive bursts Bruno before ball rebounds"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Diggie",
+          "synergyScore": 5.8,
+          "reason": "Auto-attack safety with anti-CC protection"
+        }
+      ]
+    },
+    {
+      "id": "carmilla",
+      "name": "Carmilla",
+      "primaryRole": "Support",
+      "secondaryRole": "Tank",
+      "lane": "Roam",
+      "baseWinRate": 52.2,
+      "banRate": 16.0,
+      "pickRate": 3.8,
+      "mplTier": "A",
+      "mplPresence": 30.0,
+      "counters": [
+        {
+          "heroName": "Estes",
+          "advantageDelta": 8.0,
+          "reason": "Curse of Blood chains grouped healing deathballs to share 100% damage and CC"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.5,
+          "reason": "Time Journey cleanses chained stun link completely"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.0,
+          "reason": "Fire kiting keeps Carmilla from landing curse"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Cecilion",
+          "synergyScore": 6.5,
+          "reason": "Moonlit Waltz special skill provides invulnerable escape and shield"
+        }
+      ]
+    },
+    {
+      "id": "cecilion",
+      "name": "Cecilion",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 51.8,
+      "banRate": 18.0,
+      "pickRate": 7.2,
+      "mplTier": "A",
+      "mplPresence": 32.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.0,
+          "reason": "Late-game Bat Impact one-shots squishy backlines from long range"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -7.5,
+          "reason": "Wall dive bypasses bat arc sweet spot to slice Cecilion"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -7.2,
+          "reason": "Cable dives inside minimum range"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Carmilla",
+          "synergyScore": 6.5,
+          "reason": "Moonlit Waltz defense and grouped blood curse burst"
+        }
+      ]
+    },
+    {
+      "id": "change",
+      "name": "Chang'e",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 51.0,
+      "banRate": 14.0,
+      "pickRate": 6.8,
+      "mplTier": "A",
+      "mplPresence": 20.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 6.0,
+          "reason": "Meteor shower shreds slow tanks walking in straight lines"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -9.0,
+          "reason": "Guardian Bulwark completely eats all 30+ meteor shower stars"
+        },
+        {
+          "heroName": "Radiant Armor",
+          "advantageDelta": -7.0,
+          "reason": "Drastically reduces continuous magic tick damage"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Hylos",
+          "synergyScore": 5.0,
+          "reason": "Pathway slow keeps enemies inside star stream"
+        }
+      ]
+    },
+    {
+      "id": "chip",
+      "name": "Chip",
+      "primaryRole": "Support",
+      "secondaryRole": "Tank",
+      "lane": "Roam",
+      "baseWinRate": 54.2,
+      "banRate": 82.0,
+      "pickRate": 11.0,
+      "mplTier": "S+",
+      "mplPresence": 93.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.2,
+          "reason": "Global shortcut portals flank and swarm immobile backline instantly"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 6.8,
+          "reason": "Instantly teleports frontline behind Feathered Air Strike sanctuary"
+        },
+        {
+          "heroName": "Xavier",
+          "advantageDelta": 6.5,
+          "reason": "Portal ganks isolate long-range artillery with zero warning"
+        },
+        {
+          "heroName": "Novaria",
+          "advantageDelta": 6.0,
+          "reason": "Collapse portal closes sniper distance immediately"
+        },
+        {
+          "heroName": "Ixia",
+          "advantageDelta": 6.0,
+          "reason": "Flanks Full Barrage zone from behind"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -6.5,
+          "reason": "Bloody Hunt suppression pins Chip through portal exit animation"
+        },
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.0,
+          "reason": "Time Journey purges teamfight portal crowd control and shields squad"
+        },
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -6.0,
+          "reason": "King's Calling prevents allies from clicking into or exiting portal"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Terizla",
+          "synergyScore": 7.0,
+          "reason": "Shortcut portal teleports Penalty Zone hammer into the middle of enemy team"
+        },
+        {
+          "heroName": "Suyou",
+          "synergyScore": 6.8,
+          "reason": "Surprise 5-man portal allows Suyou Immortal cleave instant wipe"
+        },
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.5,
+          "reason": "Surprise 5-man portal Implosion wipes teams cleanly"
+        }
+      ]
+    },
+    {
+      "id": "chou",
+      "name": "Chou",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Tank",
+      "lane": "Exp",
+      "baseWinRate": 51.8,
+      "banRate": 25.0,
+      "pickRate": 11.5,
+      "mplTier": "S",
+      "mplPresence": 55.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.8,
+          "reason": "Flicker Way of Dragon isolates and kicks squishies into team"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 6.0,
+          "reason": "Interrupts stationary airstrikes with kick"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -6.5,
+          "reason": "Time Journey purges airborne kicks"
+        },
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -6.0,
+          "reason": "Punishes Jeet Kune Do dash spam with repeated smashes"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Saber",
+          "synergyScore": 5.0,
+          "reason": "Guaranteed target lock follow-up"
+        }
+      ]
+    },
+    {
+      "id": "cici",
+      "name": "Cici",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 52.5,
+      "banRate": 25.0,
+      "pickRate": 11.0,
+      "mplTier": "S",
+      "mplPresence": 68.0,
+      "counters": [
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 5.2,
+          "reason": "High move speed and yoyo attacks kite Terizla slow animations"
+        },
+        {
+          "heroName": "Thamuz",
+          "advantageDelta": 4.8,
+          "reason": "Kites scythe melee range while dealing % HP damage"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.0,
+          "reason": "Bouncing ball stops yoyo bounce mobility"
+        },
+        {
+          "heroName": "Saber",
+          "advantageDelta": -5.0,
+          "reason": "Bursts Cici during lock down"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 4.8,
+          "reason": "Curtain Call double tether easily hits grouped targets"
+        }
+      ]
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 52.0,
+      "banRate": 34.0,
+      "pickRate": 15.0,
+      "mplTier": "S",
+      "mplPresence": 78.0,
+      "counters": [
+        {
+          "heroName": "Ixia",
+          "advantageDelta": 5.8,
+          "reason": "Battle Mirror teleport flanks behind Full Barrage arc"
+        },
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.2,
+          "reason": "Blazing Duet instant teleport melt"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Belerick",
+          "advantageDelta": -7.0,
+          "reason": "Deadly Thorns reflects Claude's multi-hit ultimate back to himself"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.5,
+          "reason": "Guardian's Bulwark blocks Claude's basic attacks and bullets"
+        },
+        {
+          "heroName": "Saber",
+          "advantageDelta": -5.5,
+          "reason": "Airborne executes Claude before teleport return"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Khufra",
+          "synergyScore": 5.0,
+          "reason": "Provides the dive distraction for Claude Blazing Duet"
+        }
+      ]
+    },
+    {
+      "id": "clint",
+      "name": "Clint",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 51.5,
+      "banRate": 8.0,
+      "pickRate": 8.5,
+      "mplTier": "A",
+      "mplPresence": 28.0,
+      "counters": [
+        {
+          "heroName": "Moskov",
+          "advantageDelta": 5.4,
+          "reason": "Out-ranges Moskov with long-distance passive bullets"
+        },
+        {
+          "heroName": "Claude",
+          "advantageDelta": 4.8,
+          "reason": "Trapping rope roots Claude during Blazing Duet"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -6.2,
+          "reason": "Wall dive bursts Clint without reliable escape"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.0,
+          "reason": "Shield blocks rope and grenade projectiles"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 5.0,
+          "reason": "Guiding Wind repositions Clint to max passive range"
+        }
+      ]
+    },
+    {
+      "id": "cyclops",
+      "name": "Cyclops",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 51.2,
+      "banRate": 5.0,
+      "pickRate": 6.0,
+      "mplTier": "B",
+      "mplPresence": 12.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 5.8,
+          "reason": "Star Power Lockdown locks high-speed mobile heroes in place"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -7.0,
+          "reason": "Shield absorbs all Planets Attack projectiles"
+        },
+        {
+          "heroName": "Lancelot",
+          "advantageDelta": -6.0,
+          "reason": "Invulnerable dashes bypass planetary lock"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Franco",
+          "synergyScore": 4.8,
+          "reason": "Long range lock guarantees hook accuracy"
+        }
+      ]
+    },
+    {
+      "id": "diggie",
+      "name": "Diggie",
+      "primaryRole": "Support",
+      "secondaryRole": "Mage",
+      "lane": "Roam",
+      "baseWinRate": 53.4,
+      "banRate": 60.0,
+      "pickRate": 11.0,
+      "mplTier": "S+",
+      "mplPresence": 82.0,
+      "counters": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 9.0,
+          "reason": "Time Journey completely negates Implosion and Sacred Hammer"
+        },
+        {
+          "heroName": "Atlas",
+          "advantageDelta": 8.5,
+          "reason": "Purges Fatal Links group pull instantly"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": 7.5,
+          "reason": "Removes airborne and bouncing ball CC"
+        },
+        {
+          "heroName": "Guinevere",
+          "advantageDelta": 7.0,
+          "reason": "Nullifies Violet Requiem airborne combo"
+        },
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 5.8,
+          "reason": "Frees entire team from Penalty Zone chains"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -5.0,
+          "reason": "Suppression CC cannot be cleansed by Time Journey"
+        },
+        {
+          "heroName": "Kaja",
+          "advantageDelta": -5.0,
+          "reason": "Suppression pull pierces through cleanse"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Fanny",
+          "synergyScore": 5.0,
+          "reason": "Protects fragile cable dives against crowd control traps"
+        }
+      ]
+    },
+    {
+      "id": "dyrroth",
+      "name": "Dyrroth",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 51.5,
+      "banRate": 20.0,
+      "pickRate": 14.0,
+      "mplTier": "B",
+      "mplPresence": 35.0,
+      "counters": [
+        {
+          "heroName": "Esmeralda",
+          "advantageDelta": 6.0,
+          "reason": "Spectre Step shreds 75% physical defense, instantly executing"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -4.5,
+          "reason": "Kites with hops and stuns out of ultimate strike"
+        },
+        {
+          "heroName": "Terizla",
+          "advantageDelta": -4.5,
+          "reason": "Damage reduction passive mitigates burst"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Franco",
+          "synergyScore": 4.5,
+          "reason": "Hooked target defense shredded and one-shot"
+        }
+      ]
+    },
+    {
+      "id": "edith",
+      "name": "Edith",
+      "primaryRole": "Tank",
+      "secondaryRole": "Marksman",
+      "lane": "Exp",
+      "baseWinRate": 53.8,
+      "banRate": 60.0,
+      "pickRate": 13.0,
+      "mplTier": "S+",
+      "mplPresence": 92.0,
+      "counters": [
+        {
+          "heroName": "Claude",
+          "advantageDelta": 5.5,
+          "reason": "Onward airborne lock cancels Blazing Duet channel"
+        },
+        {
+          "heroName": "Roger",
+          "advantageDelta": 5.0,
+          "reason": "Massive magic lightning DPS in Primal Wrath shreds wolf form"
+        },
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 4.5,
+          "reason": "Long range magic burst kites slow hammer strikes"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -7.5,
+          "reason": "True percentage damage melts colossal Phylax tank armor"
+        },
+        {
+          "heroName": "Lunox",
+          "advantageDelta": -6.5,
+          "reason": "Chaos assault shreds tank HP"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -5.8,
+          "reason": "Endless knockbacks keep Edith zoned from basic attack range"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.5,
+          "reason": "Double frontline CC chain ensures 100% full Primal Wrath wrath meter"
+        },
+        {
+          "heroName": "Khufra",
+          "synergyScore": 5.0,
+          "reason": "Keeps enemies locked in place while Edith free-fires lightning"
+        }
+      ]
+    },
+    {
+      "id": "esmeralda",
+      "name": "Esmeralda",
+      "primaryRole": "Mage",
+      "secondaryRole": "Tank",
+      "lane": "Exp",
+      "baseWinRate": 52.0,
+      "banRate": 20.0,
+      "pickRate": 9.0,
+      "mplTier": "A",
+      "mplPresence": 48.0,
+      "counters": [
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": 6.5,
+          "reason": "Frostmoon Shield steals Phoveus massive shields"
+        },
+        {
+          "heroName": "Harith",
+          "advantageDelta": 5.5,
+          "reason": "Absorbs Harith shield generation into her own health"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.2,
+          "reason": "Anti-heal cuts shield absorption sustainability"
+        },
+        {
+          "heroName": "Dyrroth",
+          "advantageDelta": -6.0,
+          "reason": "75% physical defense reduction bursts Esmeralda down"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Rafaela",
+          "synergyScore": 4.5,
+          "reason": "Movement speed buff keeps Esmeralda glued to targets"
+        }
+      ]
+    },
+    {
+      "id": "estes",
+      "name": "Estes",
+      "primaryRole": "Support",
+      "secondaryRole": "None",
+      "lane": "Roam",
+      "baseWinRate": 51.4,
+      "banRate": 28.0,
+      "pickRate": 7.5,
+      "mplTier": "A",
+      "mplPresence": 25.0,
+      "counters": [
+        {
+          "heroName": "Poke comps",
+          "advantageDelta": 5.5,
+          "reason": "Moonlight Immersion out-heals attrition and chip damage"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -8.5,
+          "reason": "Passive + Dominance Ice reduces team healing by over 70%"
+        },
+        {
+          "heroName": "Luo Yi",
+          "advantageDelta": -7.5,
+          "reason": "Duality reacts explosively when team groups around Estes"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Barats",
+          "synergyScore": 6.0,
+          "reason": "Makes giant dinosaur frontline virtually immortal"
+        }
+      ]
+    },
+    {
+      "id": "eudora",
+      "name": "Eudora",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 53.2,
+      "banRate": 28.0,
+      "pickRate": 12.5,
+      "mplTier": "S",
+      "mplPresence": 64.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.5,
+          "reason": "Instant point-and-click stun and lightning burst deletes assassins"
+        },
+        {
+          "heroName": "Harith",
+          "advantageDelta": 5.2,
+          "reason": "Immediate target-lock lightning stops dash spam"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Athena Shield",
+          "advantageDelta": -6.5,
+          "reason": "Single combo magic burst gets soaked by MR"
+        },
+        {
+          "heroName": "Lancelot",
+          "advantageDelta": -5.5,
+          "reason": "Thorned Rose avoids target lock with timing"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Saber",
+          "synergyScore": 5.0,
+          "reason": "Target-lock instant kill coordination"
+        }
+      ]
+    },
+    {
+      "id": "fanny",
+      "name": "Fanny",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 53.8,
+      "banRate": 78.0,
+      "pickRate": 9.5,
+      "mplTier": "S+",
+      "mplPresence": 88.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.5,
+          "reason": "Extreme mobility bypasses range and one-shots immobiles"
+        },
+        {
+          "heroName": "Miya",
+          "advantageDelta": 6.8,
+          "reason": "Instant wall-dive burst before ultimate reaction"
+        },
+        {
+          "heroName": "Xavier",
+          "advantageDelta": 5.4,
+          "reason": "Easily dives immobile artillery mages"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -8.5,
+          "reason": "Bouncing ball cancels cable flight instantly"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.5,
+          "reason": "Reliable short-cooldown displacement CC interrupts cables"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": -5.8,
+          "reason": "Spear of Misery pins to wall during cable dive"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -5.2,
+          "reason": "Suppression ultimate shuts down cable chains"
+        },
+        {
+          "heroName": "Saber",
+          "advantageDelta": -4.8,
+          "reason": "Target-lock airborne burst execution"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 6.5,
+          "reason": "Shield, speed boost, and slow anchor cable assassinations"
+        },
+        {
+          "heroName": "Diggie",
+          "synergyScore": 4.5,
+          "reason": "Time Journey purges crowd control on dives"
+        }
+      ]
+    },
+    {
+      "id": "faramis",
+      "name": "Faramis",
+      "primaryRole": "Support",
+      "secondaryRole": "Mage",
+      "lane": "Mid",
+      "baseWinRate": 52.9,
+      "banRate": 36.0,
+      "pickRate": 10.5,
+      "mplTier": "S",
+      "mplPresence": 70.0,
+      "counters": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": 5.8,
+          "reason": "Cult Altar second life negates single-target assassination burst"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 5.2,
+          "reason": "Nether Realm shield absorbs entire cable burst combo"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valentina",
+          "advantageDelta": -8.0,
+          "reason": "Valentina steals Cult Altar and uses Faramis's own resurrection against him"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -5.5,
+          "reason": "Anti-heal cuts Cult Altar extra HP bar"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Hylos",
+          "synergyScore": 6.0,
+          "reason": "Turns colossal HP tank into an immortal raid boss"
+        },
+        {
+          "heroName": "Terizla",
+          "synergyScore": 5.8,
+          "reason": "Immunity frames ensure full hammer swing delivery"
+        }
+      ]
+    },
+    {
+      "id": "floryn",
+      "name": "Floryn",
+      "primaryRole": "Support",
+      "secondaryRole": "None",
+      "lane": "Roam",
+      "baseWinRate": 52.4,
+      "banRate": 24.0,
+      "pickRate": 6.5,
+      "mplTier": "S",
+      "mplPresence": 42.0,
+      "counters": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": 7.5,
+          "reason": "Bloom ultimate grants anti-anti-heal, completely bypassing anti-heal items"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": -6.5,
+          "reason": "Single-target execution deletes fragile support"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": -6.0,
+          "reason": "Wall dive bursts backline before global bloom triggers"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Barats",
+          "synergyScore": 6.0,
+          "reason": "Free 7th item lantern and global healing keeps dinosaur alive"
+        }
+      ]
+    },
+    {
+      "id": "franco",
+      "name": "Franco",
+      "primaryRole": "Tank",
+      "secondaryRole": "Support",
+      "lane": "Roam",
+      "baseWinRate": 51.5,
+      "banRate": 40.0,
+      "pickRate": 18.0,
+      "mplTier": "A",
+      "mplPresence": 45.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 5.2,
+          "reason": "Suppression ultimate shuts down cable dives; cannot be cleansed"
+        },
+        {
+          "heroName": "Diggie",
+          "advantageDelta": 5.0,
+          "reason": "Suppression ignores Time Journey CC cleanse"
+        },
+        {
+          "heroName": "Suyou",
+          "advantageDelta": 5.0,
+          "reason": "Suppresses through damage reduction stances"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": -5.0,
+          "reason": "Hooking Tigreal allows Tigreal free Implosion engage on Franco's team"
+        },
+        {
+          "heroName": "Grock",
+          "advantageDelta": -5.5,
+          "reason": "CC immunity next to walls completely blocks Iron Hook"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Novaria",
+          "synergyScore": 5.0,
+          "reason": "Vision reveal from Astral Sphere makes blind bush hooks effortless"
+        }
+      ]
+    },
+    {
+      "id": "fredrinn",
+      "name": "Fredrinn",
+      "primaryRole": "Tank",
+      "secondaryRole": "Fighter",
+      "lane": "Jungle",
+      "baseWinRate": 52.5,
+      "banRate": 28.0,
+      "pickRate": 8.0,
+      "mplTier": "S+",
+      "mplPresence": 62.0,
+      "counters": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": 6.0,
+          "reason": "Converts assassin burst into crystal energy and taunts"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 5.8,
+          "reason": "High crowd control taunt chain locks sword divers"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -8.0,
+          "reason": "True damage melts crystal energy before Appraiser's Wrath"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -7.0,
+          "reason": "Kiting prevents Fredrinn from generating combo points"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 6.0,
+          "reason": "Allows Fredrinn to absorb lethal damage and fire 5000+ true damage smashes"
+        }
+      ]
+    },
+    {
+      "id": "freya",
+      "name": "Freya",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 51.6,
+      "banRate": 8.0,
+      "pickRate": 3.8,
+      "mplTier": "A",
+      "mplPresence": 18.0,
+      "counters": [
+        {
+          "heroName": "Zilong",
+          "advantageDelta": 6.2,
+          "reason": "Valkyrie shields and attack speed out-duels melee fighters"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.5,
+          "reason": "Anti-heal cuts shield life drain and lifesteal"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.0,
+          "reason": "Kiting and pushback prevents melee auto-attack contact"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.4,
+          "reason": "Allows Valkyrie form to stick without being peeled"
+        }
+      ]
+    },
+    {
+      "id": "gatotkaca",
+      "name": "Gatotkaca",
+      "primaryRole": "Tank",
+      "secondaryRole": "Fighter",
+      "lane": "Exp",
+      "baseWinRate": 53.2,
+      "banRate": 38.0,
+      "pickRate": 12.0,
+      "mplTier": "S",
+      "mplPresence": 65.0,
+      "counters": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": 7.0,
+          "reason": "Steel bones passive converts physical damage into massive armor"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": 6.5,
+          "reason": "Taunts basic attack users and counters with rage punch"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -7.5,
+          "reason": "Lightwheel true damage completely ignores steel bones armor"
+        },
+        {
+          "heroName": "Lunox",
+          "advantageDelta": -7.0,
+          "reason": "Chaos assault shreds magic resistance and max HP"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Guinevere",
+          "synergyScore": 5.2,
+          "reason": "Avatar of Guardian knockup sets up Violet Requiem"
+        }
+      ]
+    },
+    {
+      "id": "gloo",
+      "name": "Gloo",
+      "primaryRole": "Tank",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 51.8,
+      "banRate": 22.0,
+      "pickRate": 4.5,
+      "mplTier": "A",
+      "mplPresence": 32.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.0,
+          "reason": "Attaches to immobile carries and redirects damage to host"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Faramis",
+          "advantageDelta": -8.5,
+          "reason": "Ghost Bursters detonates on every single miniature slime split"
+        },
+        {
+          "heroName": "Vexana",
+          "advantageDelta": -8.0,
+          "reason": "Passive explosion wipes out entire slime cluster instantly"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.2,
+          "reason": "Double piggyback invades and controls enemy carries"
+        }
+      ]
+    },
+    {
+      "id": "gord",
+      "name": "Gord",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 50.2,
+      "banRate": 3.0,
+      "pickRate": 4.2,
+      "mplTier": "B",
+      "mplPresence": 8.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 5.5,
+          "reason": "Mystic Projectile and beam melts high-HP slow frontlines"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -7.5,
+          "reason": "Wall dive instantly executes stationary beam channel"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -7.2,
+          "reason": "Cables dive immobile Gord during ultimate"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.5,
+          "reason": "Stun cluster creates full duration Mystic Gush beam"
+        }
+      ]
+    },
+    {
+      "id": "granger",
+      "name": "Granger",
+      "primaryRole": "Marksman",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 51.2,
+      "banRate": 12.0,
+      "pickRate": 7.0,
+      "mplTier": "A",
+      "mplPresence": 30.0,
+      "counters": [
+        {
+          "heroName": "Novaria",
+          "advantageDelta": 5.2,
+          "reason": "Rhapsody mobility and Death Sonata snipes artillery"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -7.0,
+          "reason": "Shield eats all 6 Rhapsody bullets and cannon shells"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": -6.5,
+          "reason": "Wall dive deletes Granger between bullet reloads"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.0,
+          "reason": "Clustered targets absorb full Rhapsody burst"
+        }
+      ]
+    },
+    {
+      "id": "grock",
+      "name": "Grock",
+      "primaryRole": "Tank",
+      "secondaryRole": "Fighter",
+      "lane": "Exp",
+      "baseWinRate": 51.0,
+      "banRate": 12.0,
+      "pickRate": 5.0,
+      "mplTier": "A",
+      "mplPresence": 28.0,
+      "counters": [
+        {
+          "heroName": "Johnson",
+          "advantageDelta": 7.8,
+          "reason": "Guardian Barrier wall crashes speeding car instantly"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.2,
+          "reason": "Summons walls in choke points disrupting cable lines"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -6.8,
+          "reason": "True damage shreds wall-hugging physical defense"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.0,
+          "reason": "Fireballs slow Grock before ancestral gift charges"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Moskov",
+          "synergyScore": 6.5,
+          "reason": "Wall placement allows guaranteed spear wall-pins anywhere"
+        }
+      ]
+    },
+    {
+      "id": "guinevere",
+      "name": "Guinevere",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Mage",
+      "lane": "Exp",
+      "baseWinRate": 51.8,
+      "banRate": 26.0,
+      "pickRate": 7.5,
+      "mplTier": "S",
+      "mplPresence": 38.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.8,
+          "reason": "Spatial Migration jump into Violet Requiem airborne lock"
+        },
+        {
+          "heroName": "Claude",
+          "advantageDelta": 5.8,
+          "reason": "Airborne interrupt shuts down Blazing Duet channel"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.5,
+          "reason": "Time Journey purges Violet Requiem airborne combo"
+        },
+        {
+          "heroName": "Helcurt",
+          "advantageDelta": -6.2,
+          "reason": "Silence prevents jump execution"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.8,
+          "reason": "Group airborne extends Violet Requiem duration"
+        }
+      ]
+    },
+    {
+      "id": "gusion",
+      "name": "Gusion",
+      "primaryRole": "Assassin",
+      "secondaryRole": "Mage",
+      "lane": "Mid",
+      "baseWinRate": 51.0,
+      "banRate": 18.0,
+      "pickRate": 7.8,
+      "mplTier": "A",
+      "mplPresence": 25.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.8,
+          "reason": "Shadowblade dagger burst teleports and executes instantly"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.5,
+          "reason": "Scythe hook stuns Gusion mid-dash, canceling dagger return"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -6.2,
+          "reason": "Bouncing ball stops dagger pursuit dash"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Clustered targets absorb 10 dagger recall burst"
+        }
+      ]
+    },
+    {
+      "id": "hanabi",
+      "name": "Hanabi",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 50.5,
+      "banRate": 12.0,
+      "pickRate": 9.0,
+      "mplTier": "B",
+      "mplPresence": 8.0,
+      "counters": [
+        {
+          "heroName": "Crowd Control tanks",
+          "advantageDelta": 5.2,
+          "reason": "Ninjutsu shield provides crowd control immunity"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -7.2,
+          "reason": "Shadow dive bursts through flower shield instantly"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.8,
+          "reason": "Bulwark reflects petalgouke bouncing petals back"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Lolita",
+          "synergyScore": 5.0,
+          "reason": "Extra shield keeps Hanabi CC immune state active"
+        }
+      ]
+    },
+    {
+      "id": "hanzo",
+      "name": "Hanzo",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 53.8,
+      "banRate": 46.0,
+      "pickRate": 12.0,
+      "mplTier": "S+",
+      "mplPresence": 78.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.8,
+          "reason": "Demon Pneuma dives towers and devours jungle camps"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -7.8,
+          "reason": "Hops walls to hunt down Hanzo's vulnerable sleeping body"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -7.5,
+          "reason": "Cables straight to hidden true body"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Johnson",
+          "synergyScore": 4.5,
+          "reason": "Provides body protection while ghost hunts"
+        }
+      ]
+    },
+    {
+      "id": "harith",
+      "name": "Harith",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 53.8,
+      "banRate": 58.0,
+      "pickRate": 12.5,
+      "mplTier": "S+",
+      "mplPresence": 88.0,
+      "counters": [
+        {
+          "heroName": "Brody",
+          "advantageDelta": 5.5,
+          "reason": "Zuma realm mobility dodges Abyss marks and out-trades"
+        },
+        {
+          "heroName": "Beatrix",
+          "advantageDelta": 5.0,
+          "reason": "Shield refresh absorbs sniper and rocket burst"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -7.5,
+          "reason": "King's Calling completely disables Chrono Dash"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -6.5,
+          "reason": "Bouncing ball stops dashes in the matrix"
+        },
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -7.0,
+          "reason": "Frequent dashes trigger non-stop Phoveus ultimate slams"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Cluster allows Harith sword synchro blast to double hit"
+        }
+      ]
+    },
+    {
+      "id": "harley",
+      "name": "Harley",
+      "primaryRole": "Mage",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 50.8,
+      "banRate": 12.0,
+      "pickRate": 5.2,
+      "mplTier": "B",
+      "mplPresence": 15.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Space Escape card ring burst pops squishy carries instantly"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -7.2,
+          "reason": "Bulwark blocks all poker trick cards nullifying ring damage"
+        },
+        {
+          "heroName": "Radiant Armor",
+          "advantageDelta": -6.5,
+          "reason": "Multi-hit cards stack radiant magic reduction"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Saber",
+          "synergyScore": 4.5,
+          "reason": "Double single-target assassination burst"
+        }
+      ]
+    },
+    {
+      "id": "hayabusa",
+      "name": "Hayabusa",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 53.4,
+      "banRate": 68.0,
+      "pickRate": 11.0,
+      "mplTier": "S+",
+      "mplPresence": 82.0,
+      "counters": [
+        {
+          "heroName": "Beatrix",
+          "advantageDelta": 5.8,
+          "reason": "Shadow teleports isolate and shred solo marksmen"
+        },
+        {
+          "heroName": "Xavier",
+          "advantageDelta": 5.2,
+          "reason": "Shadow track evades skillshots and bursts backline"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": -6.0,
+          "reason": "Instant point-and-click airborne burst"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.0,
+          "reason": "Blocks quad shadow dashes"
+        },
+        {
+          "heroName": "Sun",
+          "advantageDelta": -4.5,
+          "reason": "Doppelgangers dilute Ougi Shadow Kill damage"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 4.8,
+          "reason": "Guiding Wind provides escape routes after dives"
+        }
+      ]
+    },
+    {
+      "id": "helcurt",
+      "name": "Helcurt",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Roam",
+      "baseWinRate": 52.2,
+      "banRate": 38.0,
+      "pickRate": 6.8,
+      "mplTier": "S",
+      "mplPresence": 45.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 7.0,
+          "reason": "Prowler stealth silence shuts down cables on arrival"
+        },
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.2,
+          "reason": "Dark Night falls blindness into instant stinger execution"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": -6.5,
+          "reason": "High HP ring aura breaks stealth and absorbs burst"
+        },
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -6.0,
+          "reason": "Time Journey purges silence and shields team in darkness"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Aldous",
+          "synergyScore": 5.2,
+          "reason": "Blackout global darkness complements Aldous charge"
+        }
+      ]
+    },
+    {
+      "id": "hilda",
+      "name": "Hilda",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Tank",
+      "lane": "Roam",
+      "baseWinRate": 51.6,
+      "banRate": 14.0,
+      "pickRate": 4.8,
+      "mplTier": "A",
+      "mplPresence": 26.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.0,
+          "reason": "Bush invades and silences early purple buff attempts"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 5.8,
+          "reason": "Invades blue buff and disrupts energy economy"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.5,
+          "reason": "Fire kiting burns through bush regeneration"
+        },
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -6.0,
+          "reason": "True damage shreds bush armor stack"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Saber",
+          "synergyScore": 5.2,
+          "reason": "Aggressive level 1 jungle lock invasion"
+        }
+      ]
+    },
+    {
+      "id": "hylos",
+      "name": "Hylos",
+      "primaryRole": "Tank",
+      "secondaryRole": "Fighter",
+      "lane": "Roam",
+      "baseWinRate": 54.5,
+      "banRate": 68.0,
+      "pickRate": 15.0,
+      "mplTier": "S+",
+      "mplPresence": 86.0,
+      "counters": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": 6.5,
+          "reason": "Ring of Punishment slow + Thunder Belt true damage prevents wall escapes"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": 6.2,
+          "reason": "Colossal HP pool soaks Shadow Kill effortlessly while Law and Order stuns"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.0,
+          "reason": "Punishment aura ticks chip Fanny down as she cables through team"
+        },
+        {
+          "heroName": "Roger",
+          "advantageDelta": 5.8,
+          "reason": "Immense bulk out-lasts wolf form burst; permanent slow secures kill"
+        },
+        {
+          "heroName": "Nolan",
+          "advantageDelta": 5.5,
+          "reason": "Tankiness soaks rift combos and locks Nolan down"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -8.5,
+          "reason": "Lightwheel Mark true percentage damage disintegrates colossal HP"
+        },
+        {
+          "heroName": "Lunox",
+          "advantageDelta": -7.2,
+          "reason": "Chaos Assault scales directly with maximum target HP"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.5,
+          "reason": "Continuous pushback and slow prevents Hylos from ever reaching frontline"
+        },
+        {
+          "heroName": "Claude",
+          "advantageDelta": -6.0,
+          "reason": "Demon Hunter Sword shreds HP while Claude blinks out of Ring of Punishment"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Roger",
+          "synergyScore": 6.0,
+          "reason": "Pathway of Life supercharges Roger wolf form chase down speed"
+        },
+        {
+          "heroName": "Harith",
+          "synergyScore": 5.8,
+          "reason": "Speedway provides high-speed platform for Harith infinite dashes"
+        },
+        {
+          "heroName": "Suyou",
+          "synergyScore": 5.5,
+          "reason": "Frontline wall grants Suyou time to charge immortal heavy cleaves"
+        }
+      ]
+    },
+    {
+      "id": "irithel",
+      "name": "Irithel",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 51.5,
+      "banRate": 8.5,
+      "pickRate": 6.0,
+      "mplTier": "A",
+      "mplPresence": 22.0,
+      "counters": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 5.2,
+          "reason": "Shoots while moving to kite predictable tank engagements"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": -6.5,
+          "reason": "Point and click airborne deletes before crossbow kite"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.2,
+          "reason": "Shield blocks heavy crossbow splash bolts"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 5.0,
+          "reason": "Extreme movement speed mobile firing squad"
+        }
+      ]
+    },
+    {
+      "id": "ixia",
+      "name": "Ixia",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 51.5,
+      "banRate": 16.0,
+      "pickRate": 6.5,
+      "mplTier": "A",
+      "mplPresence": 35.0,
+      "counters": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 5.8,
+          "reason": "Full Barrage fan shape sweeps enemy tank frontline from safe zone"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -7.2,
+          "reason": "Wall dive slashes Ixia during stationary Full Barrage channel"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -7.0,
+          "reason": "Bulwark blocks all barrage bullets completely"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.0,
+          "reason": "Implosion clusters 5 enemies inside Full Barrage cone"
+        }
+      ]
+    },
+    {
+      "id": "jawhead",
+      "name": "Jawhead",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Tank",
+      "lane": "Roam",
+      "baseWinRate": 51.5,
+      "banRate": 12.0,
+      "pickRate": 5.5,
+      "mplTier": "A",
+      "mplPresence": 28.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.8,
+          "reason": "Ejector rocket throws immobile squishies into ally deathball"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.5,
+          "reason": "Knocks Jawhead back when rushing in for Ejector throw"
+        },
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -6.0,
+          "reason": "Time Journey negates throw displacement"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Eudora",
+          "synergyScore": 5.5,
+          "reason": "Throws target straight into lightning stun deletion"
+        }
+      ]
+    },
+    {
+      "id": "johnson",
+      "name": "Johnson",
+      "primaryRole": "Tank",
+      "secondaryRole": "Support",
+      "lane": "Roam",
+      "baseWinRate": 50.8,
+      "banRate": 22.0,
+      "pickRate": 8.0,
+      "mplTier": "B",
+      "mplPresence": 10.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Rapid touchdown crashes onto immobile squishies anywhere"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Grock",
+          "advantageDelta": -7.5,
+          "reason": "Guardian Barrier wall crashes speeding car instantly"
+        },
+        {
+          "heroName": "Zhask",
+          "advantageDelta": -6.2,
+          "reason": "Spawns Nightmaric Spawn to intercept speeding car"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Odette",
+          "synergyScore": 7.0,
+          "reason": "Car crash combo into Swan Song magic wipe"
+        }
+      ]
+    },
+    {
+      "id": "joy",
+      "name": "Joy",
+      "primaryRole": "Assassin",
+      "secondaryRole": "Mage",
+      "lane": "Jungle",
+      "baseWinRate": 52.8,
+      "banRate": 45.0,
+      "pickRate": 6.0,
+      "mplTier": "S+",
+      "mplPresence": 68.0,
+      "counters": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": 6.2,
+          "reason": "CC-immune rhythm dashes ignore time journey traps"
+        },
+        {
+          "heroName": "Novaria",
+          "advantageDelta": 6.5,
+          "reason": "Hyper-mobile rhythm hops weave through skillshots into backline"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -8.5,
+          "reason": "King's Calling ground field disables all rhythm dashes completely"
+        },
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -7.5,
+          "reason": "Every rhythm beat leap triggers Phoveus ultimate smash"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -7.0,
+          "reason": "Suppression ultimate ignores rhythm CC immunity"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 5.2,
+          "reason": "Guiding wind provides extra jump reset angles"
+        }
+      ]
+    },
+    {
+      "id": "julian",
+      "name": "Julian",
+      "primaryRole": "Mage",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 53.1,
+      "banRate": 48.0,
+      "pickRate": 13.5,
+      "mplTier": "S+",
+      "mplPresence": 75.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.8,
+          "reason": "Enhanced Chain airborne into Scythe burst kills in 0.5s"
+        },
+        {
+          "heroName": "Miya",
+          "advantageDelta": 6.0,
+          "reason": "Burst combo finishes before concealment reaction"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": -5.5,
+          "reason": "Airborne lock down prevents invulnerable enhanced dash"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.0,
+          "reason": "Bouncing ball stops enhanced sword dash"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.5,
+          "reason": "Clumps enemies for massive AoE enhanced scythe cleave"
+        },
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 5.0,
+          "reason": "Guiding wind repositioning after dive"
+        }
+      ]
+    },
+    {
+      "id": "kadita",
+      "name": "Kadita",
+      "primaryRole": "Mage",
+      "secondaryRole": "Assassin",
+      "lane": "Mid",
+      "baseWinRate": 52.7,
+      "banRate": 35.0,
+      "pickRate": 10.0,
+      "mplTier": "S",
+      "mplPresence": 66.0,
+      "counters": [
+        {
+          "heroName": "Zhuxin",
+          "advantageDelta": 6.0,
+          "reason": "CC immunity on Ocean Oddity ignores lantern displacement"
+        },
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Immunity wave dive + petrify + Rough Waves is instant kill"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -6.0,
+          "reason": "Time Journey frees petrified targets before Rough Waves converges"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.5,
+          "reason": "Rough Waves on clustered Implosion wipes all 5 enemies"
+        },
+        {
+          "heroName": "Atlas",
+          "synergyScore": 6.2,
+          "reason": "Fatal Links pull guarantees 100% full wave convergence damage"
+        }
+      ]
+    },
+    {
+      "id": "kagura",
+      "name": "Kagura",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 51.2,
+      "banRate": 10.0,
+      "pickRate": 6.5,
+      "mplTier": "A",
+      "mplPresence": 28.0,
+      "counters": [
+        {
+          "heroName": "Nana",
+          "advantageDelta": 6.0,
+          "reason": "Rasho Umbrella purge cancels Molina morph completely"
+        },
+        {
+          "heroName": "Eudora",
+          "advantageDelta": 5.5,
+          "reason": "Purge dashes out of lightning lock combo"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.5,
+          "reason": "Bouncing ball stops umbrella teleports"
+        },
+        {
+          "heroName": "Athena Shield",
+          "advantageDelta": -5.0,
+          "reason": "Absorbs umbrella burst combo"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Yin Yang Overturn clusters enemies for chain cc"
+        }
+      ]
+    },
+    {
+      "id": "kaja",
+      "name": "Kaja",
+      "primaryRole": "Support",
+      "secondaryRole": "Fighter",
+      "lane": "Roam",
+      "baseWinRate": 51.5,
+      "banRate": 16.0,
+      "pickRate": 4.5,
+      "mplTier": "A",
+      "mplPresence": 32.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 7.5,
+          "reason": "Divine Judgement suppression cannot be purged by cables"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 7.0,
+          "reason": "Grabs Ling off walls or sword storm recovery"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -5.2,
+          "reason": "Body-blocks whip latch"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -5.0,
+          "reason": "Pushes Kaja back before lasso range"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Saber",
+          "synergyScore": 5.2,
+          "reason": "Suppression whip pulls enemy directly into burst carry"
+        }
+      ]
+    },
+    {
+      "id": "karina",
+      "name": "Karina",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 51.2,
+      "banRate": 14.5,
+      "pickRate": 5.8,
+      "mplTier": "A",
+      "mplPresence": 20.0,
+      "counters": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": 6.8,
+          "reason": "Elusiveness grants complete immunity to basic attacks"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": 6.0,
+          "reason": "Blocks auto-attacks while dealing true damage"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Eudora",
+          "advantageDelta": -6.2,
+          "reason": "Targeted magic burst ignores auto-attack block"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -5.8,
+          "reason": "Suppression cancels dance of blades"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Aoe cluster sets up consecutive Shadow Rush resets"
+        }
+      ]
+    },
+    {
+      "id": "karrie",
+      "name": "Karrie",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 51.8,
+      "banRate": 32.0,
+      "pickRate": 12.5,
+      "mplTier": "S",
+      "mplPresence": 68.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 8.0,
+          "reason": "Lightwheel Mark true damage scales off Max HP, melting Hylos"
+        },
+        {
+          "heroName": "Uranus",
+          "advantageDelta": 7.2,
+          "reason": "True damage bypasses massive regen and armor"
+        },
+        {
+          "heroName": "Belerick",
+          "advantageDelta": 6.5,
+          "reason": "True percentage damage ignores damage reflection"
+        },
+        {
+          "heroName": "Grock",
+          "advantageDelta": 6.0,
+          "reason": "True damage bypasses passive physical defense"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Claude",
+          "advantageDelta": -5.0,
+          "reason": "Faster burst and mobility out-trades Karrie"
+        },
+        {
+          "heroName": "Natalia",
+          "advantageDelta": -5.5,
+          "reason": "Smoke bomb blocks basic attack stacks and silences"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Lolita",
+          "synergyScore": 5.0,
+          "reason": "Shield protects Karrie during dual wheel spin up"
+        }
+      ]
+    },
+    {
+      "id": "khaleed",
+      "name": "Khaleed",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 51.4,
+      "banRate": 12.0,
+      "pickRate": 4.5,
+      "mplTier": "A",
+      "mplPresence": 24.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Sandstorm charge dives backline"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -6.5,
+          "reason": "Suppression stops Quicksand heal"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.0,
+          "reason": "Scythe interrupts heal"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Raging Sandstorm into cluster"
+        }
+      ]
+    },
+    {
+      "id": "khufra",
+      "name": "Khufra",
+      "primaryRole": "Tank",
+      "secondaryRole": "Support",
+      "lane": "Roam",
+      "baseWinRate": 52.6,
+      "banRate": 38.0,
+      "pickRate": 12.0,
+      "mplTier": "S",
+      "mplPresence": 70.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 8.5,
+          "reason": "Bouncing ball cancels cable flight completely"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 7.2,
+          "reason": "Grounds and knocks up jumping wall dashes"
+        },
+        {
+          "heroName": "Lancelot",
+          "advantageDelta": 6.8,
+          "reason": "Blocks Puncture chains"
+        },
+        {
+          "heroName": "Harith",
+          "advantageDelta": 6.5,
+          "reason": "Interrupts Chrono Dash spam"
+        },
+        {
+          "heroName": "Joy",
+          "advantageDelta": 6.0,
+          "reason": "Bouncing ball disrupts rhythm dash combos"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.5,
+          "reason": "Time Journey purges Tyrant's Rage and Bouncing Ball CC"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.2,
+          "reason": "Knocks back Tyrant's Revenge jump initiates"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Pharsa",
+          "synergyScore": 5.5,
+          "reason": "Tyrant's Rage wall slams hold targets inside Feathered Air Strike"
+        },
+        {
+          "heroName": "Claude",
+          "synergyScore": 5.0,
+          "reason": "Knockups create space for Blazing Duet channel"
+        }
+      ]
+    },
+    {
+      "id": "kimmy",
+      "name": "Kimmy",
+      "primaryRole": "Marksman",
+      "secondaryRole": "Mage",
+      "lane": "Gold",
+      "baseWinRate": 50.2,
+      "banRate": 4.0,
+      "pickRate": 3.8,
+      "mplTier": "B",
+      "mplPresence": 8.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 5.2,
+          "reason": "Continuous chemical spray kites slow melee tanks"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -9.2,
+          "reason": "Guardian Bulwark completely absorbs continuous spray"
+        },
+        {
+          "heroName": "Radiant Armor",
+          "advantageDelta": -8.0,
+          "reason": "Multi-hit spray activates max radiant damage reduction"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 5.0,
+          "reason": "Guiding wind provides continuous mobile firing angles"
+        }
+      ]
+    },
+    {
+      "id": "lancelot",
+      "name": "Lancelot",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 51.8,
+      "banRate": 28.0,
+      "pickRate": 9.5,
+      "mplTier": "S",
+      "mplPresence": 52.0,
+      "counters": [
+        {
+          "heroName": "Novaria",
+          "advantageDelta": 6.0,
+          "reason": "Puncture dashes through minions to slice backline mages"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 5.8,
+          "reason": "Thorned rose invulnerability dodges airstrikes and dives"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -7.5,
+          "reason": "Bouncing Ball cancels every Puncture dash reset"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.5,
+          "reason": "Micro-stuns disrupt sword dance chains"
+        },
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -6.2,
+          "reason": "Every puncture triggers demonic force leap counters"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.5,
+          "reason": "Extra speed and shield allows extreme dive executions"
+        }
+      ]
+    },
+    {
+      "id": "lapulapu",
+      "name": "Lapu-Lapu",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 51.2,
+      "banRate": 10.0,
+      "pickRate": 6.0,
+      "mplTier": "A",
+      "mplPresence": 35.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Heavy blade stance dives backline with crowd control immunity"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -5.5,
+          "reason": "Interrupts twin blade prep before heavy stance switch"
+        },
+        {
+          "heroName": "Edith",
+          "advantageDelta": -5.2,
+          "reason": "Out-sustains and flips during ultimate charge"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Yve",
+          "synergyScore": 5.0,
+          "reason": "Real World Manipulation slow traps enemies for heavy smashes"
+        }
+      ]
+    },
+    {
+      "id": "layla",
+      "name": "Layla",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 50.2,
+      "banRate": 5.0,
+      "pickRate": 18.0,
+      "mplTier": "B",
+      "mplPresence": 10.0,
+      "counters": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": 2.5,
+          "reason": "Can poke from extreme range outside hook danger behind tanks"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -7.5,
+          "reason": "Zero mobility makes Layla food for cable dives"
+        },
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": -6.5,
+          "reason": "Zero escape against Flicker Implosion"
+        },
+        {
+          "heroName": "Atlas",
+          "advantageDelta": -6.5,
+          "reason": "Fatal Links pulls with no response"
+        },
+        {
+          "heroName": "Yu Zhong",
+          "advantageDelta": -6.0,
+          "reason": "Black Dragon dives directly on top of her"
+        },
+        {
+          "heroName": "Kadita",
+          "advantageDelta": -6.5,
+          "reason": "Rough Waves combo is 100% lethal"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Lolita",
+          "synergyScore": 5.0,
+          "reason": "Shield defends Layla while she snipes from the backline"
+        },
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 4.5,
+          "reason": "Frontline wall lets Layla safely free-fire"
+        }
+      ]
+    },
+    {
+      "id": "leomord",
+      "name": "Leomord",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 51.0,
+      "banRate": 8.0,
+      "pickRate": 4.0,
+      "mplTier": "A",
+      "mplPresence": 16.0,
+      "counters": [
+        {
+          "heroName": "Low HP comps",
+          "advantageDelta": 6.2,
+          "reason": "The Black Steed guarantees 100% critical strikes below 50% HP"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -6.5,
+          "reason": "Suppression halts mounted horse charge"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.0,
+          "reason": "Micro-stuns disrupt horse mounting sequence"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.8,
+          "reason": "Barbiel mount rampage with invulnerability shield"
+        }
+      ]
+    },
+    {
+      "id": "lesley",
+      "name": "Lesley",
+      "primaryRole": "Marksman",
+      "secondaryRole": "Assassin",
+      "lane": "Gold",
+      "baseWinRate": 50.8,
+      "banRate": 15.0,
+      "pickRate": 8.5,
+      "mplTier": "A",
+      "mplPresence": 18.0,
+      "counters": [
+        {
+          "heroName": "Uranus",
+          "advantageDelta": 6.0,
+          "reason": "Lethal Shot true damage crits cut through massive armor stack"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": -7.0,
+          "reason": "Triple Sweep locks on during camouflage and deletes"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.5,
+          "reason": "Bulwark reflects Ultimate Snipe bullets back"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Franco",
+          "synergyScore": 4.8,
+          "reason": "Suppression holds target for lethal true damage crits"
+        }
+      ]
+    },
+    {
+      "id": "ling",
+      "name": "Ling",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 53.6,
+      "banRate": 72.0,
+      "pickRate": 12.0,
+      "mplTier": "S+",
+      "mplPresence": 85.0,
+      "counters": [
+        {
+          "heroName": "Novaria",
+          "advantageDelta": 6.0,
+          "reason": "Traverses walls to dive long-range artillery"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 5.5,
+          "reason": "Invulnerable ultimate dodges air strikes and dives backline"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -7.2,
+          "reason": "Bouncing ball blocks wall leaps and sword dashes"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -5.8,
+          "reason": "Pulls and stuns out of sword recovery"
+        },
+        {
+          "heroName": "Kaja",
+          "advantageDelta": -6.2,
+          "reason": "Suppression pull grabs Ling off swords"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.8,
+          "reason": "Gives Ling durability and slows retreating enemies"
+        }
+      ]
+    },
+    {
+      "id": "lolita",
+      "name": "Lolita",
+      "primaryRole": "Support",
+      "secondaryRole": "Tank",
+      "lane": "Roam",
+      "baseWinRate": 53.7,
+      "banRate": 28.0,
+      "pickRate": 8.5,
+      "mplTier": "S",
+      "mplPresence": 64.0,
+      "counters": [
+        {
+          "heroName": "Claude",
+          "advantageDelta": 6.5,
+          "reason": "Shield reflects or blocks bullets from Blazing Duet"
+        },
+        {
+          "heroName": "Chang'e",
+          "advantageDelta": 8.0,
+          "reason": "Guardian's Bulwark deflects Meteor Shower completely"
+        },
+        {
+          "heroName": "Beatrix",
+          "advantageDelta": 6.0,
+          "reason": "Reflects sniper and machine gun rounds"
+        },
+        {
+          "heroName": "Harley",
+          "advantageDelta": 5.8,
+          "reason": "Blocks Poker Trick magic cards"
+        },
+        {
+          "heroName": "Gusion",
+          "advantageDelta": 5.2,
+          "reason": "Shield deflects returned daggers"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -5.5,
+          "reason": "Knocks back and cancels giant hammer slam windup"
+        },
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -6.0,
+          "reason": "Time Journey cleanses full screen hammer stun"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Ixia",
+          "synergyScore": 5.2,
+          "reason": "Lolita shield deflects incoming projectiles during Ixia ultimate"
+        }
+      ]
+    },
+    {
+      "id": "lunox",
+      "name": "Lunox",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.4,
+      "banRate": 26.0,
+      "pickRate": 6.5,
+      "mplTier": "S",
+      "mplPresence": 46.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 7.8,
+          "reason": "Chaos Assault converts magic pen into % max HP shred"
+        },
+        {
+          "heroName": "Uranus",
+          "advantageDelta": 7.2,
+          "reason": "Continuous Chaos bursts shred tank health pools"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.5,
+          "reason": "Shield blocks Chaos Assault projectiles"
+        },
+        {
+          "heroName": "Saber",
+          "advantageDelta": -6.0,
+          "reason": "Burst airborne deletes before Brilliance invulnerability flips"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Clusters enemies for Chaos Assault piercing"
+        }
+      ]
+    },
+    {
+      "id": "luoyi",
+      "name": "Luo Yi",
+      "primaryRole": "Mage",
+      "secondaryRole": "Support",
+      "lane": "Mid",
+      "baseWinRate": 52.6,
+      "banRate": 28.0,
+      "pickRate": 6.8,
+      "mplTier": "S",
+      "mplPresence": 48.0,
+      "counters": [
+        {
+          "heroName": "Estes",
+          "advantageDelta": 8.5,
+          "reason": "Yin-Yang Duality triggers catastrophic chain reactions when enemies group"
+        },
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 7.0,
+          "reason": "Yin-Yang reactions pull clustered enemies into each other"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -6.8,
+          "reason": "Wall jumps dodge predictable ground duality markers"
+        },
+        {
+          "heroName": "Radiant Armor",
+          "advantageDelta": -5.5,
+          "reason": "Absorbs consecutive mark trigger damage"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Terizla",
+          "synergyScore": 6.2,
+          "reason": "Diversion teleport delivers Terizla directly into enemy backline"
+        }
+      ]
+    },
+    {
+      "id": "lylia",
+      "name": "Lylia",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.6,
+      "banRate": 18.0,
+      "pickRate": 9.0,
+      "mplTier": "A",
+      "mplPresence": 50.0,
+      "counters": [
+        {
+          "heroName": "Grock",
+          "advantageDelta": 5.5,
+          "reason": "Magic explosive gloom spam slows and eats Grock HP"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": -5.5,
+          "reason": "Instant burst executes before Black Shoes rewind can be pressed"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Hylos",
+          "synergyScore": 4.5,
+          "reason": "Pathway slow locks enemies inside Shadow Energy detonations"
+        }
+      ]
+    },
+    {
+      "id": "martis",
+      "name": "Martis",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 51.8,
+      "banRate": 30.0,
+      "pickRate": 7.5,
+      "mplTier": "S",
+      "mplPresence": 45.0,
+      "counters": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 6.5,
+          "reason": "Mortal Coil grants CC immunity to dance through Implosion"
+        },
+        {
+          "heroName": "Atlas",
+          "advantageDelta": 6.0,
+          "reason": "Ignores Fatal Links pull with second skill immunity"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -7.0,
+          "reason": "Suppression ultimate ignores Mortal Coil CC immunity"
+        },
+        {
+          "heroName": "Kaja",
+          "advantageDelta": -6.5,
+          "reason": "Divine Judgement suppression grabs Martis mid-spin"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.8,
+          "reason": "Enables chain Decimation true damage reset rampages"
+        }
+      ]
+    },
+    {
+      "id": "masha",
+      "name": "Masha",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Tank",
+      "lane": "Exp",
+      "baseWinRate": 52.0,
+      "banRate": 28.0,
+      "pickRate": 5.0,
+      "mplTier": "S",
+      "mplPresence": 40.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.5,
+          "reason": "Triple HP bar dive ignores initial burst and disarms auto-attackers"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": 6.8,
+          "reason": "Disarm halts basic attacks while Thunderclap executes"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -7.0,
+          "reason": "Anti-heal cuts HP bar lifesteal recovery"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -6.5,
+          "reason": "Suppression holds Masha through wild power"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.5,
+          "reason": "Heartguard lets Masha run down backlines unstopped"
+        }
+      ]
+    },
+    {
+      "id": "mathilda",
+      "name": "Mathilda",
+      "primaryRole": "Support",
+      "secondaryRole": "Assassin",
+      "lane": "Roam",
+      "baseWinRate": 52.8,
+      "banRate": 42.0,
+      "pickRate": 9.0,
+      "mplTier": "S",
+      "mplPresence": 74.0,
+      "counters": [
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 5.0,
+          "reason": "Guiding Wind enables all allies to fly out of Penalty Zone"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -5.0,
+          "reason": "Hook/Suppression interrupts Circling Eagle flight"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.2,
+          "reason": "Bouncing ball knocks Mathilda out of flight arc"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Hayabusa",
+          "synergyScore": 4.8,
+          "reason": "Free disengage flight after deep shadow dive"
+        },
+        {
+          "heroName": "Beatrix",
+          "synergyScore": 5.0,
+          "reason": "Mobility repositioning for sniper angles"
+        }
+      ]
+    },
+    {
+      "id": "melissa",
+      "name": "Melissa",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 53.9,
+      "banRate": 54.0,
+      "pickRate": 14.0,
+      "mplTier": "S+",
+      "mplPresence": 88.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 7.8,
+          "reason": "Go Away doll barrier physically blocks cable dives completely"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 6.8,
+          "reason": "Barrier field denies melee sword plunge approach"
+        },
+        {
+          "heroName": "Chou",
+          "advantageDelta": 6.5,
+          "reason": "Doll barrier knocks Chou back on dash attempts"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -7.0,
+          "reason": "Shield blocks Muddles needles and basic attacks"
+        },
+        {
+          "heroName": "Xavier",
+          "advantageDelta": -6.2,
+          "reason": "Long range laser pokes Melissa outside barrier protection"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.5,
+          "reason": "Muddles needle doll binds clustered targets for triple bounce damage"
+        }
+      ]
+    },
+    {
+      "id": "minotaur",
+      "name": "Minotaur",
+      "primaryRole": "Tank",
+      "secondaryRole": "Support",
+      "lane": "Roam",
+      "baseWinRate": 52.4,
+      "banRate": 15.0,
+      "pickRate": 6.2,
+      "mplTier": "S",
+      "mplPresence": 40.0,
+      "counters": [
+        {
+          "heroName": "Claude",
+          "advantageDelta": 6.0,
+          "reason": "Rage ultimate knocks airborne and cancels Blazing Duet"
+        },
+        {
+          "heroName": "Harith",
+          "advantageDelta": 5.5,
+          "reason": "Triple airborne CC prevents dashes"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -8.0,
+          "reason": "Time Journey purges Minotaur triple knockup completely"
+        },
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -6.2,
+          "reason": "True damage shreds bonus armor from roar"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Moskov",
+          "synergyScore": 5.5,
+          "reason": "Cluster airborne groups enemies for wall spear stuns"
+        }
+      ]
+    },
+    {
+      "id": "minsitthar",
+      "name": "Minsitthar",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Support",
+      "lane": "Roam",
+      "baseWinRate": 52.8,
+      "banRate": 36.0,
+      "pickRate": 9.5,
+      "mplTier": "A",
+      "mplPresence": 58.0,
+      "counters": [
+        {
+          "heroName": "Harith",
+          "advantageDelta": 7.5,
+          "reason": "King's Calling grounds target; Harith cannot cast Chrono Dash"
+        },
+        {
+          "heroName": "Nolan",
+          "advantageDelta": 6.5,
+          "reason": "Prevents cosmic rift dashes entirely"
+        },
+        {
+          "heroName": "Joy",
+          "advantageDelta": 6.8,
+          "reason": "Grounding field denies rhythm dashes"
+        },
+        {
+          "heroName": "Lancelot",
+          "advantageDelta": 6.0,
+          "reason": "Disables all blink and dash skills"
+        },
+        {
+          "heroName": "Benedetta",
+          "advantageDelta": 6.2,
+          "reason": "Grounds passive dash and sword abilities"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -6.5,
+          "reason": "Purges hook stun and enables walk-out of zone"
+        },
+        {
+          "heroName": "Xavier",
+          "advantageDelta": -5.5,
+          "reason": "Pokes from outside spear range"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Claude",
+          "synergyScore": 5.2,
+          "reason": "Grounding ring traps enemies for Claude's entire ultimate"
+        }
+      ]
+    },
+    {
+      "id": "miya",
+      "name": "Miya",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 53.8,
+      "banRate": 40.0,
+      "pickRate": 16.5,
+      "mplTier": "S+",
+      "mplPresence": 76.0,
+      "counters": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": 3.0,
+          "reason": "Hidden Moonlight ultimate purges Saber airborne lock"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -6.8,
+          "reason": "Wall dive burst executes before ultimate can be triggered"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": -5.0,
+          "reason": "Moskov out-trades and pins with Spear of Misery"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 4.5,
+          "reason": "Moon Arrow multi-shots shred clustered targets"
+        }
+      ]
+    },
+    {
+      "id": "moskov",
+      "name": "Moskov",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 53.2,
+      "banRate": 50.0,
+      "pickRate": 15.0,
+      "mplTier": "S",
+      "mplPresence": 75.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 5.8,
+          "reason": "Knocks cable dives into nearby walls for a 1.5s stun"
+        },
+        {
+          "heroName": "Miya",
+          "advantageDelta": 5.0,
+          "reason": "Piercing basic attacks out-range and push away"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lesley",
+          "advantageDelta": -5.2,
+          "reason": "Outranges Moskov and pokes with true damage from stealth"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.0,
+          "reason": "Interrupts Abyss Walk teleport dash"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Grock",
+          "synergyScore": 6.2,
+          "reason": "Grock's Guardian Barrier creates instant walls for Spear stuns"
+        }
+      ]
+    },
+    {
+      "id": "nana",
+      "name": "Nana",
+      "primaryRole": "Mage",
+      "secondaryRole": "Support",
+      "lane": "Mid",
+      "baseWinRate": 51.8,
+      "banRate": 24.5,
+      "pickRate": 12.0,
+      "mplTier": "A",
+      "mplPresence": 18.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.8,
+          "reason": "Molina morphs cable divers into helpless critters"
+        },
+        {
+          "heroName": "Chou",
+          "advantageDelta": 5.2,
+          "reason": "Molina cancels dash combos"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Kagura",
+          "advantageDelta": -5.5,
+          "reason": "Purge cancels morph and umbrella out-ranges Nana"
+        },
+        {
+          "heroName": "Novaria",
+          "advantageDelta": -5.0,
+          "reason": "Astral sphere pokes Nana from afar"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Molina zone controls followed by implosion"
+        }
+      ]
+    },
+    {
+      "id": "natalia",
+      "name": "Natalia",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Roam",
+      "baseWinRate": 51.4,
+      "banRate": 16.0,
+      "pickRate": 4.5,
+      "mplTier": "A",
+      "mplPresence": 22.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.2,
+          "reason": "Stealth silence eliminates immobile marksmen before reaction"
+        },
+        {
+          "heroName": "Xavier",
+          "advantageDelta": 6.5,
+          "reason": "Stalks and silences long-range artillery mages"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Rafaela",
+          "advantageDelta": -7.0,
+          "reason": "Reveals stealth with automated light pulses"
+        },
+        {
+          "heroName": "Hylos",
+          "advantageDelta": -6.0,
+          "reason": "Ring of punishment exposes Natalia and out-tanks burst"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Saber",
+          "synergyScore": 4.8,
+          "reason": "Dual roam assassin pickoff terror"
+        }
+      ]
+    },
+    {
+      "id": "natan",
+      "name": "Natan",
+      "primaryRole": "Marksman",
+      "secondaryRole": "Mage",
+      "lane": "Gold",
+      "baseWinRate": 52.6,
+      "banRate": 35.0,
+      "pickRate": 12.0,
+      "mplTier": "S",
+      "mplPresence": 66.0,
+      "counters": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 5.5,
+          "reason": "Magic basic attack DPS melts physical armor tanks"
+        },
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 5.0,
+          "reason": "Interference knockback cancels hammer engages"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -6.0,
+          "reason": "Shadow teleports isolate and delete Natan before reverse clone fires"
+        },
+        {
+          "heroName": "Saber",
+          "advantageDelta": -5.8,
+          "reason": "Airborne executes through Inspire"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.5,
+          "reason": "Shield blocks dual reverse clone projectiles"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.0,
+          "reason": "Group pull allows Natan boomerang to double hit entire team"
+        }
+      ]
+    },
+    {
+      "id": "nolan",
+      "name": "Nolan",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 52.8,
+      "banRate": 52.0,
+      "pickRate": 9.0,
+      "mplTier": "S",
+      "mplPresence": 72.0,
+      "counters": [
+        {
+          "heroName": "Lesley",
+          "advantageDelta": 5.5,
+          "reason": "Rapid cosmic rift burst deletes before camouflage escape"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -6.5,
+          "reason": "King's Calling grounds and silences rift dashes"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.5,
+          "reason": "Cancels rift dashes with bouncing ball"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Atlas",
+          "synergyScore": 5.2,
+          "reason": "Fatal Links gathers victims into cosmic rift chain explosions"
+        }
+      ]
+    },
+    {
+      "id": "novaria",
+      "name": "Novaria",
+      "primaryRole": "Mage",
+      "secondaryRole": "Support",
+      "lane": "Mid",
+      "baseWinRate": 51.9,
+      "banRate": 28.0,
+      "pickRate": 10.0,
+      "mplTier": "A",
+      "mplPresence": 58.0,
+      "counters": [
+        {
+          "heroName": "Natalia",
+          "advantageDelta": 7.0,
+          "reason": "Astral Echo reveals all invisible/camouflaged heroes on map"
+        },
+        {
+          "heroName": "Lesley",
+          "advantageDelta": 6.5,
+          "reason": "Hitbox enlargement and reveal denies camouflage"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -6.0,
+          "reason": "Traverses terrain to reach Novaria sniping positions"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Franco",
+          "synergyScore": 5.0,
+          "reason": "Hitbox expansion and vision makes hooks virtually unmissable"
+        },
+        {
+          "heroName": "Xavier",
+          "synergyScore": 5.2,
+          "reason": "Vision reveal allows guaranteed cross-map laser snipes"
+        }
+      ]
+    },
+    {
+      "id": "odette",
+      "name": "Odette",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 51.4,
+      "banRate": 14.0,
+      "pickRate": 6.2,
+      "mplTier": "A",
+      "mplPresence": 18.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.8,
+          "reason": "Swan song shield and massive AoE magic melt immobile carries"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": -7.0,
+          "reason": "Push or knockup interrupts Swan Song channel immediately"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.8,
+          "reason": "Instant short cooldown scythe hook cancels concert channel"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Johnson",
+          "synergyScore": 7.5,
+          "reason": "Deadly vehicle delivery into instant Swan Song team wipe"
+        }
+      ]
+    },
+    {
+      "id": "paquito",
+      "name": "Paquito",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 51.8,
+      "banRate": 25.0,
+      "pickRate": 11.0,
+      "mplTier": "A",
+      "mplPresence": 56.0,
+      "counters": [
+        {
+          "heroName": "Beatrix",
+          "advantageDelta": 5.0,
+          "reason": "Double dash champ stance knocks up and executes solo marksmen"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Terizla",
+          "advantageDelta": -4.0,
+          "reason": "Terizla wins prolonged heavy trades"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -4.5,
+          "reason": "Bouncing ball blocks jab and dash combos"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 4.5,
+          "reason": "Speed buff allows rapid flank initiates"
+        }
+      ]
+    },
+    {
+      "id": "pharsa",
+      "name": "Pharsa",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.1,
+      "banRate": 22.0,
+      "pickRate": 11.0,
+      "mplTier": "S",
+      "mplPresence": 65.0,
+      "counters": [
+        {
+          "heroName": "Ixia",
+          "advantageDelta": 6.0,
+          "reason": "Air strike outranges and obliterates stationary Ixia"
+        },
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.5,
+          "reason": "Long range artillery bombs delete immobile marksmen"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -5.4,
+          "reason": "Cables dive into air strike circle and burst"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": -5.5,
+          "reason": "Invulnerable ultimate dives directly onto Pharsa"
+        },
+        {
+          "heroName": "Yu Zhong",
+          "advantageDelta": -5.5,
+          "reason": "Black Dragon ignores CC and crashes on Pharsa"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.0,
+          "reason": "Implosion clusters targets for 4x guaranteed air strikes"
+        },
+        {
+          "heroName": "Khufra",
+          "synergyScore": 5.5,
+          "reason": "Tyrant's Rage holds targets stationary in bombing radius"
+        }
+      ]
+    },
+    {
+      "id": "phoveus",
+      "name": "Phoveus",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 54.2,
+      "banRate": 62.0,
+      "pickRate": 11.5,
+      "mplTier": "S+",
+      "mplPresence": 84.0,
+      "counters": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": 7.5,
+          "reason": "Revamped Astaroth force slams and displacements shut down wall escapes"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 7.2,
+          "reason": "Demon force knockup and heavy shields punish reckless cables"
+        },
+        {
+          "heroName": "Harith",
+          "advantageDelta": 7.0,
+          "reason": "Chrono Dash triggers constant shields and relentless crushing slams"
+        },
+        {
+          "heroName": "Nolan",
+          "advantageDelta": 6.8,
+          "reason": "Displacement slams interrupt rift charging and shield through combo"
+        },
+        {
+          "heroName": "Joy",
+          "advantageDelta": 6.5,
+          "reason": "Disrupts dance rhythm with forced knockups and massive shield absorb"
+        },
+        {
+          "heroName": "Cici",
+          "advantageDelta": 6.2,
+          "reason": "Yo-yo hops feed consecutive crushing leaps"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": 6.0,
+          "reason": "Continuous scythe hops trigger constant counter slams"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Esmeralda",
+          "advantageDelta": -7.5,
+          "reason": "Frostmoon Shield continuously absorbs Phoveus massive shields"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.0,
+          "reason": "Anti-heal passive and rolling mobility nullify Phoveus sustain"
+        },
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -6.5,
+          "reason": "True damage shreds through both HP and shield barriers"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.5,
+          "reason": "Implosion knockups set up instant 5-man Astaroth demon force slams"
+        },
+        {
+          "heroName": "Chip",
+          "synergyScore": 6.2,
+          "reason": "Shortcut portal drops Phoveus directly onto clustered dash-reliant carries"
+        },
+        {
+          "heroName": "Terizla",
+          "synergyScore": 6.0,
+          "reason": "Penalty Zone chains enemies in place for guaranteed smash combos"
+        }
+      ]
+    },
+    {
+      "id": "popolandkupa",
+      "name": "Popol and Kupa",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 51.5,
+      "banRate": 12.0,
+      "pickRate": 5.5,
+      "mplTier": "A",
+      "mplPresence": 25.0,
+      "counters": [
+        {
+          "heroName": "Natalia",
+          "advantageDelta": 6.5,
+          "reason": "Traps and Kupa bite detect stealth and stun assassins"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Claude",
+          "advantageDelta": -6.2,
+          "reason": "Blazing Duet melts Kupa while stacking attack speed"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -5.8,
+          "reason": "Shadow dives directly onto Popol bypassing wolf"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.0,
+          "reason": "Kupa bite stun chains with Implosion"
+        }
+      ]
+    },
+    {
+      "id": "rafaela",
+      "name": "Rafaela",
+      "primaryRole": "Support",
+      "secondaryRole": "None",
+      "lane": "Roam",
+      "baseWinRate": 51.0,
+      "banRate": 4.0,
+      "pickRate": 4.0,
+      "mplTier": "B",
+      "mplPresence": 12.0,
+      "counters": [
+        {
+          "heroName": "Natalia",
+          "advantageDelta": 6.2,
+          "reason": "Light of Retribution automatically reveals stealthed heroes"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Saber",
+          "advantageDelta": -5.8,
+          "reason": "Single-target execution deletes fragile support"
+        },
+        {
+          "heroName": "Chou",
+          "advantageDelta": -5.2,
+          "reason": "Immune to slow during dash and kicks Rafaela"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Bruno",
+          "synergyScore": 5.2,
+          "reason": "Holy Healing move speed allows aggressive ball pursuit"
+        }
+      ]
+    },
+    {
+      "id": "roger",
+      "name": "Roger",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Marksman",
+      "lane": "Jungle",
+      "baseWinRate": 53.5,
+      "banRate": 55.0,
+      "pickRate": 14.0,
+      "mplTier": "S+",
+      "mplPresence": 85.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.0,
+          "reason": "Gun poke slows and wolf form leap executes"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.0,
+          "reason": "Bouncing ball blocks wolf form lunges"
+        },
+        {
+          "heroName": "Saber",
+          "advantageDelta": -5.2,
+          "reason": "Airborne lock down prevents shapeshift immune frames"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.5,
+          "reason": "Heartguard gives wolf form immense longevity and movement"
+        },
+        {
+          "heroName": "Hylos",
+          "synergyScore": 5.0,
+          "reason": "Pathway of Life speed buff allows endless Roger chases"
+        }
+      ]
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Tank",
+      "lane": "Exp",
+      "baseWinRate": 53.2,
+      "banRate": 35.0,
+      "pickRate": 14.5,
+      "mplTier": "S",
+      "mplPresence": 74.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.5,
+          "reason": "Displacement hook and spin disrupts cable momentum"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 5.8,
+          "reason": "High lifesteal and hook interrupts landing on swords"
+        },
+        {
+          "heroName": "Dyrroth",
+          "advantageDelta": 4.5,
+          "reason": "Kites armor shred with hops and crowd control"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -5.5,
+          "reason": "Inherent anti-heal passive neuters Ruby's lifesteal sustainability"
+        },
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -6.0,
+          "reason": "Every Ruby hop triggers Phoveus ultimate smash"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Vexana",
+          "synergyScore": 5.0,
+          "reason": "Group pull lines up Eternal Guard slam"
+        },
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.0,
+          "reason": "Implosion into Wolf King hook chains creates impenetrable CC clump"
+        }
+      ]
+    },
+    {
+      "id": "saber",
+      "name": "Saber",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 51.0,
+      "banRate": 25.0,
+      "pickRate": 15.0,
+      "mplTier": "B",
+      "mplPresence": 22.0,
+      "counters": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": 6.0,
+          "reason": "Point-and-click airborne burst prevents shadow escape"
+        },
+        {
+          "heroName": "Claude",
+          "advantageDelta": 5.5,
+          "reason": "Triple Sweep locks Claude before teleport return"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 4.8,
+          "reason": "Target-lock ultimate shuts down low-HP cable dives"
+        },
+        {
+          "heroName": "Cici",
+          "advantageDelta": 5.0,
+          "reason": "Locks down and bursts during yoyo spin"
+        },
+        {
+          "heroName": "Lylia",
+          "advantageDelta": 5.5,
+          "reason": "Bursts before Black Shoes rewind can be activated"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": -3.0,
+          "reason": "Miya ultimate purges airborne CC and conceals"
+        },
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": -4.5,
+          "reason": "High physical armor and defensive peel nullifies burst"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 4.0,
+          "reason": "Safe flight exit after isolated target execution"
+        }
+      ]
+    },
+    {
+      "id": "selena",
+      "name": "Selena",
+      "primaryRole": "Assassin",
+      "secondaryRole": "Mage",
+      "lane": "Roam",
+      "baseWinRate": 50.8,
+      "banRate": 18.0,
+      "pickRate": 4.8,
+      "mplTier": "A",
+      "mplPresence": 26.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.8,
+          "reason": "Abyssal Arrow long-range 3s stun guarantees execution"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.5,
+          "reason": "Time Journey cleanses max duration abyssal arrow stun"
+        },
+        {
+          "heroName": "Lolita",
+          "advantageDelta": -6.2,
+          "reason": "Shield blocks arrow projectile"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Moskov",
+          "synergyScore": 5.0,
+          "reason": "Abyssal arrow stun sets up easy spear pin"
+        }
+      ]
+    },
+    {
+      "id": "silvanna",
+      "name": "Silvanna",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Mage",
+      "lane": "Exp",
+      "baseWinRate": 50.5,
+      "banRate": 4.0,
+      "pickRate": 3.8,
+      "mplTier": "B",
+      "mplPresence": 10.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.8,
+          "reason": "Imperial Justice ring traps cable users inside circular arena"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.0,
+          "reason": "Time Journey cleanses ring restraint and stun"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.0,
+          "reason": "Interrupts Spiral Strangling channel with scythe"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Guinevere",
+          "synergyScore": 5.0,
+          "reason": "Traps enemies in circle for guaranteed jump knockup"
+        }
+      ]
+    },
+    {
+      "id": "sun",
+      "name": "Sun",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 49.8,
+      "banRate": 4.0,
+      "pickRate": 4.5,
+      "mplTier": "B",
+      "mplPresence": 5.0,
+      "counters": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": 6.5,
+          "reason": "Doppelgangers absorb and dilute Ougi Shadow Kill damage"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -7.0,
+          "reason": "Lifesteals massively off clones with continuous scythe sweeps"
+        },
+        {
+          "heroName": "Terizla",
+          "advantageDelta": -6.5,
+          "reason": "Cleaves through clones and gains damage reduction"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 4.5,
+          "reason": "Shields true Sun among illusions"
+        }
+      ]
+    },
+    {
+      "id": "suyou",
+      "name": "Suyou",
+      "primaryRole": "Assassin",
+      "secondaryRole": "Fighter",
+      "lane": "Jungle",
+      "baseWinRate": 54.8,
+      "banRate": 84.0,
+      "pickRate": 14.5,
+      "mplTier": "S+",
+      "mplPresence": 96.0,
+      "counters": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": 6.5,
+          "reason": "Mortal tap blink and Immortal cleave interrupt wall jumping and burst in landing"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.2,
+          "reason": "Immortal hold 40% damage reduction soaks cable burst while heavy stun clips cables"
+        },
+        {
+          "heroName": "Nolan",
+          "advantageDelta": 5.8,
+          "reason": "Immortal stance absorbs rift burst and executes with dual-form scaling"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": 5.5,
+          "reason": "Immortal form cleave damage reduction out-trades Shadow Kill completely"
+        },
+        {
+          "heroName": "Roger",
+          "advantageDelta": 5.2,
+          "reason": "Dual stance out-ranges human poke and over-tanks wolf form finisher"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": 5.0,
+          "reason": "Tap lunge closes distance instantly through Abyss Walkers"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -7.5,
+          "reason": "King's Calling ground completely disables Suyou tap blinks and hold dashes"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -6.5,
+          "reason": "Iron Hook and Suppression bypass Immortal stance transitions entirely"
+        },
+        {
+          "heroName": "Kaja",
+          "advantageDelta": -6.0,
+          "reason": "Divine Judgment suppression drags Suyou into burst focus before stance engage"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.8,
+          "reason": "Bouncing Ball interrupts mortal dash chains"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 6.5,
+          "reason": "Guiding Wind grants unstoppable dive mobility and rapid retreat"
+        },
+        {
+          "heroName": "Chip",
+          "synergyScore": 6.2,
+          "reason": "Global shortcut portal flanks into immediate Immortal 5-man stun cleave"
+        },
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.8,
+          "reason": "Implosion gathers enemies for catastrophic Immortal blade damage"
+        },
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.5,
+          "reason": "Heartguard shield and movement speed allow perpetual immortal frontline fighting"
+        }
+      ]
+    },
+    {
+      "id": "terizla",
+      "name": "Terizla",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Tank",
+      "lane": "Exp",
+      "baseWinRate": 53.4,
+      "banRate": 48.0,
+      "pickRate": 14.0,
+      "mplTier": "S",
+      "mplPresence": 80.0,
+      "counters": [
+        {
+          "heroName": "Dyrroth",
+          "advantageDelta": 4.5,
+          "reason": "Body of Smith damage reduction mitigates armor pierce burst"
+        },
+        {
+          "heroName": "Paquito",
+          "advantageDelta": 4.0,
+          "reason": "Wins prolonged attrition trades with execution strike"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.5,
+          "reason": "Infinite slows and pushback kite Terizla's slow attack animations"
+        },
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -6.0,
+          "reason": "True damage shreds through passive damage resistance"
+        },
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -5.8,
+          "reason": "Time Journey frees all allies pulled by Penalty Zone hammer"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Pharsa",
+          "synergyScore": 6.0,
+          "reason": "Penalty Zone locks 3+ heroes for guaranteed air strike wipe"
+        }
+      ]
+    },
+    {
+      "id": "thamuz",
+      "name": "Thamuz",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 51.5,
+      "banRate": 10.0,
+      "pickRate": 5.8,
+      "mplTier": "A",
+      "mplPresence": 22.0,
+      "counters": [
+        {
+          "heroName": "Zilong",
+          "advantageDelta": 6.8,
+          "reason": "Grand Lord Lava explosion melts basic attack fighters"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -7.2,
+          "reason": "Anti-heal cuts Cauterant Inferno HP regeneration"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.5,
+          "reason": "Fire kiting keeps Thamuz from retrieving scythes"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.5,
+          "reason": "Gives molten tank movement speed and shield"
+        }
+      ]
+    },
+    {
+      "id": "tigreal",
+      "name": "Tigreal",
+      "primaryRole": "Tank",
+      "secondaryRole": "Support",
+      "lane": "Roam",
+      "baseWinRate": 53.5,
+      "banRate": 42.0,
+      "pickRate": 16.5,
+      "mplTier": "S",
+      "mplPresence": 62.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.5,
+          "reason": "Flicker Implosion offers zero reaction escape for immobiles"
+        },
+        {
+          "heroName": "Hanabi",
+          "advantageDelta": 4.5,
+          "reason": "Sacred Hammer pushes out of team shield range"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -9.0,
+          "reason": "Time Journey negates Implosion entirely"
+        },
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.5,
+          "reason": "Burst Fireball and Vengeance knockback peel engages"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Odette",
+          "synergyScore": 7.0,
+          "reason": "Classic Implosion + Swan Song lethal teamwipe combo"
+        },
+        {
+          "heroName": "Kadita",
+          "synergyScore": 6.5,
+          "reason": "Rough Waves on Implosion target cluster is instantaneous death"
+        },
+        {
+          "heroName": "Pharsa",
+          "synergyScore": 6.0,
+          "reason": "Guaranteed full damage Feathered Air Strike hits"
+        }
+      ]
+    },
+    {
+      "id": "uranus",
+      "name": "Uranus",
+      "primaryRole": "Tank",
+      "secondaryRole": "Fighter",
+      "lane": "Exp",
+      "baseWinRate": 50.8,
+      "banRate": 8.0,
+      "pickRate": 4.5,
+      "mplTier": "A",
+      "mplPresence": 22.0,
+      "counters": [
+        {
+          "heroName": "Poke comps",
+          "advantageDelta": 5.8,
+          "reason": "Radiance passive stacks endless HP regeneration"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -8.0,
+          "reason": "Passive anti-heal + Dominance cuts regeneration to shreds"
+        },
+        {
+          "heroName": "Karrie",
+          "advantageDelta": -7.5,
+          "reason": "True damage completely ignores shield and armor"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.2,
+          "reason": "Dual shield and heal makes frontline indestructible"
+        }
+      ]
+    },
+    {
+      "id": "vale",
+      "name": "Vale",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 51.5,
+      "banRate": 14.0,
+      "pickRate": 7.5,
+      "mplTier": "A",
+      "mplPresence": 18.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.2,
+          "reason": "Wind tear knockup into windstorm deletes immobiles"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -7.0,
+          "reason": "Time Journey purges airborne wind storm CC"
+        },
+        {
+          "heroName": "Athena Shield",
+          "advantageDelta": -6.0,
+          "reason": "Soaks wind storm explosive burst"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.5,
+          "reason": "Vacuum pull into full windstorm magic explosion"
+        }
+      ]
+    },
+    {
+      "id": "valentina",
+      "name": "Valentina",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.5,
+      "banRate": 40.0,
+      "pickRate": 11.5,
+      "mplTier": "S",
+      "mplPresence": 72.0,
+      "counters": [
+        {
+          "heroName": "Faramis",
+          "advantageDelta": 8.0,
+          "reason": "Steals Cult Altar to grant her own team full resurrection"
+        },
+        {
+          "heroName": "Guinevere",
+          "advantageDelta": 6.5,
+          "reason": "Steals Violet Requiem and turns airborne against Guinevere"
+        },
+        {
+          "heroName": "Atlas",
+          "advantageDelta": 6.0,
+          "reason": "Steals Fatal Links and pulls enemy team first"
+        },
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 5.8,
+          "reason": "Steals Implosion for free 5-man crowd control"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Helcurt",
+          "advantageDelta": -5.5,
+          "reason": "Silence prevents ultimate theft"
+        },
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -5.0,
+          "reason": "Shadow Strike dash triggers ultimate punishment"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Khufra",
+          "synergyScore": 5.0,
+          "reason": "Sets up stolen teamfight ultimates"
+        }
+      ]
+    },
+    {
+      "id": "valir",
+      "name": "Valir",
+      "primaryRole": "Mage",
+      "secondaryRole": "Support",
+      "lane": "Mid",
+      "baseWinRate": 52.0,
+      "banRate": 22.0,
+      "pickRate": 6.5,
+      "mplTier": "S",
+      "mplPresence": 42.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 7.5,
+          "reason": "Continuous fireball burn and slow neutralizes horse walk"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": 6.8,
+          "reason": "Searing Torrent pushes rolling ball away and kites with slow"
+        },
+        {
+          "heroName": "Barats",
+          "advantageDelta": 6.5,
+          "reason": "Self-purge breaks suppression; fireballs kite dinosaur"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -7.0,
+          "reason": "Wall jumps dive over fireballs and burst from above"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -6.5,
+          "reason": "Shadow dives behind flame push"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Claude",
+          "synergyScore": 5.0,
+          "reason": "Fire wall peel keeps enemies off marksman"
+        }
+      ]
+    },
+    {
+      "id": "vexana",
+      "name": "Vexana",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.4,
+      "banRate": 22.0,
+      "pickRate": 13.0,
+      "mplTier": "A",
+      "mplPresence": 45.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.0,
+          "reason": "Charmed Spectre horror CC forces into Eternal Guard slam"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Lancelot",
+          "advantageDelta": -5.0,
+          "reason": "Invulnerable dashes dodge horror hand and burst"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Ruby",
+          "synergyScore": 5.0,
+          "reason": "Ruby pull clusters enemies for massive undead knight smash"
+        }
+      ]
+    },
+    {
+      "id": "wanwan",
+      "name": "Wanwan",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 51.8,
+      "banRate": 32.0,
+      "pickRate": 6.2,
+      "mplTier": "S",
+      "mplPresence": 45.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 7.0,
+          "reason": "Hops around giant hitbox to trigger all 3 weaknesses easily"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": 6.5,
+          "reason": "Dashes trigger weaknesses off frontlines effortlessly"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -8.5,
+          "reason": "Every jump hop triggers Phoveus ultimate smash continuously"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -7.5,
+          "reason": "Bouncing Ball cancels dart hops"
+        },
+        {
+          "heroName": "Wind of Nature",
+          "advantageDelta": -6.5,
+          "reason": "Physical immunity completely absorbs Crossbow of Tang"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.2,
+          "reason": "Holds targets steady to unlock all 3 weaknesses"
+        }
+      ]
+    },
+    {
+      "id": "x.borg",
+      "name": "X.Borg",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 51.4,
+      "banRate": 15.0,
+      "pickRate": 6.5,
+      "mplTier": "A",
+      "mplPresence": 28.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 6.5,
+          "reason": "Fire spray deals true damage when temperature reaches max"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -6.2,
+          "reason": "Shadow dive bursts Firaga Armor before explosion"
+        },
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -5.8,
+          "reason": "Reduces fire spray regeneration"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.8,
+          "reason": "Shield protects naked X.Borg while regenerating armor"
+        }
+      ]
+    },
+    {
+      "id": "xavier",
+      "name": "Xavier",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.3,
+      "banRate": 24.0,
+      "pickRate": 12.5,
+      "mplTier": "A",
+      "mplPresence": 55.0,
+      "counters": [
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": 5.5,
+          "reason": "Artillery laser snipes from outside king's field range"
+        },
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 5.0,
+          "reason": "Mystic Field snares keep Terizla completely zoned"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -5.4,
+          "reason": "Cables dive through mystic field barrier and burst Xavier"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -5.2,
+          "reason": "Shadow track dives behind frontline"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Novaria",
+          "synergyScore": 5.2,
+          "reason": "Ultimate snipe combos across the entire map"
+        }
+      ]
+    },
+    {
+      "id": "yisunshin",
+      "name": "Yi Sun-shin",
+      "primaryRole": "Assassin",
+      "secondaryRole": "Marksman",
+      "lane": "Jungle",
+      "baseWinRate": 51.0,
+      "banRate": 6.0,
+      "pickRate": 3.5,
+      "mplTier": "A",
+      "mplPresence": 16.0,
+      "counters": [
+        {
+          "heroName": "Natalia",
+          "advantageDelta": 6.8,
+          "reason": "Mountain Shocker reveals all stealthed targets across map"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Ling",
+          "advantageDelta": -6.0,
+          "reason": "Fast wall jumps close distance on vulnerable marksman"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -5.5,
+          "reason": "Bounces cancel Traceless dash weapon switch"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Aldous",
+          "synergyScore": 5.0,
+          "reason": "Global vision provides coordinates for cross-map pursuit"
+        }
+      ]
+    },
+    {
+      "id": "yin",
+      "name": "Yin",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Exp",
+      "baseWinRate": 50.2,
+      "banRate": 30.0,
+      "pickRate": 7.0,
+      "mplTier": "B",
+      "mplPresence": 10.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.0,
+          "reason": "My Turn pulls squishy carry into isolated Lieh domain"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Wind of Nature",
+          "advantageDelta": -8.0,
+          "reason": "Negates entire Lieh burst duration inside ring"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -6.5,
+          "reason": "Suppresses Yin before domain activation"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 5.2,
+          "reason": "Shield carries inside domain for guaranteed 1v1 kill"
+        }
+      ]
+    },
+    {
+      "id": "yu_zhong",
+      "name": "Yu Zhong",
+      "primaryRole": "Fighter",
+      "secondaryRole": "None",
+      "lane": "Exp",
+      "baseWinRate": 52.2,
+      "banRate": 25.0,
+      "pickRate": 12.0,
+      "mplTier": "A",
+      "mplPresence": 60.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 6.0,
+          "reason": "Black Dragon transformation flies directly to backline past tanks"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 5.5,
+          "reason": "Dragon form ignores CC and lands directly on ultimate channel"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -5.8,
+          "reason": "Anti-heal cuts Sha Essence HP restoration to zero"
+        },
+        {
+          "heroName": "Franco",
+          "advantageDelta": -5.0,
+          "reason": "Suppresses dragon on landing"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Luo Yi",
+          "synergyScore": 5.2,
+          "reason": "Duality reactions pair with Dragon form disruption"
+        }
+      ]
+    },
+    {
+      "id": "yve",
+      "name": "Yve",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 51.6,
+      "banRate": 16.0,
+      "pickRate": 5.2,
+      "mplTier": "A",
+      "mplPresence": 38.0,
+      "counters": [
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 6.5,
+          "reason": "Real World Manipulation slow grid traps slow tanks completely"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -7.5,
+          "reason": "Suppression hook interrupts ultimate chessboard immediately"
+        },
+        {
+          "heroName": "Kaja",
+          "advantageDelta": -7.0,
+          "reason": "Divine Judgement suppression breaks chessboard grid"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Terizla",
+          "synergyScore": 5.8,
+          "reason": "Slow grid keeps enemies trapped inside Penalty Zone"
+        }
+      ]
+    },
+    {
+      "id": "zhask",
+      "name": "Zhask",
+      "primaryRole": "Mage",
+      "secondaryRole": "None",
+      "lane": "Mid",
+      "baseWinRate": 52.5,
+      "banRate": 34.0,
+      "pickRate": 7.0,
+      "mplTier": "S",
+      "mplPresence": 48.0,
+      "counters": [
+        {
+          "heroName": "Fanny",
+          "advantageDelta": 6.5,
+          "reason": "Dominator's Descent spawn blocks cables and laser stuns"
+        },
+        {
+          "heroName": "Johnson",
+          "advantageDelta": 6.2,
+          "reason": "Places alien spawn in vehicle path to trigger crash safely"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Claude",
+          "advantageDelta": -6.5,
+          "reason": "Blazing Duet melts spawn and gains full attack speed"
+        },
+        {
+          "heroName": "Irithel",
+          "advantageDelta": -5.8,
+          "reason": "Crossbow splash destroys alien summon from safe distance"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Hylos",
+          "synergyScore": 5.2,
+          "reason": "Glorious Pathway traps targets inside alien laser beam"
+        }
+      ]
+    },
+    {
+      "id": "zhuxin",
+      "name": "Zhuxin",
+      "primaryRole": "Mage",
+      "secondaryRole": "Support",
+      "lane": "Mid",
+      "baseWinRate": 54.6,
+      "banRate": 86.0,
+      "pickRate": 13.0,
+      "mplTier": "S+",
+      "mplPresence": 95.0,
+      "counters": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 7.0,
+          "reason": "Continuous Fluttering Grace lantern tether lifts and throws frontline before initiation"
+        },
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 6.5,
+          "reason": "Airborne toss cancels heavy hammer windups repeatedly"
+        },
+        {
+          "heroName": "Hylos",
+          "advantageDelta": 6.2,
+          "reason": "Kites Hylos endlessly, throwing him over terrain away from your squishies"
+        },
+        {
+          "heroName": "Gatotkaca",
+          "advantageDelta": 6.0,
+          "reason": "Disrupts Avatar of Guardian landing and casts him away"
+        },
+        {
+          "heroName": "Edith",
+          "advantageDelta": 5.8,
+          "reason": "Displaces Edith during ultimate conversion, wasting Primal Strength duration"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Kadita",
+          "advantageDelta": -7.0,
+          "reason": "Ocean Oddity CC immunity penetrates lantern aura and executes with Rough Waves"
+        },
+        {
+          "heroName": "Helcurt",
+          "advantageDelta": -6.5,
+          "reason": "Dark Night Falls silence and instantaneous burst shut down lantern channeling"
+        },
+        {
+          "heroName": "Benedetta",
+          "advantageDelta": -6.0,
+          "reason": "Eye for an Eye parries Zhuxin airborne throw and stuns her in return"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -5.8,
+          "reason": "Cable speed bursts Zhuxin before lantern stacks can accumulate"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Terizla",
+          "synergyScore": 6.5,
+          "reason": "Zone control tether throws grouped targets directly into Penalty Zone"
+        },
+        {
+          "heroName": "Chip",
+          "synergyScore": 6.0,
+          "reason": "Portals deposit Zhuxin behind enemy team for free reverse throws"
+        },
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.0,
+          "reason": "Chains CC displacements for insurmountable teamfight lockdown"
+        }
+      ]
+    },
+    {
+      "id": "zilong",
+      "name": "Zilong",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Exp",
+      "baseWinRate": 48.8,
+      "banRate": 2.1,
+      "pickRate": 5.5,
+      "mplTier": "C",
+      "mplPresence": 1.0,
+      "counters": [
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.0,
+          "reason": "Supreme Warrior speed sprint flips and melts squishies"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Gatotkaca",
+          "advantageDelta": -6.8,
+          "reason": "Physical armor reflection taunt destroys basic attackers"
+        },
+        {
+          "heroName": "Ruby",
+          "advantageDelta": -6.2,
+          "reason": "Endless stuns and pulls negate ultimate sprint"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 4.5,
+          "reason": "Speed bonus stacks for extreme backline diving"
+        }
+      ]
+    },
+    {
+      "id": "lukas",
+      "name": "Lukas",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Jungle",
+      "baseWinRate": 54.5,
+      "banRate": 58.0,
+      "pickRate": 14.0,
+      "mplTier": "S+",
+      "mplPresence": 88.0,
+      "counters": [
+        {
+          "heroName": "Nolan",
+          "advantageDelta": 6.5,
+          "reason": "Sacred Beast form explosive burst out-trades fragile assassin combos"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": 6.2,
+          "reason": "High-mobility beast leap catches Ling as he dismounts walls"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": 5.8,
+          "reason": "Beast form damage reduction withstands Shadow Kill easily"
+        },
+        {
+          "heroName": "Roger",
+          "advantageDelta": 5.5,
+          "reason": "Superior burst and sustained resolve form overpowers wolf form"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.5,
+          "reason": "Anti-heal passive cuts Sacred Beast sustain in half"
+        },
+        {
+          "heroName": "Melissa",
+          "advantageDelta": -6.0,
+          "reason": "Cuddles field barrier prevents beast form melee engagement"
+        },
+        {
+          "heroName": "Phoveus",
+          "advantageDelta": -6.0,
+          "reason": "Frequent beast form leaps trigger repeated Phoveus slams"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Angela",
+          "synergyScore": 6.8,
+          "reason": "Heartguard shield and speed allow unstoppable Sacred Beast dives"
+        },
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 6.2,
+          "reason": "Guiding Wind ensures optimal flank entry in beast form"
+        },
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 5.8,
+          "reason": "Implosion groups enemies for catastrophic AoE beast stomps"
+        }
+      ]
+    },
+    {
+      "id": "kalea",
+      "name": "Kalea",
+      "primaryRole": "Support",
+      "secondaryRole": "Fighter",
+      "lane": "Roam",
+      "baseWinRate": 53.2,
+      "banRate": 32.0,
+      "pickRate": 11.0,
+      "mplTier": "S",
+      "mplPresence": 70.0,
+      "counters": [
+        {
+          "heroName": "Tigreal",
+          "advantageDelta": 6.0,
+          "reason": "Water Zone speed and wave displacement disrupt slow tank initiation"
+        },
+        {
+          "heroName": "Gatotkaca",
+          "advantageDelta": 5.5,
+          "reason": "Continuous kiting and healing nullifies taunt setups"
+        },
+        {
+          "heroName": "Atlas",
+          "advantageDelta": 5.2,
+          "reason": "Wave knockback breaks Fatal Links positioning"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Baxia",
+          "advantageDelta": -6.2,
+          "reason": "Severe healing reduction weakens Water Zone effectiveness"
+        },
+        {
+          "heroName": "Diggie",
+          "advantageDelta": -5.8,
+          "reason": "Time Journey negates Water Zone displacement crowd control"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Obsidia",
+          "synergyScore": 6.5,
+          "reason": "Water Zone healing and protection allows Obsidia to safely stack bone shards"
+        },
+        {
+          "heroName": "Lukas",
+          "synergyScore": 6.2,
+          "reason": "Movement boost and constant regeneration supercharge beast form rampages"
+        },
+        {
+          "heroName": "Belerick",
+          "synergyScore": 5.5,
+          "reason": "Double regeneration creates unkillable frontline zone"
+        }
+      ]
+    },
+    {
+      "id": "zetian",
+      "name": "Zetian",
+      "primaryRole": "Mage",
+      "secondaryRole": "Support",
+      "lane": "Mid",
+      "baseWinRate": 53.8,
+      "banRate": 46.0,
+      "pickRate": 12.0,
+      "mplTier": "S+",
+      "mplPresence": 82.0,
+      "counters": [
+        {
+          "heroName": "Zhuxin",
+          "advantageDelta": 6.2,
+          "reason": "Celestial Empress long-range poke and global stun interrupts lantern tether"
+        },
+        {
+          "heroName": "Yve",
+          "advantageDelta": 6.0,
+          "reason": "Global stun disrupts Real World Manipulation instantly"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 5.8,
+          "reason": "Out-ranges and interrupts Feathered Air Strike bombardment"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Hirara",
+          "advantageDelta": -7.5,
+          "reason": "Twin fan drag burst penetrates celestial zoning and executes"
+        },
+        {
+          "heroName": "Ling",
+          "advantageDelta": -6.5,
+          "reason": "Rapid wall leaps bypass frontline straight onto Zetian"
+        },
+        {
+          "heroName": "Helcurt",
+          "advantageDelta": -6.0,
+          "reason": "Darkness and silence prevent spell vamp and shield activation"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Terizla",
+          "synergyScore": 6.5,
+          "reason": "Penalty Zone clumps enemies for guaranteed global stun detonation"
+        },
+        {
+          "heroName": "Hylos",
+          "synergyScore": 6.0,
+          "reason": "Pathway of Life provides peel and distance for spell casting"
+        },
+        {
+          "heroName": "Sora",
+          "synergyScore": 5.8,
+          "reason": "Cloud storms trap enemies inside Zetian defense-shredding zones"
+        }
+      ]
+    },
+    {
+      "id": "obsidia",
+      "name": "Obsidia",
+      "primaryRole": "Marksman",
+      "secondaryRole": "None",
+      "lane": "Gold",
+      "baseWinRate": 53.0,
+      "banRate": 35.0,
+      "pickRate": 11.5,
+      "mplTier": "S",
+      "mplPresence": 72.0,
+      "counters": [
+        {
+          "heroName": "Claude",
+          "advantageDelta": 6.0,
+          "reason": "Root ultimate pins Claude before Blazing Duet blinks"
+        },
+        {
+          "heroName": "Moskov",
+          "advantageDelta": 5.8,
+          "reason": "Bone Shards out-range and pierce through Abyssal Walkers"
+        },
+        {
+          "heroName": "Wanwan",
+          "advantageDelta": 5.5,
+          "reason": "Multi-hit bone burst trades favorably before weakness breakdown"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Hirara",
+          "advantageDelta": -7.2,
+          "reason": "Twin fan dive suppresses and executes before bone stacks form"
+        },
+        {
+          "heroName": "Hayabusa",
+          "advantageDelta": -6.5,
+          "reason": "Shadow Kill easily dodges bone projectiles and executes"
+        },
+        {
+          "heroName": "Lukas",
+          "advantageDelta": -6.0,
+          "reason": "Beast leap closes distance and bursts through squishy defenses"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Kalea",
+          "synergyScore": 6.8,
+          "reason": "Water Zone protection gives Obsidia room to build maximum bone shards"
+        },
+        {
+          "heroName": "Minotaur",
+          "synergyScore": 6.0,
+          "reason": "Triple knockup locks enemies for free high-velocity bone attacks"
+        }
+      ]
+    },
+    {
+      "id": "sora",
+      "name": "Sora",
+      "primaryRole": "Fighter",
+      "secondaryRole": "Assassin",
+      "lane": "Exp",
+      "baseWinRate": 54.2,
+      "banRate": 52.0,
+      "pickRate": 13.5,
+      "mplTier": "S+",
+      "mplPresence": 86.0,
+      "counters": [
+        {
+          "heroName": "Terizla",
+          "advantageDelta": 6.5,
+          "reason": "Wispy cloud form maneuvers around slow hammer strikes with ease"
+        },
+        {
+          "heroName": "Paquito",
+          "advantageDelta": 6.0,
+          "reason": "Fluffy cloud shield absorbs burst punches while counter-striking"
+        },
+        {
+          "heroName": "Dyrroth",
+          "advantageDelta": 5.8,
+          "reason": "Fluid cloud transitions kite armor break and execute in storm form"
+        },
+        {
+          "heroName": "Chou",
+          "advantageDelta": 5.5,
+          "reason": "Adaptive form shifts mitigate kick CC and out-sustain single-target burst"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Valir",
+          "advantageDelta": -6.5,
+          "reason": "Relentless knockback and fireballs deny cloud engagement"
+        },
+        {
+          "heroName": "Esmeralda",
+          "advantageDelta": -6.0,
+          "reason": "Siphons Sora fluffy cloud shields into her own health pool"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 6.5,
+          "reason": "Storm form energy fists burst down Implosion-clustered squads"
+        },
+        {
+          "heroName": "Chip",
+          "synergyScore": 6.2,
+          "reason": "Instant portal ambushes let Sora flank straight into storm execution"
+        }
+      ]
+    },
+    {
+      "id": "marcel",
+      "name": "Marcel",
+      "primaryRole": "Support",
+      "secondaryRole": "Mage",
+      "lane": "Roam",
+      "baseWinRate": 52.0,
+      "banRate": 22.0,
+      "pickRate": 8.0,
+      "mplTier": "A",
+      "mplPresence": 55.0,
+      "counters": [
+        {
+          "heroName": "Beatrix",
+          "advantageDelta": 6.2,
+          "reason": "Soul photograph snapshot freezes sniper bullets and rocket barrages mid-air"
+        },
+        {
+          "heroName": "Lesley",
+          "advantageDelta": 5.8,
+          "reason": "Freezes ultimate bullets to protect wounded teammates"
+        },
+        {
+          "heroName": "Layla",
+          "advantageDelta": 5.5,
+          "reason": "Turret and projectile freeze allows easy dives onto backline glass cannon"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Kadita",
+          "advantageDelta": -6.5,
+          "reason": "Rough Waves invulnerability ignores photograph freeze entirely"
+        },
+        {
+          "heroName": "Fanny",
+          "advantageDelta": -6.0,
+          "reason": "Rapid cable speed evades snapshot frame capture with ease"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Miya",
+          "synergyScore": 6.5,
+          "reason": "Frozen targets allow Miya maximum attack-speed shred with zero retaliation"
+        },
+        {
+          "heroName": "Suyou",
+          "synergyScore": 6.0,
+          "reason": "Photograph freeze guarantees 100% full charge hit on Immortal cleaves"
+        }
+      ]
+    },
+    {
+      "id": "hirara",
+      "name": "Hirara",
+      "primaryRole": "Assassin",
+      "secondaryRole": "None",
+      "lane": "Jungle",
+      "baseWinRate": 55.0,
+      "banRate": 63.2,
+      "pickRate": 8.5,
+      "mplTier": "S+",
+      "mplPresence": 94.0,
+      "counters": [
+        {
+          "heroName": "Miya",
+          "advantageDelta": 7.5,
+          "reason": "Twin fan drag-and-drop mobility bursts down glass cannons through conceal"
+        },
+        {
+          "heroName": "Layla",
+          "advantageDelta": 7.5,
+          "reason": "Ukifune fan rush closes entire screen distance instantly"
+        },
+        {
+          "heroName": "Pharsa",
+          "advantageDelta": 7.0,
+          "reason": "High-mobility dive penetrates air-strike zones and deletes backline"
+        },
+        {
+          "heroName": "Harith",
+          "advantageDelta": 6.5,
+          "reason": "AoE fan suppression interrupts Chrono Dash rhythm and executes"
+        },
+        {
+          "heroName": "Xavier",
+          "advantageDelta": 6.5,
+          "reason": "Unpredictable fan drag angles bypass mystic field zoning"
+        }
+      ],
+      "counteredBy": [
+        {
+          "heroName": "Franco",
+          "advantageDelta": -7.5,
+          "reason": "Bloody Hunt suppression instantly halts twin fan drag sequences"
+        },
+        {
+          "heroName": "Khufra",
+          "advantageDelta": -7.0,
+          "reason": "Bouncing Ball shuts down twin fan dash momentum immediately"
+        },
+        {
+          "heroName": "Minsitthar",
+          "advantageDelta": -6.5,
+          "reason": "King's Calling ground area completely disables fan mobility skills"
+        }
+      ],
+      "synergies": [
+        {
+          "heroName": "Tigreal",
+          "synergyScore": 7.0,
+          "reason": "5-man Implosion sets up catastrophic twin fan drag burst wipe"
+        },
+        {
+          "heroName": "Chip",
+          "synergyScore": 6.8,
+          "reason": "Shortcut portal drops Hirara directly behind enemy carries with zero alert"
+        },
+        {
+          "heroName": "Mathilda",
+          "synergyScore": 6.5,
+          "reason": "Guiding Wind provides effortless entry and exit for twin fan combos"
+        }
+      ]
+    }
+  ],
+  "totalHeroes": 126
+}
