@@ -16,24 +16,24 @@
         FontFamily="Segoe UI, -apple-system, BlinkMacSystemFont, Roboto, sans-serif">
 
     <Window.Resources>
-        <!-- Apple Monochrome Palette (Light Mode Default - White First) -->
-        <SolidColorBrush x:Key="BgBase" Color="#FBFBFD" />
-        <SolidColorBrush x:Key="BgCard" Color="#FFFFFF" />
-        <SolidColorBrush x:Key="BgCardHover" Color="#F5F5F7" />
-        <SolidColorBrush x:Key="BgSidebar" Color="#F5F5F7" />
-        <SolidColorBrush x:Key="BgSunken" Color="#F0F0F2" />
-        <SolidColorBrush x:Key="BorderSubtle" Color="#E5E5EA" />
-        <SolidColorBrush x:Key="BorderCard" Color="#E5E5EA" />
-        <SolidColorBrush x:Key="BorderStrong" Color="#D1D1D6" />
-        <SolidColorBrush x:Key="TextPrimary" Color="#1D1D1F" />
-        <SolidColorBrush x:Key="TextSecondary" Color="#6E6E73" />
-        <SolidColorBrush x:Key="TextMuted" Color="#86868B" />
-        <SolidColorBrush x:Key="AccentAction" Color="#1D1D1F" />
+        <!-- Apple Frosted Glass Palette (Light Mode Default - White First) -->
+        <SolidColorBrush x:Key="BgBase" Color="#E6F4F5F8" />
+        <SolidColorBrush x:Key="BgCard" Color="#E6FFFFFF" />
+        <SolidColorBrush x:Key="BgCardHover" Color="#F2F8F9FB" />
+        <SolidColorBrush x:Key="BgSidebar" Color="#CCEAECEF" />
+        <SolidColorBrush x:Key="BgSunken" Color="#D9EDF0F5" />
+        <SolidColorBrush x:Key="BorderSubtle" Color="#26000000" />
+        <SolidColorBrush x:Key="BorderCard" Color="#1F000000" />
+        <SolidColorBrush x:Key="BorderStrong" Color="#4D000000" />
+        <SolidColorBrush x:Key="TextPrimary" Color="#121417" />
+        <SolidColorBrush x:Key="TextSecondary" Color="#5A6272" />
+        <SolidColorBrush x:Key="TextMuted" Color="#8892A2" />
+        <SolidColorBrush x:Key="AccentAction" Color="#121417" />
         <SolidColorBrush x:Key="AccentActionFg" Color="#FFFFFF" />
-        <SolidColorBrush x:Key="AccentActionHover" Color="#38383A" />
-        <SolidColorBrush x:Key="ActiveStateBg" Color="#E5E5EA" />
-        <SolidColorBrush x:Key="ActiveStateBorder" Color="#D1D1D6" />
-        <SolidColorBrush x:Key="ActiveStateText" Color="#1D1D1F" />
+        <SolidColorBrush x:Key="AccentActionHover" Color="#2A2E35" />
+        <SolidColorBrush x:Key="ActiveStateBg" Color="#CCE2E6EE" />
+        <SolidColorBrush x:Key="ActiveStateBorder" Color="#4D000000" />
+        <SolidColorBrush x:Key="ActiveStateText" Color="#121417" />
 
         <!-- Apple Minimalist Fluid Sliding Toggle Switch -->
         <Style x:Key="ModernToggle" TargetType="{x:Type CheckBox}">
@@ -617,6 +617,7 @@
                                 <!-- Hero Action Buttons (Apple Pill) -->
                                 <StackPanel Grid.Row="3" Orientation="Horizontal">
                                     <Button x:Name="BtnManualBoost" Content="Boost System Now" Style="{StaticResource AccentBtn}" Padding="20,9" FontSize="12" Click="BtnManualBoost_Click" Margin="0,0,8,0" />
+                                    <Button x:Name="BtnCooldownNow" Content="Cool Down Laptop" Style="{StaticResource SecondaryBtn}" Padding="16,9" FontSize="12" Click="BtnInstantCooldown_Click" Margin="0,0,8,0" />
                                     <Button Content="Trim Working RAM" Style="{StaticResource SecondaryBtn}" Padding="16,9" FontSize="12" Click="BtnPurgeRam_Click" Margin="0,0,8,0" />
                                     <Button Content="Scan Running Windows" Style="{StaticResource SecondaryBtn}" Padding="16,9" FontSize="12" Click="BtnDetectGames_Click" Margin="0,0,8,0" />
                                     <Button Content="Add Executable" Style="{StaticResource SecondaryBtn}" Padding="16,9" FontSize="12" Click="BtnAddCustomGame_Click" />
@@ -738,6 +739,23 @@
                             <Grid>
                                 <TextBlock Text="Automatic High Performance Power Switching" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" />
                                 <CheckBox x:Name="ChkPowerPlan" HorizontalAlignment="Right" Style="{StaticResource ModernToggle}" IsChecked="True" Checked="Option_Changed" Unchecked="Option_Changed" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+
+                        <Border Background="{DynamicResource BgCard}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="8" Padding="16,12" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Text="Laptop Thermal Guard &amp; Active Fan Cooler" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimary}" />
+                                    <TextBlock Text="Engages active ACPI fan cooling policy and caps CPU at 99% frequency to stop heat spikes." FontSize="11" Foreground="{DynamicResource TextSecondary}" Margin="0,2,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button x:Name="BtnCooldownView" Content="Rapid Cooldown" Style="{StaticResource SecondaryBtn}" Padding="12,5" FontSize="11" Click="BtnInstantCooldown_Click" Margin="0,0,12,0" />
+                                    <CheckBox x:Name="ChkLaptopCooler" Style="{StaticResource ModernToggle}" IsChecked="False" Checked="Option_Changed" Unchecked="Option_Changed" VerticalAlignment="Center" />
+                                </StackPanel>
                             </Grid>
                         </Border>
 

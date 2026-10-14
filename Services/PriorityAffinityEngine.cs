@@ -13,7 +13,7 @@ namespace ZenithOptimizer.Services
         private static readonly string[] BackgroundAppsToThrottle = new string[]
         {
             "chrome", "msedge", "firefox", "brave", "opera",
-            "Discord", "Spotify", "steamwebhelper", "EpicGamesLauncher"
+            "Discord", "Spotify", "steamwebhelper", "EpicGamesLauncher", "RiotClientServices", "slack", "teams"
         };
 
         public bool OptimizeGameProcess(Process process, bool enablePCores, bool enableHighPriority)
@@ -25,6 +25,7 @@ namespace ZenithOptimizer.Services
                 int pid = process.Id;
                 string pName = process.ProcessName.ToLower();
                 bool isEmulator = pName.Contains("hd-player") || pName.Contains("bluestacks") || pName.Contains("bstksvc");
+                bool isValorant = pName.Contains("valorant");
 
                 // 1. Save original states if not already saved
                 if (!_originalPriorities.ContainsKey(pid))
@@ -62,7 +63,47 @@ namespace ZenithOptimizer.Services
                     return true;
                 }
 
-                // For Native PC Games (Valorant, LoL, Tekken, etc.)
+                // For Valorant: Vanguard anti-cheat kernel driver and Windows raw input threads (csrss/dwm)
+                // must never be starved. ProcessPriorityClass.AboveNormal gives highest game responsiveness
+                // without anti-cheat timeouts (VAN 1067) or input drops.
+                if (isValorant)
+                {
+                    try
+                    {
+                        if (process.PriorityClass != ProcessPriorityClass.AboveNormal)
+                        {
+                            process.PriorityClass = ProcessPriorityClass.AboveNormal;
+                        }
+                    }
+                    catch { }
+
+                    // Deprioritize Riot Client launcher during active match
+                    try
+                    {
+                        Process[] riotLaunchers = Process.GetProcessesByName("RiotClientServices");
+                        if (riotLaunchers != null)
+                        {
+                            foreach (Process rp in riotLaunchers)
+                            {
+                                try
+                                {
+                                    if (!_throttledProcesses.Contains(rp.Id))
+                                    {
+                                        _throttledProcesses.Add(rp.Id);
+                                        rp.PriorityClass = ProcessPriorityClass.BelowNormal;
+                                    }
+                                }
+                                catch { }
+                                finally { rp.Dispose(); }
+                            }
+                        }
+                    }
+                    catch { }
+
+                    return true;
+                }
+
+                // For Native PC Games (LoL, Tekken, etc.)
                 if (enableHighPriority)
                 {
                     try

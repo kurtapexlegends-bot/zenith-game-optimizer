@@ -65,6 +65,26 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\MainWindow.Theme.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\MainWindow.Telemetry.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\MainWindow.Profiles.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\MainWindow.ToolsPanel.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\MainWindow.GameTools.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\GameProfile.cs" />
     <Compile Include="Models\SystemTelemetry.cs" />
     <Compile Include="Models\OptimizationSettings.cs" />
@@ -75,7 +95,14 @@
     <Compile Include="Services\NetworkOptimizer.cs" />
     <Compile Include="Services\BlueStacksOptimizer.cs" />
     <Compile Include="Services\SystemTweaksService.cs" />
-    <Compile Include="Services\GameSpecificTunerService.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.BlueStacks.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.Roblox.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.League.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.Valorant.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.Tekken.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.OtherGames.cs" />
+    <Compile Include="Services\Tuners\GameSpecificTunerService.CombatAndQueries.cs" />
     <Compile Include="Services\ProcessMonitorService.cs" />
     <Compile Include="Services\GameLauncherService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

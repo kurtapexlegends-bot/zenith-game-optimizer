@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace ZenithOptimizer.Services
@@ -75,6 +75,21 @@ namespace ZenithOptimizer.Services
                 return true;
             }
             catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool EnforceMaxResolution()
+        {
+            try
+            {
+                TimeBeginPeriod(1);
+                uint currentRes;
+                int status = NtSetTimerResolution(5000, true, out currentRes);
+                return status == 0 || currentRes <= 10000;
+            }
+            catch
             {
                 return false;
             }

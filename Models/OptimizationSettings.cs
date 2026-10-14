@@ -17,6 +17,7 @@ namespace ZenithOptimizer.Models
         public bool EnableGpuPriority { get; set; }
         public bool EnableWindowsGameMode { get; set; }
         public bool MinimizeToSystemTray { get; set; }
+        public bool EnableLaptopThermalGuard { get; set; }
 
         public OptimizationSettings()
         {
@@ -33,6 +34,7 @@ namespace ZenithOptimizer.Models
             EnableGpuPriority = false; // DirectX MMCSS scheduling (user opt-in)
             EnableWindowsGameMode = true;
             MinimizeToSystemTray = true;
+            EnableLaptopThermalGuard = false;
         }
     }
 }

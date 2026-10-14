@@ -46,6 +46,7 @@ namespace ZenithOptimizer.Services
         private double _cachedCpuUsage = 0.0;
         private string _cachedPowerPlan = null;
         private int _telemetryTickCount = 0;
+        private int _idleTrimCounter = 0;
 
         public event Action<GameProfile> GameStarted;
         public event Action<GameProfile> GameExited;
@@ -246,7 +247,22 @@ namespace ZenithOptimizer.Services
                     }
                 }
 
-                // 3. Collect Telemetry with zero CPU overhead
+                // 3. Periodic idle memory trim (every 30s when no game is active)
+                if (_activeProfile == null)
+                {
+                    _idleTrimCounter++;
+                    if (_idleTrimCounter >= 30)
+                    {
+                        _idleTrimCounter = 0;
+                        _memoryService.TrimSelfMemory();
+                    }
+                }
+                else
+                {
+                    _idleTrimCounter = 0;
+                }
+
+                // 4. Collect Telemetry with zero CPU overhead
                 CollectTelemetry();
             }
             catch { }
@@ -355,6 +371,9 @@ namespace ZenithOptimizer.Services
             _activeProfile = null;
             _activeProcess = null;
             _activeProcessId = 0;
+
+            // Trim working set immediately after game session wraps up
+            _memoryService.TrimSelfMemory();
         }
 
         public bool ForceOptimizeGame(GameProfile profile, bool autoLaunch, out string statusMessage)
@@ -482,6 +501,13 @@ namespace ZenithOptimizer.Services
 
                 string mmcssMsg;
                 _systemTweaks.SetMmcssGamingPriority(false, out mmcssMsg);
+
+                if (_settings.EnableLaptopThermalGuard || _powerService.IsLaptopThermalGuardActive())
+                {
+                    string coolerMsg;
+                    _powerService.RestoreLaptopThermalGuard(out coolerMsg);
+                    _settings.EnableLaptopThermalGuard = false;
+                }
 
                 _cachedPowerPlan = null;
 

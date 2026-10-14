@@ -66,7 +66,7 @@ namespace ZenithOptimizer.Models
             valo.OptimizationBadge = "Vanguard-Safe / 0.5ms Timer";
             valo.TargetPacing = "Max Refresh (Uncapped)";
             valo.EnablePCoreAffinity = false;
-            valo.EnableHighPriority = true;
+            valo.EnableHighPriority = false; // Uses balanced AboveNormal priority to avoid starving Vanguard or DWM
             valo.EnableStandbyPurge = false;
             list.Add(valo);
 
