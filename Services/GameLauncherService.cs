@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using ZenithOptimizer.Models;
 
@@ -15,6 +20,9 @@ namespace ZenithOptimizer.Services
 
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        private static extern bool DeleteObject(IntPtr hObject);
 
         private const int SW_RESTORE = 9;
 
@@ -128,6 +136,241 @@ namespace ZenithOptimizer.Services
                 return File.Exists(@"C:\Program Files (x86)\Steam\steam.exe");
             }
             catch { return false; }
+        }
+
+        /// <summary>
+        /// Resolves shortcuts (.lnk), Steam app manifests (.acf), or Epic manifests (.item) to the genuine primary executable.
+        /// </summary>
+        public static string ResolveExecutablePath(string detectedPath)
+        {
+            if (string.IsNullOrEmpty(detectedPath)) return null;
+
+            try
+            {
+                // Direct executable or shortcut
+                if (File.Exists(detectedPath) && (detectedPath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) || detectedPath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return detectedPath;
+                }
+
+                // Steam AppManifest (.acf) -> Locate actual game executable in steamapps\common\
+                if (File.Exists(detectedPath) && detectedPath.EndsWith(".acf", StringComparison.OrdinalIgnoreCase))
+                {
+                    string dir = Path.GetDirectoryName(detectedPath); // ...\steamapps
+                    string[] lines = File.ReadAllLines(detectedPath);
+                    string installDir = null;
+                    foreach (string line in lines)
+                    {
+                        string trimmed = line.Trim();
+                        if (trimmed.StartsWith("\"installdir\"", StringComparison.OrdinalIgnoreCase))
+                        {
+                            int q1 = trimmed.IndexOf('"', 12);
+                            if (q1 >= 0)
+                            {
+                                int q2 = trimmed.IndexOf('"', q1 + 1);
+                                if (q2 > q1)
+                                {
+                                    installDir = trimmed.Substring(q1 + 1, q2 - q1 - 1);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(installDir) && dir != null)
+                    {
+                        string commonDir = Path.Combine(dir, "common", installDir);
+                        if (Directory.Exists(commonDir))
+                        {
+                            // 1. Check root directory first (<1ms)
+                            string[] rootExes = Directory.GetFiles(commonDir, "*.exe", SearchOption.TopDirectoryOnly);
+                            string candidate = FindBestExecutable(rootExes);
+                            if (!string.IsNullOrEmpty(candidate)) return candidate;
+
+                            // 2. Check standard binary subfolders
+                            string[] candidateSubfolders = new string[]
+                            {
+                                "bin",
+                                @"bin\win64",
+                                @"bin\x64",
+                                @"Binaries\Win64",
+                                @"Binaries\Win32",
+                                @"game\bin\win64",
+                                @"game\bin",
+                                "x64"
+                            };
+
+                            foreach (var sub in candidateSubfolders)
+                            {
+                                string subPath = Path.Combine(commonDir, sub);
+                                if (Directory.Exists(subPath))
+                                {
+                                    string[] subExes = Directory.GetFiles(subPath, "*.exe", SearchOption.TopDirectoryOnly);
+                                    candidate = FindBestExecutable(subExes);
+                                    if (!string.IsNullOrEmpty(candidate)) return candidate;
+                                }
+                            }
+
+                            // 3. Fallback: Search 1 level deep only to avoid scanning large asset trees
+                            try
+                            {
+                                foreach (string subDir in Directory.GetDirectories(commonDir))
+                                {
+                                    string dirName = Path.GetFileName(subDir).ToLowerInvariant();
+                                    if (dirName.StartsWith("_") || dirName.Contains("redist") || dirName.Contains("directx") || dirName.Contains("support"))
+                                        continue;
+
+                                    string[] subExes = Directory.GetFiles(subDir, "*.exe", SearchOption.TopDirectoryOnly);
+                                    candidate = FindBestExecutable(subExes);
+                                    if (!string.IsNullOrEmpty(candidate)) return candidate;
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                }
+
+                // Epic Games Manifest (.item)
+                if (File.Exists(detectedPath) && detectedPath.EndsWith(".item", StringComparison.OrdinalIgnoreCase))
+                {
+                    string json = File.ReadAllText(detectedPath);
+                    Match mLoc = Regex.Match(json, @"""InstallLocation""\s*:\s*""([^""]+)""");
+                    Match mExe = Regex.Match(json, @"""LaunchExecutable""\s*:\s*""([^""]+)""");
+                    if (mLoc.Success && mExe.Success)
+                    {
+                        string exe = Path.Combine(mLoc.Groups[1].Value.Replace(@"\\", @"\"), mExe.Groups[1].Value.Replace(@"\\", @"\"));
+                        if (File.Exists(exe)) return exe;
+                    }
+                }
+            }
+            catch { }
+
+            return detectedPath;
+        }
+
+        private static string FindBestExecutable(string[] exes)
+        {
+            if (exes == null || exes.Length == 0) return null;
+            foreach (string exe in exes)
+            {
+                string fname = Path.GetFileName(exe).ToLowerInvariant();
+                if (!fname.Contains("crash") && !fname.Contains("install") && !fname.Contains("setup") && 
+                    !fname.Contains("update") && !fname.Contains("unitycrash") && !fname.Contains("redist") &&
+                    !fname.Contains("unins") && !fname.Contains("launcher") && !fname.Contains("helper"))
+                {
+                    return exe;
+                }
+            }
+            return exes[0];
+        }
+
+        private static readonly Dictionary<string, ImageSource> _iconCache = new Dictionary<string, ImageSource>(StringComparer.OrdinalIgnoreCase);
+        private static readonly object _iconCacheLock = new object();
+
+        public static void ClearIconCache()
+        {
+            lock (_iconCacheLock)
+            {
+                _iconCache.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Extracts the genuine high-resolution executable icon and converts it to a frozen,
+        /// hardware-accelerated WPF ImageSource with zero GDI handle leaks and thread-safe caching.
+        /// </summary>
+        public static ImageSource ExtractGameIcon(string targetPath)
+        {
+            if (string.IsNullOrEmpty(targetPath)) return null;
+
+            lock (_iconCacheLock)
+            {
+                ImageSource cached;
+                if (_iconCache.TryGetValue(targetPath, out cached))
+                {
+                    return cached;
+                }
+            }
+
+            try
+            {
+                string resolved = ResolveExecutablePath(targetPath);
+                if (string.IsNullOrEmpty(resolved) || !File.Exists(resolved)) return null;
+
+                using (System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(resolved))
+                {
+                    if (icon != null)
+                    {
+                        using (System.Drawing.Bitmap bmp = icon.ToBitmap())
+                        {
+                            IntPtr hBitmap = bmp.GetHbitmap();
+                            try
+                            {
+                                BitmapSource bs = Imaging.CreateBitmapSourceFromHBitmap(
+                                    hBitmap,
+                                    IntPtr.Zero,
+                                    Int32Rect.Empty,
+                                    BitmapSizeOptions.FromEmptyOptions());
+                                if (bs != null)
+                                {
+                                    if (bs.CanFreeze) bs.Freeze();
+
+                                    lock (_iconCacheLock)
+                                    {
+                                        _iconCache[targetPath] = bs;
+                                    }
+
+                                    return bs;
+                                }
+                            }
+                            finally
+                            {
+                                if (hBitmap != IntPtr.Zero)
+                                {
+                                    DeleteObject(hBitmap);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Automatically audits all local drives and launchers (Steam across all drives, Epic, Riot, Roblox, BlueStacks)
+        /// to detect installed titles and extract their genuine high-resolution executable icons.
+        /// </summary>
+        public static void ScanAllLocalInstalledGames(IEnumerable<GameProfile> profiles)
+        {
+            if (profiles == null) return;
+
+            foreach (var profile in profiles)
+            {
+                if (profile == null) continue;
+                try
+                {
+                    string detectedPath;
+                    bool installed = IsGameInstalled(profile, out detectedPath);
+                    profile.IsInstalled = installed;
+                    if (installed && !string.IsNullOrEmpty(detectedPath))
+                    {
+                        string resolved = ResolveExecutablePath(detectedPath);
+                        profile.DetectedExecutablePath = !string.IsNullOrEmpty(resolved) ? resolved : detectedPath;
+                        if (profile.IconImage == null)
+                        {
+                            profile.IconImage = ExtractGameIcon(profile.DetectedExecutablePath);
+                        }
+                    }
+                    else
+                    {
+                        profile.DetectedExecutablePath = null;
+                    }
+                }
+                catch { }
+            }
         }
 
         /// <summary>
@@ -366,15 +609,52 @@ namespace ZenithOptimizer.Services
                     string manifest = Path.Combine(libPath, @"steamapps\appmanifest_" + sId.ToString() + ".acf");
                     if (File.Exists(manifest))
                     {
-                        detectedPath = manifest;
+                        string resolved = ResolveExecutablePath(manifest);
+                        detectedPath = !string.IsNullOrEmpty(resolved) ? resolved : manifest;
                         return true;
                     }
                 }
 
-                if (IsSteamClientInstalled())
+                return false;
+            }
+
+            // Assassin's Creed Unity (Steam 289650, Ubisoft Connect, or local disk)
+            if (id.Equals("acu", StringComparison.OrdinalIgnoreCase))
+            {
+                string sc = FindGameShortcut("Assassin's Creed Unity", "ACU", "AC Unity");
+                if (!string.IsNullOrEmpty(sc))
                 {
-                    detectedPath = "steam://rungameid/" + sId.ToString();
+                    detectedPath = sc;
                     return true;
+                }
+
+                string[] acuPaths = new string[]
+                {
+                    @"C:\Games\Assassin's Creed Unity\ACU.exe",
+                    @"D:\Games\Assassin's Creed Unity\ACU.exe",
+                    @"C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\games\Assassin's Creed Unity\ACU.exe",
+                    @"D:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\games\Assassin's Creed Unity\ACU.exe"
+                };
+
+                foreach (string p in acuPaths)
+                {
+                    if (File.Exists(p))
+                    {
+                        detectedPath = p;
+                        return true;
+                    }
+                }
+
+                List<string> libraryPaths = GetSteamLibraryPaths();
+                foreach (string libPath in libraryPaths)
+                {
+                    string manifest = Path.Combine(libPath, @"steamapps\appmanifest_289650.acf");
+                    if (File.Exists(manifest))
+                    {
+                        string resExe = ResolveExecutablePath(manifest);
+                        detectedPath = !string.IsNullOrEmpty(resExe) ? resExe : manifest;
+                        return true;
+                    }
                 }
 
                 return false;
@@ -400,7 +680,8 @@ namespace ZenithOptimizer.Services
                     string manifest = Path.Combine(libPath, @"steamapps\appmanifest_" + steamAppId.ToString() + ".acf");
                     if (File.Exists(manifest))
                     {
-                        detectedPath = manifest;
+                        string resolved = ResolveExecutablePath(manifest);
+                        detectedPath = !string.IsNullOrEmpty(resolved) ? resolved : manifest;
                         return true;
                     }
                 }
@@ -413,12 +694,6 @@ namespace ZenithOptimizer.Services
                         detectedPath = eaApex;
                         return true;
                     }
-                }
-
-                if (IsSteamClientInstalled())
-                {
-                    detectedPath = "steam://rungameid/" + steamAppId.ToString();
-                    return true;
                 }
 
                 return false;
@@ -873,6 +1148,26 @@ namespace ZenithOptimizer.Services
                             }
                         }
                     }
+                }
+
+                // Check all fixed system drives for standard Steam library folders across drives
+                foreach (DriveInfo drive in DriveInfo.GetDrives())
+                {
+                    try
+                    {
+                        if (drive.IsReady && drive.DriveType == DriveType.Fixed)
+                        {
+                            string p1 = Path.Combine(drive.RootDirectory.FullName, "SteamLibrary");
+                            if (Directory.Exists(p1) && !list.Contains(p1)) list.Add(p1);
+
+                            string p2 = Path.Combine(drive.RootDirectory.FullName, "Steam");
+                            if (Directory.Exists(p2) && !list.Contains(p2)) list.Add(p2);
+
+                            string p3 = Path.Combine(drive.RootDirectory.FullName, @"Program Files (x86)\Steam");
+                            if (Directory.Exists(p3) && !list.Contains(p3)) list.Add(p3);
+                        }
+                    }
+                    catch { }
                 }
             }
             catch { }

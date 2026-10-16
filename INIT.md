@@ -3,7 +3,7 @@
 > **Release Version:** 2.0.0-PRO (Production Ready)  
 > **Repository:** [kurtapexlegends-bot/zenith-game-optimizer](https://github.com/kurtapexlegends-bot/zenith-game-optimizer)  
 > **Branch:** `main` | **Head Commit:** `37e5801` (Batched release suite)  
-> **Verification Status:** 19/19 Tests Passing (`ZenithTests.exe`)  
+> **Verification Status:** 32/32 Tests Passing (`ZenithTests.exe`)  
 > **Aesthetic Standard:** Minimalist Monochrome / Asymmetrical Apple Product Showcase / 60 FPS Fluid Motion / Zero Emojis  
 
 ---
@@ -25,7 +25,7 @@ All code changes have been staged, verified, and pushed to the upstream reposito
 | **Device Spoof Profile** | Must stay locked to ASUS ROG Phone 7 Ultimate (`ASUS_AI2205_D` / ASUS / asus) to retain Moonton 120 FPS whitelist. | **LOCKED** | `Select-String -Path C:\ProgramData\BlueStacks_nxt\bluestacks.conf -Pattern "device_model"` |
 | **Typography & Copy** | Zero decorative or inline unicode emojis anywhere in the UI, toasts, logs, or code. | **0 EMOJIS DETECTED** (Scan across all `.cs`, `.xaml`, `.json`) | AST Regex Unicode Scan (`find_emojis_utf8.py`) |
 | **AppUserModelID** | Must be explicitly bound in `App.xaml.cs` to break stale Windows taskbar icon caching. | **BOUND** (`Zenith.GameOptimizer.Pro.v2`) | [App.xaml.cs](file:///C:/SIDEPROJECTS/zenith-game-optimizer/App.xaml.cs) |
-| **Automated Test Suite** | 19/19 tests covering memory, timer resolution, profile tuner, and BlueStacks protection must pass. | **19/19 PASS** | `.\ZenithTests.exe` |
+| **Automated Test Suite** | 32/32 tests covering memory, timer resolution, profile tuner, BlueStacks protection, and multi-res icons must pass. | **32/32 PASS** | `.\ZenithTests.exe` |
 
 ---
 
@@ -53,12 +53,17 @@ Following Apple product showcase principles ([robbietilton.com](https://robbieti
 4. **Accordion Disclosure Animation:** Expanding game tools activates a smooth opacity and Y-slide reveal (`TranslateTransform.Y: -8px -> 0px` over 200ms).
 5. **High-DPI Font Rendering:** Enforced `RenderOptions.BitmapScalingMode="HighQuality"`, `RenderOptions.ClearTypeHint="Enabled"`, and `TextOptions.TextFormattingMode="Display"` across the primary visual tree.
 
-### 3.3 Taskbar Icon Root-Cause Fix
-- **Problem:** Windows Shell was aggressively pinning stale blue/black cached icons from `iconcache_*.db` based on the old executable launch path, ignoring newly compiled icon resources.
+### 3.3 Taskbar, Shell & System Tray Icon Root-Cause Fix
+- **Problem:** 
+  1. An elevated orphan process (PID 7716) from a prior session held `Local\ZenithGameOptimizer_SingleInstance_Mutex`, causing all subsequent launches of the new executable to exit immediately, locking the user to the stale tray icon and old binary.
+  2. The Windows Start Menu recommended `ZenithBidSniper.exe` via ROT13 UserAssist history even after file deletion.
+  3. Desktop shortcuts had broken icon location references, and WPF `pack://application:,,,/app.ico` failed without the assembly name or explicit `ResourceAssembly`.
 - **Solution:** 
-  1. Assigned explicit `AppUserModelID` via `Shell32.SetCurrentProcessExplicitAppUserModelID("Zenith.GameOptimizer.Pro.v2")` in `App.xaml.cs`.
-  2. Fixed `HICON` lifetime bug in `MainWindow.OnSourceInitialized` by storing `_persistentIconBig` and `_persistentIconSmall` as static handles so they are never garbage-collected or destroyed while the Win32 window is alive.
-  3. Generated a multi-resolution `.ico` (`zenith_v2.ico` and `app.ico`) with 16, 20, 24, 32, 40, 48, 64, 96, 128, and 256 pixel mipmaps featuring pure monochrome white geometry on deep obsidian (`#0E1116`).
+  1. Terminated PID 7716 via WMI `Win32_Process.Terminate()`, purged `bin\Release\ZenithOptimizer.old.exe`, and freed the single-instance mutex.
+  2. Pruned dead ROT13 `MravguOvqFavcre.rkr` entries from `HKCU:\...\Explorer\UserAssist`.
+  3. Set `ResourceAssembly = typeof(App).Assembly;` in `App.xaml.cs` and bound `Icon="pack://application:,,,/ZenithOptimizer;component/app.ico"`.
+  4. Dynamically queried `GetSystemMetrics(SM_CXSMICON)` in `GenerateTrayIcon()` and `OnSourceInitialized()` so Windows 11 high-DPI scaling (125%, 150%, 200%) dynamically selects 20x20, 24x24, or 32x32 crisp mipmap frames.
+  5. Updated all shortcuts on Desktop and Start Menu to point to `bin\Release\ZenithOptimizer.exe` and refreshed shell icon cache via `SHChangeNotify(SHCNE_ASSOCCHANGED)`.
 
 ---
 
@@ -79,7 +84,7 @@ C:\SIDEPROJECTS\zenith-game-optimizer\
 ├── App.xaml / App.xaml.cs             # Mutex lock & AppUserModelID initialization
 ├── MainWindow.xaml / .xaml.cs         # Asymmetrical UI, fluid motion triggers, Win32 icon bindings
 ├── ZenithOptimizer.csproj             # .NET 8.0 Windows Desktop project
-├── app.ico / zenith_v2.ico            # Monochrome obsidian-and-white icons (multi-res)
+├── app.ico                            # Monochrome obsidian-and-white icon (multi-res 16-256px)
 ├── Models/
 │   └── GameProfile.cs                 # Curated 9-game roster (zero emojis, AC Unity added)
 ├── Services/

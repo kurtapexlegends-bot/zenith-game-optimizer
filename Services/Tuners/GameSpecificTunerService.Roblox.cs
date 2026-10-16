@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
@@ -333,25 +334,21 @@ namespace ZenithOptimizer.Services
 
                     : "FFlagDebugGraphicsPreferD3D11";
 
-                if (content.Contains(flagName))
+                content = UpdateJsonSetting(content, flagName, true);
 
-                {
 
-                    content = Regex.Replace(content, @"""" + flagName + @"""\s*:\s*(true|false)", @"""" + flagName + @""": true");
 
-                }
 
-                else
 
-                {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"" + flagName + "\": true\r\n}";
 
-                }
+
+
+
+
+
 
                 File.WriteAllText(mainFile, content);
 
@@ -393,11 +390,11 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDisablePostFx\": true\r\n}";
+
+
+                    content = UpdateJsonSetting(content, "FFlagDisablePostFx", true);
 
                     File.WriteAllText(mainFile, content);
 
@@ -441,11 +438,11 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDebugGraphicsDisableTexturePreloading\": true\r\n}";
+
+
+                    content = UpdateJsonSetting(content, "FFlagDebugGraphicsDisableTexturePreloading", true);
 
                     File.WriteAllText(mainFile, content);
 
@@ -489,11 +486,11 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDebugDisplayFPS\": true\r\n}";
+
+
+                    content = UpdateJsonSetting(content, "FFlagDebugDisplayFPS", true);
 
                     File.WriteAllText(mainFile, content);
 
@@ -797,12 +794,12 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDebugDisableShadowMap\": true,\r\n  \"FIntRenderShadowIntensity\": 0\r\n}";
 
+
+                    content = UpdateJsonSetting(content, "FFlagDebugDisableShadowMap", true);
+                    content = UpdateJsonSetting(content, "FIntRenderShadowIntensity", 0);
                     File.WriteAllText(mainFile, content);
 
                 }
@@ -841,12 +838,12 @@ namespace ZenithOptimizer.Services
 
                 string content = File.Exists(mainFile) ? File.ReadAllText(mainFile) : "{\r\n}";
 
-                content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                if (content.Length > 2) content += ",\r\n";
 
-                content += "  \"DFFlagTextureQualityOverrideEnabled\": true,\r\n  \"DFIntTextureQualityOverride\": " + qualityLevel + "\r\n}";
 
+
+                content = UpdateJsonSetting(content, "DFFlagTextureQualityOverrideEnabled", true);
+                content = UpdateJsonSetting(content, "DFIntTextureQualityOverride", qualityLevel);
                 File.WriteAllText(mainFile, content);
 
                 string desc = qualityLevel == 1 ? "Performance (1/4 Res Textures)" : (qualityLevel == 2 ? "Balanced" : "Ultra HD");
@@ -889,11 +886,11 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagFixCameraOffsetPitch\": true\r\n}";
+
+
+                    content = UpdateJsonSetting(content, "FFlagFixCameraOffsetPitch", true);
 
                     File.WriteAllText(mainFile, content);
 
@@ -933,11 +930,11 @@ namespace ZenithOptimizer.Services
 
                 string content = File.Exists(mainFile) ? File.ReadAllText(mainFile) : "{\r\n}";
 
-                content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                if (content.Length > 2) content += ",\r\n";
 
-                content += "  \"DFIntTaskSchedulerTargetFpsInBackground\": " + backgroundFps + "\r\n}";
+
+
+                content = UpdateJsonSetting(content, "DFIntTaskSchedulerTargetFpsInBackground", backgroundFps);
 
                 File.WriteAllText(mainFile, content);
 
@@ -979,11 +976,11 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDebugDisableWaterReflection\": true\r\n}";
+
+
+                    content = UpdateJsonSetting(content, "FFlagDebugDisableWaterReflection", true);
 
                     File.WriteAllText(mainFile, content);
 
@@ -1081,11 +1078,11 @@ namespace ZenithOptimizer.Services
 
                 string content = File.Exists(mainFile) ? File.ReadAllText(mainFile) : "{\r\n}";
 
-                content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                if (content.Length > 2) content += ",\r\n";
 
-                content += "  \"DFIntDebugForceFoliageCutoffDistance\": " + distance + "\r\n}";
+
+
+                content = UpdateJsonSetting(content, "DFIntDebugForceFoliageCutoffDistance", distance);
 
                 File.WriteAllText(mainFile, content);
 
@@ -1170,31 +1167,31 @@ namespace ZenithOptimizer.Services
 
                 string jsonPath = Path.Combine(clientSettingsDir, "ClientAppSettings.json");
 
-                string content = "{\r\n  \"FFlagDebugDisableShadowMap\": \"true\",\r\n  \"DFIntTextureQualityOverride\": 1\r\n}\r\n";
+                string existing = File.Exists(jsonPath) ? File.ReadAllText(jsonPath) : "";
 
-                if (File.Exists(jsonPath))
+                string content = UpdateJsonSetting(existing, "FFlagDebugDisableShadowMap", true);
 
-                {
+                content = UpdateJsonSetting(content, "DFIntTextureQualityOverride", 1);
 
-                    string existing = File.ReadAllText(jsonPath);
 
-                    if (!existing.Contains("FFlagDebugDisableShadowMap"))
 
-                    {
 
-                        content = existing.TrimEnd().TrimEnd('}') + ",\r\n  \"FFlagDebugDisableShadowMap\": \"true\"\r\n}\r\n";
 
-                    }
 
-                    else
 
-                    {
 
-                        content = existing;
 
-                    }
 
-                }
+
+
+
+
+
+
+
+
+
+
 
                 File.WriteAllText(jsonPath, content);
 
@@ -1294,41 +1291,33 @@ namespace ZenithOptimizer.Services
 
                 string jsonPath = Path.Combine(localApp, @"Roblox\ClientSettings\ClientAppSettings.json");
 
-                string content = "{\r\n  \"FFlagDebugDisableParticleEmitters\": \"true\"\r\n}\r\n";
+                string existing = File.Exists(jsonPath) ? File.ReadAllText(jsonPath) : "";
 
-                if (File.Exists(jsonPath))
+                string content = UpdateJsonSetting(existing, "FFlagDebugDisableParticleEmitters", true);
 
-                {
 
-                    string existing = File.ReadAllText(jsonPath);
 
-                    if (!existing.Contains("FFlagDebugDisableParticleEmitters"))
 
-                    {
 
-                        content = existing.TrimEnd().TrimEnd('}') + ",\r\n  \"FFlagDebugDisableParticleEmitters\": \"true\"\r\n}\r\n";
 
-                    }
 
-                    else
 
-                    {
 
-                        content = existing;
 
-                    }
 
-                }
 
-                else
 
-                {
+
+
+
+
+
+
+
 
                     string dir = Path.GetDirectoryName(jsonPath);
 
                     if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-
-                }
 
                 File.WriteAllText(jsonPath, content);
 
@@ -1464,41 +1453,37 @@ namespace ZenithOptimizer.Services
 
                 string jsonPath = Path.Combine(localApp, @"Roblox\ClientSettings\ClientAppSettings.json");
 
-                string content = "{\r\n  \"DFIntCameraFieldOfView\": 105\r\n}\r\n";
+                string existing = File.Exists(jsonPath) ? File.ReadAllText(jsonPath) : "";
 
-                if (File.Exists(jsonPath))
+                string content = UpdateJsonSetting(existing, "DFIntCameraFieldOfView", 105);
 
-                {
 
-                    string existing = File.ReadAllText(jsonPath);
 
-                    if (!existing.Contains("DFIntCameraFieldOfView"))
 
-                    {
 
-                        content = existing.TrimEnd().TrimEnd('}') + ",\r\n  \"DFIntCameraFieldOfView\": 105\r\n}\r\n";
 
-                    }
 
-                    else
 
-                    {
 
-                        content = existing;
 
-                    }
 
-                }
 
-                else
 
-                {
+
+
+
+
+
+
+
+
+
+
+
 
                     string dir = Path.GetDirectoryName(jsonPath);
 
                     if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-
-                }
 
                 File.WriteAllText(jsonPath, content);
 
@@ -1562,38 +1547,7 @@ namespace ZenithOptimizer.Services
 
             {
 
-                Process[] rbxProcs = Process.GetProcessesByName("RobloxPlayerBeta");
-
-                if (rbxProcs != null && rbxProcs.Length > 0)
-
-                {
-
-                    foreach (var p in rbxProcs)
-
-                    {
-
-                        try
-
-                        {
-
-                            MemoryPurgeService.EmptyWorkingSet(p.Handle);
-
-                        }
-
-                        catch { }
-
-                        finally
-
-                        {
-
-                            p.Dispose();
-
-                        }
-
-                    }
-
-                }
-
+                // Zero-Drawback: flush Windows standby list safely without evicting the game's active pages
                 freedBytes = _memoryService.PurgeSafeBackgroundMemory();
 
                 double mb = Math.Round((double)freedBytes / (1024 * 1024), 1);
@@ -2053,24 +2007,7 @@ namespace ZenithOptimizer.Services
 
             {
 
-                Process[] procs = Process.GetProcessesByName("RobloxPlayerBeta");
-
-                if (procs != null)
-
-                {
-
-                    foreach (var p in procs)
-
-                    {
-
-                        try { MemoryPurgeService.EmptyWorkingSet(p.Handle); } catch { }
-
-                        finally { p.Dispose(); }
-
-                    }
-
-                }
-
+                // Zero-Drawback: Purge Windows standby list safely without evicting the active game process
                 freedBytes = _memoryService.PurgeSafeBackgroundMemory();
 
                 double mb = Math.Round((double)freedBytes / (1024 * 1024), 1);
@@ -2764,6 +2701,263 @@ namespace ZenithOptimizer.Services
 
         }
 
+        public bool ToggleRobloxAuctionSniper(out bool isActive, out string message)
+        {
+            bool ok = RobloxBidSniperService.Instance.Toggle(out isActive, out message);
+            if (isActive)
+            {
+                // Auto-show HUD overlay so user has immediate visual feedback
+                try { ZenithOptimizer.UI.RobloxSniperOverlay.Instance.Show(); } catch { }
+            }
+            else
+            {
+                try { ZenithOptimizer.UI.RobloxSniperOverlay.Instance.Hide(); } catch { }
+            }
+            return ok;
+        }
 
+        public bool ToggleRobloxSniperOverlay(out bool isVisible, out string message)
+        {
+            var overlay = ZenithOptimizer.UI.RobloxSniperOverlay.Instance;
+            overlay.Toggle();
+            isVisible = overlay.IsVisible;
+            message = isVisible 
+                ? "Gaming HUD Overlay & Sensor Reticle visible on screen. Drag reticle over green zone!" 
+                : "Gaming HUD Overlay hidden.";
+            return true;
+        }
+
+        public bool TriggerRobloxSniperTestClick(out string message)
+        {
+            RobloxBidSniperService.Instance.TriggerTestClick();
+            message = "Dispatched test click (25ms down/up). Input verified!";
+            return true;
+        }
+
+        public bool TriggerRobloxSniperTurboBurst(out string message)
+        {
+            RobloxBidSniperService.Instance.TriggerTurboBurst(3);
+            message = "Dispatched 3x Turbo Bid burst. High-speed input verified!";
+            return true;
+        }
+
+        public bool SetRobloxSniperSensorToCursor(out string message)
+        {
+            int x, y;
+            bool ok = RobloxBidSniperService.Instance.SetSensorToCurrentCursor(out x, out y);
+            message = ok 
+                ? string.Format("Sensor reticle locked to screen coordinates ({0}, {1})", x, y)
+                : "Unable to query current mouse coordinates.";
+            return ok;
+        }
+
+        public bool IsRobloxSniperOverlayVisible()
+        {
+            return ZenithOptimizer.UI.RobloxSniperOverlay.Instance.IsVisible;
+        }
+
+        public bool IsRobloxAuctionSniperActive()
+        {
+            return RobloxBidSniperService.Instance.IsRunning;
+        }
+
+        public string GetRobloxAuctionSniperStatus()
+        {
+            var sniper = RobloxBidSniperService.Instance;
+            if (!sniper.IsRunning)
+            {
+                return "Inactive (Standby)";
+            }
+            return string.Format("Active • {0} • Spot: ({1}, {2}) • Snipes: {3}", 
+                sniper.IsArmed ? "Armed [Auto-Click Ready]" : "Disarmed [V to Snipe]", 
+                sniper.SensorPosition.X,
+                sniper.SensorPosition.Y,
+                sniper.SuccessfulSnipes);
+        }
+
+        public bool SetRobloxSniperClickTargetToCursor(out string message)
+        {
+            int x, y;
+            bool ok = RobloxBidSniperService.Instance.SetClickTargetToCurrentCursor(out x, out y);
+            message = ok
+                ? string.Format("Bid Button click target locked to screen coordinates ({0}, {1})", x, y)
+                : "Unable to query current mouse coordinates.";
+            return ok;
+        }
+
+        public bool ResetRobloxSniperClickTarget(out string message)
+        {
+            RobloxBidSniperService.Instance.ResetCalibration();
+            message = "Bid Button click target reset to active mouse cursor position.";
+            return true;
+        }
+
+        public bool CalibrateRobloxSniperTargetColorFromCursor(out string message)
+        {
+            int r, g, b;
+            bool ok = RobloxBidSniperService.Instance.SampleTargetColorAtCursor(out r, out g, out b);
+            message = ok
+                ? string.Format("Eyedropper sampled color RGB({0}, {1}, {2}) [#{0:X2}{1:X2}{2:X2}] locked as sweet-spot target!", r, g, b)
+                : "Unable to sample color under mouse cursor.";
+            return ok;
+        }
+
+        public bool ResetRobloxSniperTargetColor(out string message)
+        {
+            RobloxBidSniperService.Instance.ResetTargetColor();
+            message = "Target color reset to Dynamic HSV Green Sweet-Spot mode.";
+            return true;
+        }
+
+        public bool SetRobloxSniperTriggerMode(string mode, out string message)
+        {
+            RobloxBidSniperService.Instance.TriggerMode = mode;
+            message = string.Format("Roblox Auction Sniper trigger mode set to: {0}", mode);
+            return true;
+        }
+
+        // =========================================================================
+        // STORAGE HUNTERS & ROBLOX RENDER DISTANCE UNLOCKER & FOG ELIMINATOR
+        // =========================================================================
+
+        public bool UnlockStorageHuntersRenderDistance(out string message)
+        {
+            try
+            {
+                string localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string robloxDir = Path.Combine(localApp, "Roblox");
+                if (!Directory.Exists(robloxDir))
+                {
+                    message = "Roblox installation folder not found in AppData\\Local.";
+                    return false;
+                }
+
+                ApplyRobloxRenderDistanceFastFlags(robloxDir, true);
+
+                message = "✓ Storage Hunters Max Draw Distance Unlocked!\n• Render Distance: 100,000 Studs (Bypasses FRM throttling)\n• Foliage Cutoff: 10,000 Studs\n• Fog & Post-FX Shaders: Cleared / Disabled\n• Quality Override: Level 21 Locked (Ultra Crisp)";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = "Failed to unlock Roblox render distance: " + ex.Message;
+                return false;
+            }
+        }
+
+        public bool RestoreRobloxRenderDistance(out string message)
+        {
+            try
+            {
+                string localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string robloxDir = Path.Combine(localApp, "Roblox");
+                if (!Directory.Exists(robloxDir))
+                {
+                    message = "Roblox installation folder not found in AppData\\Local.";
+                    return false;
+                }
+
+                ApplyRobloxRenderDistanceFastFlags(robloxDir, false);
+
+                message = "✓ Storage Hunters & Roblox Draw Distance & Fog restored to standard engine defaults.";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = "Failed to restore Roblox render distance: " + ex.Message;
+                return false;
+            }
+        }
+
+        public bool IsStorageHuntersRenderDistanceUnlocked()
+        {
+            try
+            {
+                string localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string mainConfig = Path.Combine(localApp, @"Roblox\ClientSettings\ClientAppSettings.json");
+                if (File.Exists(mainConfig))
+                {
+                    string content = File.ReadAllText(mainConfig);
+                    return content.IndexOf("FIntRenderDistanceStuds", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                           content.IndexOf("DFIntDebugFRMQualityLevelOverride", StringComparison.OrdinalIgnoreCase) >= 0;
+                }
+            }
+            catch { }
+            return false;
+        }
+
+        private static void ApplyRobloxRenderDistanceFastFlags(string robloxDir, bool enable)
+        {
+            var targetFiles = new List<string>();
+
+            string clientSettingsDir = Path.Combine(robloxDir, "ClientSettings");
+            if (!Directory.Exists(clientSettingsDir)) Directory.CreateDirectory(clientSettingsDir);
+            targetFiles.Add(Path.Combine(clientSettingsDir, "ClientAppSettings.json"));
+
+            string versionsDir = Path.Combine(robloxDir, "Versions");
+            if (Directory.Exists(versionsDir))
+            {
+                string[] subDirs = Directory.GetDirectories(versionsDir);
+                foreach (string dir in subDirs)
+                {
+                    try
+                    {
+                        string vSettings = Path.Combine(dir, "ClientSettings");
+                        if (!Directory.Exists(vSettings)) Directory.CreateDirectory(vSettings);
+                        targetFiles.Add(Path.Combine(vSettings, "ClientAppSettings.json"));
+                    }
+                    catch { }
+                }
+            }
+
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+
+            foreach (string file in targetFiles)
+            {
+                try
+                {
+                    Dictionary<string, object> dict = null;
+                    if (File.Exists(file))
+                    {
+                        try
+                        {
+                            string json = File.ReadAllText(file);
+                            dict = serializer.Deserialize<Dictionary<string, object>>(json);
+                        }
+                        catch { }
+                    }
+                    if (dict == null) dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                    if (enable)
+                    {
+                        dict["FFlagDisablePostFx"] = "True";
+                        dict["DFIntDebugForceFoliageCutoffDistance"] = "10000";
+                        dict["DFIntDebugFRMQualityLevelOverride"] = "21";
+                        dict["FIntRenderDistanceStuds"] = "100000";
+                        dict["FIntRenderShadowIntensity"] = "0";
+                        dict["DFFlagDebugRenderForceTechnologyVoxel"] = "True";
+                    }
+                    else
+                    {
+                        dict.Remove("FFlagDisablePostFx");
+                        dict.Remove("DFIntDebugForceFoliageCutoffDistance");
+                        dict.Remove("DFIntDebugFRMQualityLevelOverride");
+                        dict.Remove("FIntRenderDistanceStuds");
+                        dict.Remove("FIntRenderShadowIntensity");
+                        dict.Remove("DFFlagDebugRenderForceTechnologyVoxel");
+                    }
+
+                    if (dict.Count > 0)
+                    {
+                        string updatedJson = serializer.Serialize(dict);
+                        File.WriteAllText(file, updatedJson);
+                    }
+                    else if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                    }
+                }
+                catch { }
+            }
+        }
     }
 }

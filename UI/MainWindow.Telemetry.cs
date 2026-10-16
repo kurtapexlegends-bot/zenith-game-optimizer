@@ -29,13 +29,33 @@ namespace ZenithOptimizer
 
                 ToastNotification.Visibility = Visibility.Visible;
 
+                var animFade = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                };
+                var animSlide = new DoubleAnimation(10.0, 0.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                };
+                ToastNotification.BeginAnimation(UIElement.OpacityProperty, animFade);
+                var tt = ToastNotification.RenderTransform as TranslateTransform;
+                if (tt != null)
+                {
+                    tt.BeginAnimation(TranslateTransform.YProperty, animSlide);
+                }
+
                 if (_toastTimer == null)
                 {
                     _toastTimer = new System.Windows.Threading.DispatcherTimer();
-                    _toastTimer.Interval = TimeSpan.FromSeconds(3.5);
+                    _toastTimer.Interval = TimeSpan.FromSeconds(3.0);
                     _toastTimer.Tick += (s, e) =>
                     {
-                        ToastNotification.Visibility = Visibility.Collapsed;
+                        var closeFade = new DoubleAnimation(ToastNotification.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(140)))
+                        {
+                            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+                        };
+                        closeFade.Completed += (cs, ce) => { ToastNotification.Visibility = Visibility.Collapsed; };
+                        ToastNotification.BeginAnimation(UIElement.OpacityProperty, closeFade);
                         _toastTimer.Stop();
                     };
                 }
@@ -65,7 +85,7 @@ namespace ZenithOptimizer
                             {
                                 _notifyIcon.Text = telem.IsGameRunning 
                                     ? ("Zenith: " + telem.ActiveGameName) 
-                                    : "Zenith Game Optimizer (Monitoring)";
+                                    : "Zenith Game Optimizer (Active)";
                             }
                             catch { }
                         }
@@ -77,10 +97,16 @@ namespace ZenithOptimizer
 
                         TxtTimerRes.Text = string.Format("{0:0.000} ms", telem.CurrentTimerResolutionMs);
                         TxtCpuLoad.Text = string.Format("{0:0.0} %", telem.CpuUsagePercent);
-                        TxtCpuCores.Text = string.Format("{0} Cores • Ready", telem.PhysicalCoreCount);
+                        TxtCpuCores.Text = string.Format("{0} Cores - Ready", telem.PhysicalCoreCount);
                         TxtRamLoad.Text = string.Format("{0:0} %", telem.RamUsagePercent);
                         TxtRamDetails.Text = string.Format("{0:0.0} of {1:0.0} GB Used", telem.UsedRamGb, telem.TotalRamGb);
                         TxtPowerPlan.Text = telem.ActivePowerPlanName;
+                        if (TxtThermalState != null)
+                        {
+                            TxtThermalState.Text = _monitorService.PowerService.IsInstantCooldownActive() 
+                                ? "Cooldown (80%)" 
+                                : (_monitorService.PowerService.IsLaptopThermalGuardActive() ? "Thermal Guard (99%)" : "Standard");
+                        }
 
                         TxtDetectedCpu.Text = telem.CpuName;
                         TxtDetectedGpu.Text = telem.GpuName;
@@ -92,7 +118,7 @@ namespace ZenithOptimizer
                             bool isPreArmed = telem.ActiveGameName.IndexOf("(Pre-Armed)", StringComparison.OrdinalIgnoreCase) >= 0;
                             DashHeroTitle.Text = isPreArmed ? telem.ActiveGameName : telem.ActiveGameName + " (Active & Optimized)";
                             DashHeroDesc.Text = isPreArmed
-                                ? "Pre-armed mode active: 0.500ms microsecond timer, High Performance power scheme, and audio shield engaged."
+                                ? "Pre-armed mode active: 0.500ms kernel timer, high performance power scheme, and audio shield engaged."
                                 : "Game mode engaged: 0.500ms ultra-low input response, audio shield, and priority scheduling are active.";
                             StatusText.Text = isPreArmed ? "Pre-Armed: " + telem.ActiveGameName.Replace(" (Pre-Armed)", "") : "Game Active: " + telem.ActiveGameName;
                             StatusBadgeBorder.Background = FrozenTheme.StatusBadgeActiveBg;
@@ -103,10 +129,10 @@ namespace ZenithOptimizer
                         {
                             if (BtnManualBoost.Content != null && BtnManualBoost.Content.ToString() != "Boosted (Active)")
                             {
-                                DashHeroTitle.Text = "Monitoring Your Games...";
-                                DashHeroDesc.Text = "Whenever you launch a supported game, Zenith automatically eliminates input lag, gives your game top priority, and keeps your PC running at full speed.";
+                                DashHeroTitle.Text = "System Monitoring Active";
+                                DashHeroDesc.Text = "Whenever a supported game starts, Zenith automatically engages 0.500ms precision scheduling, AudioDG isolation, and unparked CPU cores.";
                             }
-                            StatusText.Text = "Zenith Active • Auto-Optimizing Games";
+                            StatusText.Text = "Zenith Active - Auto-Optimizing";
                             StatusBadgeBorder.Background = FrozenTheme.StatusBadgeActiveBg;
                             StatusDot.Fill = FrozenTheme.StatusDotActive;
                             TxtFooterStatus.Text = "Zenith Engine Ready. 0 games running. Input Response: " + telem.CurrentTimerResolutionMs.ToString("0.000") + " ms";
@@ -114,13 +140,23 @@ namespace ZenithOptimizer
                     }
                     catch (Exception ex)
                     {
-                        System.IO.File.AppendAllText(@"C:\Users\acost\.gemini\antigravity\scratch\zenith-game-optimizer\error.log", "[TelemetryUI] " + ex.ToString() + "\r\n");
+                        try
+                        {
+                            string errPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ZenithOptimizer", "error.log");
+                            System.IO.File.AppendAllText(errPath, "[TelemetryUI] " + ex.ToString() + "\r\n");
+                        }
+                        catch { }
                     }
                 }));
             }
             catch (Exception ex)
             {
-                System.IO.File.AppendAllText(@"C:\Users\acost\.gemini\antigravity\scratch\zenith-game-optimizer\error.log", "[TelemetryInvoke] " + ex.ToString() + "\r\n");
+                try
+                {
+                    string errPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ZenithOptimizer", "error.log");
+                    System.IO.File.AppendAllText(errPath, "[TelemetryInvoke] " + ex.ToString() + "\r\n");
+                }
+                catch { }
             }
         }
 
@@ -168,7 +204,5 @@ namespace ZenithOptimizer
         {
             TxtEventLog.Clear();
         }
-// REGION: UI Polish: Search, Filter, Accordions, Latency Badge, Theme Accents & Profile Export/Import
-
     }
 }

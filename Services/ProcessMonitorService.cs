@@ -69,7 +69,7 @@ namespace ZenithOptimizer.Services
         public ProcessMonitorService()
         {
             _profiles = GameProfile.GetDefaultProfiles();
-            _settings = new OptimizationSettings();
+            _settings = OptimizationSettings.Load();
 
             _timerEngine = new TimerResolutionEngine();
             _priorityEngine = new PriorityAffinityEngine();
@@ -98,6 +98,7 @@ namespace ZenithOptimizer.Services
             profile.OptimizationBadge = "Custom Optimized";
             profile.TargetPacing = "High Precision";
             profile.IsCustom = true;
+            profile.IsInstalled = true;
             _profiles.Add(profile);
 
             if (LogMessage != null)

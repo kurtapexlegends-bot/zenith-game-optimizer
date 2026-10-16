@@ -11,3 +11,6 @@ scratch/
 *.backup_*
 error.log
 test_multi.ico
+*.old.exe
+*_old.exe
+ZenithTests.exe

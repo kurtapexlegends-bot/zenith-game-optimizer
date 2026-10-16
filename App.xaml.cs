@@ -9,7 +9,15 @@ namespace ZenithOptimizer
 {
     public partial class App : Application
     {
-        private const string ErrorLogPath = @"C:\Users\acost\.gemini\antigravity\scratch\zenith-game-optimizer\error.log";
+        private static string ErrorLogPath
+        {
+            get
+            {
+                string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ZenithOptimizer");
+                try { if (!Directory.Exists(dir)) Directory.CreateDirectory(dir); } catch { }
+                return Path.Combine(dir, "error.log");
+            }
+        }
         private const string MutexName = @"Local\ZenithGameOptimizer_SingleInstance_Mutex";
         private const string EventName = @"Local\ZenithGameOptimizer_ShowWindow_Event";
 
@@ -30,6 +38,12 @@ namespace ZenithOptimizer
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            try
+            {
+                ResourceAssembly = typeof(App).Assembly;
+            }
+            catch { }
+
             try
             {
                 SetCurrentProcessExplicitAppUserModelID("Zenith.GameOptimizer.Pro.v2");

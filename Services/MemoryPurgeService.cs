@@ -29,8 +29,56 @@ namespace ZenithOptimizer.Services
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
 
-        [DllImport("psapi.dll")]
-        public static extern int EmptyWorkingSet(IntPtr hwProc);
+        [DllImport("psapi.dll", EntryPoint = "EmptyWorkingSet")]
+        private static extern int EmptyWorkingSetRaw(IntPtr hwProc);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern uint GetProcessId(IntPtr Process);
+
+        /// <summary>
+        /// Safely trims working set for background helper utilities.
+        /// Hardened with root-cause zero-drawback protection: completely blocks working set eviction
+        /// on active game engines (Roblox, BlueStacks, League, Valorant, CS2, Tekken) and critical OS processes
+        /// to prevent hard page-fault storms, disk thrashing, and asset streaming freezes.
+        /// </summary>
+        public static int EmptyWorkingSet(IntPtr hwProc)
+        {
+            if (hwProc == IntPtr.Zero) return 0;
+            try
+            {
+                uint pid = GetProcessId(hwProc);
+                if (pid != 0)
+                {
+                    // Allow self process trim
+                    if (pid == (uint)Process.GetCurrentProcess().Id)
+                    {
+                        return EmptyWorkingSetRaw(hwProc);
+                    }
+
+                    try
+                    {
+                        using (var proc = Process.GetProcessById((int)pid))
+                        {
+                            string name = proc.ProcessName.ToLowerInvariant();
+                            for (int i = 0; i < ProtectedGameAndSystemNames.Length; i++)
+                            {
+                                if (name.IndexOf(ProtectedGameAndSystemNames[i], StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    // Game or system process protected! Block eviction to prevent page-fault storm.
+                                    return 1;
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                return EmptyWorkingSetRaw(hwProc);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetProcessWorkingSetSize(IntPtr hProcess, IntPtr dwMinimumWorkingSetSize, IntPtr dwMaximumWorkingSetSize);
@@ -149,14 +197,6 @@ namespace ZenithOptimizer.Services
             "dwm", "explorer", "audiodg", "csrss", "lsass", "smss", "wininit", "services", "system"
         };
 
-        // Idle background apps that are safe to trim to free RAM for games
-        private static readonly string[] SafeBackgroundAppsToTrim = new string[]
-        {
-            "chrome", "msedge", "firefox", "brave", "opera",
-            "Discord", "Spotify", "steamwebhelper", "EpicGamesLauncher",
-            "RiotClientServices", "slack", "teams", "battle.net", "origin", "eaBackgroundService", "galaxyclient"
-        };
-
         public void GetMemoryMetrics(out double totalGb, out double freeGb, out double usedGb, out double usedPercent)
         {
             totalGb = 16.0;
@@ -183,43 +223,20 @@ namespace ZenithOptimizer.Services
             long freedBytes = 0;
             try
             {
-                // Only trim known memory-heavy background applications
-                foreach (string appName in SafeBackgroundAppsToTrim)
-                {
-                    try
-                    {
-                        Process[] procs = Process.GetProcessesByName(appName);
-                        if (procs != null)
-                        {
-                            foreach (Process p in procs)
-                            {
-                                try
-                                {
-                                    long before = p.WorkingSet64;
-                                    EmptyWorkingSet(p.Handle);
-                                    p.Refresh();
-                                    long after = p.WorkingSet64;
-                                    if (before > after)
-                                    {
-                                        freedBytes += (before - after);
-                                    }
-                                }
-                                catch { }
-                                finally
-                                {
-                                    p.Dispose();
-                                }
-                            }
-                        }
-                    }
-                    catch { }
-                }
+                MEMORYSTATUSEX before = new MEMORYSTATUSEX();
+                GlobalMemoryStatusEx(before);
 
-                // Flush system standby cache if permissions allow
+                // Flush system standby list cache safely (SystemMemoryListInformation) without touching third-party working sets
                 FlushWindowsStandbyList();
 
-                // Trim Zenith's own working set
+                // Generational GC and trim Zenith's self-working set
                 TrimSelfMemory();
+
+                MEMORYSTATUSEX after = new MEMORYSTATUSEX();
+                if (GlobalMemoryStatusEx(after) && after.ullAvailPhys > before.ullAvailPhys)
+                {
+                    freedBytes = (long)(after.ullAvailPhys - before.ullAvailPhys);
+                }
             }
             catch { }
 

@@ -140,16 +140,16 @@ namespace ZenithOptimizer.Services
                 }
                 catch { }
 
-                // 2. High Process Priority & High I/O Priority in Windows IFEO (Zero Frame Stutters in 5v5)
+                // 2. AboveNormal Process Priority & High I/O Priority in Windows IFEO (Zero Frame Stutters in 5v5)
                 try
                 {
                     using (RegistryKey ifeo = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\HD-Player.exe\PerfOptions"))
                     {
                         if (ifeo != null)
                         {
-                            ifeo.SetValue("CpuPriorityClass", 3, RegistryValueKind.DWord); // 3 = High
+                            ifeo.SetValue("CpuPriorityClass", 6, RegistryValueKind.DWord); // 6 = AboveNormal (preserves DWM & audio scheduling)
                             ifeo.SetValue("IoPriority", 3, RegistryValueKind.DWord);        // 3 = High
-                            results.Add("High Process & I/O Priority");
+                            results.Add("AboveNormal Process & High I/O Priority");
                         }
                     }
                 }

@@ -17,6 +17,12 @@ namespace ZenithOptimizer.Models
         public bool EnableHighPriority { get; set; }
         public bool EnableStandbyPurge { get; set; }
         public bool IsCustom { get; set; }
+        public bool IsInstalled { get; set; }
+        public string DetectedExecutablePath { get; set; }
+        public bool IsFavorite { get; set; }
+        [System.Web.Script.Serialization.ScriptIgnore]
+        public System.Windows.Media.ImageSource IconImage { get; set; }
+
         public string PrimaryProcessName
         {
             get
@@ -33,6 +39,8 @@ namespace ZenithOptimizer.Models
             EnableStandbyPurge = false; // Default safe: do not evict active game RAM
             IsActive = false;
             IsCustom = false;
+            IsInstalled = false;
+            IsFavorite = false;
         }
 
         public static List<GameProfile> GetDefaultProfiles()

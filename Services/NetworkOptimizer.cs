@@ -172,7 +172,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
 
-                message = "Low-latency network packet delivery active (TCPNoDelay & unthrottled networking enabled).";
+                message = "Asset & download throughput optimization active (TCPNoDelay & unthrottled multimedia network throughput enabled. Note: Competitive game state packets use UDP).";
                 return true;
             }
             catch (Exception ex)

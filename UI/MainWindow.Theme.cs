@@ -52,58 +52,58 @@ namespace ZenithOptimizer
             {
                 if (isDark)
                 {
-                    TextPrimary = Freeze(new SolidColorBrush(Color.FromRgb(237, 237, 237)));
-                    TextSecondary = Freeze(new SolidColorBrush(Color.FromRgb(148, 155, 166)));
-                    TextMuted = Freeze(new SolidColorBrush(Color.FromRgb(93, 100, 114)));
-                    BadgeBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 28, 33, 41)));
-                    BorderSubtle = Freeze(new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)));
-                    BorderCard = Freeze(new SolidColorBrush(Color.FromArgb(31, 255, 255, 255)));
+                    TextPrimary = Freeze(new SolidColorBrush(Color.FromRgb(241, 245, 249)));
+                    TextSecondary = Freeze(new SolidColorBrush(Color.FromRgb(148, 163, 184)));
+                    TextMuted = Freeze(new SolidColorBrush(Color.FromRgb(100, 116, 139)));
+                    BadgeBg = Freeze(new SolidColorBrush(Color.FromArgb(140, 24, 30, 42)));
+                    BorderSubtle = Freeze(new SolidColorBrush(Color.FromArgb(24, 255, 255, 255)));
+                    BorderCard = Freeze(new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)));
                     BorderStrong = Freeze(new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)));
 
-                    ToolsPanelBg = Freeze(new SolidColorBrush(Color.FromArgb(204, 17, 19, 23)));
-                    CardBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 22, 25, 31)));
-                    ActiveBtnBg = Freeze(new SolidColorBrush(Color.FromArgb(204, 34, 39, 48)));
-                    ActiveBtnBorder = Freeze(new SolidColorBrush(Color.FromArgb(77, 255, 255, 255)));
-                    ActiveBtnFg = Freeze(new SolidColorBrush(Color.FromRgb(244, 244, 245)));
+                    ToolsPanelBg = Freeze(new SolidColorBrush(Color.FromArgb(160, 14, 18, 26)));
+                    CardBg = Freeze(new SolidColorBrush(Color.FromArgb(170, 20, 26, 36)));
+                    ActiveBtnBg = Freeze(new SolidColorBrush(Color.FromArgb(180, 32, 40, 54)));
+                    ActiveBtnBorder = Freeze(new SolidColorBrush(Color.FromArgb(70, 255, 255, 255)));
+                    ActiveBtnFg = Freeze(new SolidColorBrush(Color.FromRgb(248, 250, 252)));
 
-                    NotificationBg = Freeze(new SolidColorBrush(Color.FromArgb(204, 26, 29, 36)));
-                    NotificationBorder = Freeze(new SolidColorBrush(Color.FromArgb(51, 255, 255, 255)));
-                    CalloutBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 20, 22, 27)));
+                    NotificationBg = Freeze(new SolidColorBrush(Color.FromArgb(220, 20, 26, 36)));
+                    NotificationBorder = Freeze(new SolidColorBrush(Color.FromArgb(50, 255, 255, 255)));
+                    CalloutBg = Freeze(new SolidColorBrush(Color.FromArgb(160, 18, 23, 32)));
 
-                    StatusBadgeActiveBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 28, 33, 41)));
-                    StatusDotActive = Freeze(new SolidColorBrush(Color.FromRgb(237, 237, 237)));
+                    StatusBadgeActiveBg = Freeze(new SolidColorBrush(Color.FromArgb(140, 24, 30, 42)));
+                    StatusDotActive = Freeze(new SolidColorBrush(Color.FromRgb(16, 185, 129))); // Crisp Emerald
 
-                    AccordionHeaderBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 22, 25, 31)));
-                    AccordionHeaderHover = Freeze(new SolidColorBrush(Color.FromArgb(204, 30, 34, 42)));
-                    SearchBoxBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 20, 23, 29)));
+                    AccordionHeaderBg = Freeze(new SolidColorBrush(Color.FromArgb(150, 20, 26, 36)));
+                    AccordionHeaderHover = Freeze(new SolidColorBrush(Color.FromArgb(180, 30, 38, 50)));
+                    SearchBoxBg = Freeze(new SolidColorBrush(Color.FromArgb(160, 18, 24, 34)));
                 }
                 else
                 {
-                    // Light Mode (White first)
-                    TextPrimary = Freeze(new SolidColorBrush(Color.FromRgb(18, 20, 23)));
-                    TextSecondary = Freeze(new SolidColorBrush(Color.FromRgb(90, 98, 114)));
-                    TextMuted = Freeze(new SolidColorBrush(Color.FromRgb(136, 146, 162)));
-                    BadgeBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 237, 240, 245)));
-                    BorderSubtle = Freeze(new SolidColorBrush(Color.FromArgb(38, 0, 0, 0)));
-                    BorderCard = Freeze(new SolidColorBrush(Color.FromArgb(31, 0, 0, 0)));
-                    BorderStrong = Freeze(new SolidColorBrush(Color.FromArgb(77, 0, 0, 0)));
+                    // Light Mode (Crisp White First - Pure Acrylic Glass)
+                    TextPrimary = Freeze(new SolidColorBrush(Color.FromRgb(15, 23, 42)));
+                    TextSecondary = Freeze(new SolidColorBrush(Color.FromRgb(71, 85, 105)));
+                    TextMuted = Freeze(new SolidColorBrush(Color.FromRgb(148, 163, 184)));
+                    BadgeBg = Freeze(new SolidColorBrush(Color.FromArgb(140, 226, 232, 240)));
+                    BorderSubtle = Freeze(new SolidColorBrush(Color.FromArgb(16, 0, 0, 0)));
+                    BorderCard = Freeze(new SolidColorBrush(Color.FromArgb(24, 0, 0, 0)));
+                    BorderStrong = Freeze(new SolidColorBrush(Color.FromArgb(48, 0, 0, 0)));
 
-                    ToolsPanelBg = Freeze(new SolidColorBrush(Color.FromArgb(204, 245, 246, 248)));
-                    CardBg = Freeze(new SolidColorBrush(Color.FromArgb(230, 255, 255, 255)));
-                    ActiveBtnBg = Freeze(new SolidColorBrush(Color.FromArgb(204, 226, 230, 238)));
-                    ActiveBtnBorder = Freeze(new SolidColorBrush(Color.FromArgb(77, 0, 0, 0)));
-                    ActiveBtnFg = Freeze(new SolidColorBrush(Color.FromRgb(18, 20, 23)));
+                    ToolsPanelBg = Freeze(new SolidColorBrush(Color.FromArgb(180, 248, 250, 252)));
+                    CardBg = Freeze(new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)));
+                    ActiveBtnBg = Freeze(new SolidColorBrush(Color.FromArgb(180, 226, 232, 240)));
+                    ActiveBtnBorder = Freeze(new SolidColorBrush(Color.FromArgb(50, 0, 0, 0)));
+                    ActiveBtnFg = Freeze(new SolidColorBrush(Color.FromRgb(15, 23, 42)));
 
                     NotificationBg = Freeze(new SolidColorBrush(Color.FromArgb(230, 255, 255, 255)));
-                    NotificationBorder = Freeze(new SolidColorBrush(Color.FromArgb(51, 0, 0, 0)));
-                    CalloutBg = Freeze(new SolidColorBrush(Color.FromArgb(217, 240, 242, 246)));
+                    NotificationBorder = Freeze(new SolidColorBrush(Color.FromArgb(36, 0, 0, 0)));
+                    CalloutBg = Freeze(new SolidColorBrush(Color.FromArgb(180, 241, 245, 249)));
 
-                    StatusBadgeActiveBg = Freeze(new SolidColorBrush(Color.FromArgb(179, 237, 240, 245)));
-                    StatusDotActive = Freeze(new SolidColorBrush(Color.FromRgb(18, 20, 23)));
+                    StatusBadgeActiveBg = Freeze(new SolidColorBrush(Color.FromArgb(140, 226, 232, 240)));
+                    StatusDotActive = Freeze(new SolidColorBrush(Color.FromRgb(16, 185, 129))); // Crisp Emerald
 
-                    AccordionHeaderBg = Freeze(new SolidColorBrush(Color.FromArgb(204, 245, 246, 248)));
-                    AccordionHeaderHover = Freeze(new SolidColorBrush(Color.FromArgb(230, 237, 240, 245)));
-                    SearchBoxBg = Freeze(new SolidColorBrush(Color.FromArgb(230, 255, 255, 255)));
+                    AccordionHeaderBg = Freeze(new SolidColorBrush(Color.FromArgb(170, 241, 245, 249)));
+                    AccordionHeaderHover = Freeze(new SolidColorBrush(Color.FromArgb(195, 226, 232, 240)));
+                    SearchBoxBg = Freeze(new SolidColorBrush(Color.FromArgb(220, 255, 255, 255)));
                 }
             }
         }
@@ -114,23 +114,54 @@ namespace ZenithOptimizer
             {
                 if (BadgeLatencySaved == null || TxtLatencySaved == null) return;
 
-                double latencySavedMs = 0.0;
+                int activeSubsystems = 0;
                 var breakdown = new System.Text.StringBuilder();
-                breakdown.AppendLine(" Realtime Latency Reduction Estimate:");
+                breakdown.AppendLine("Active Kernel & Hardware Subsystems:");
 
-                // 1. High-Resolution Multimedia Timer (15.6ms Windows default -> 0.500ms)
-                if (_monitorService != null && _monitorService.TimerEngine != null && _monitorService.TimerEngine.IsHighResolutionActive)
+                double currentTimerMs = _monitorService != null && _monitorService.TimerEngine != null 
+                    ? _monitorService.TimerEngine.GetCurrentResolutionMs() 
+                    : 1.0;
+                bool timerActive = (_monitorService != null && _monitorService.TimerEngine != null && _monitorService.TimerEngine.IsHighResolutionActive)
+                                   || (ChkTweakTimer != null && ChkTweakTimer.IsChecked == true);
+                if (timerActive)
                 {
-                    latencySavedMs += 15.1;
-                    breakdown.AppendLine("• 0.500ms OS Multimedia Timer: ~15.1ms saved (from 15.6ms default)");
+                    activeSubsystems++;
+                    breakdown.AppendLine(string.Format("- High-Precision Multimedia Timer: ACTIVE ({0:0.000}ms target resolution)", currentTimerMs));
                 }
-                else if (ChkTweakTimer != null && ChkTweakTimer.IsChecked == true)
+                else
                 {
-                    latencySavedMs += 15.1;
-                    breakdown.AppendLine("• 0.500ms OS Multimedia Timer: ~15.1ms saved (from 15.6ms default)");
+                    breakdown.AppendLine(string.Format("- Standard Windows Timer: {0:0.000}ms (Default)", currentTimerMs));
                 }
 
-                // 2. Raw Input / Pointer Precision unhooking
+                bool directFlipActive = false;
+                foreach (var kvp in _toolActiveStates)
+                {
+                    if (kvp.Value && (kvp.Key.Contains("DirectFlip") || kvp.Key.Contains("Fullscreen") || kvp.Key.Contains("Borderless")))
+                    {
+                        directFlipActive = true;
+                        break;
+                    }
+                }
+                if (directFlipActive)
+                {
+                    activeSubsystems++;
+                    breakdown.AppendLine("- DWM DirectFlip Presentation: ENGAGED (Zero composition latency)");
+                }
+
+                bool audioShieldActive = (ChkAudioStabilization != null && ChkAudioStabilization.IsChecked == true);
+                if (audioShieldActive)
+                {
+                    activeSubsystems++;
+                    breakdown.AppendLine("- AudioDG Multimedia Shield: ENGAGED (Isolated to Core 1 / High priority)");
+                }
+
+                bool powerPlanActive = (ChkPowerPlan != null && ChkPowerPlan.IsChecked == true);
+                if (powerPlanActive)
+                {
+                    activeSubsystems++;
+                    breakdown.AppendLine("- CPU Core Unparking & High Performance: ACTIVE (100% Core Frequency)");
+                }
+
                 bool rawMouseActive = false;
                 foreach (var kvp in _toolActiveStates)
                 {
@@ -142,77 +173,28 @@ namespace ZenithOptimizer
                 }
                 if (rawMouseActive)
                 {
-                    latencySavedMs += 1.8;
-                    breakdown.AppendLine("• 1:1 Hardware Raw Mouse Aim: ~1.8ms curve lag removed");
+                    activeSubsystems++;
+                    breakdown.AppendLine("- Hardware 1:1 Raw Mouse Aim: ACTIVE (Dynamic acceleration curves disabled)");
                 }
 
-                // 3. Process Priority / Realtime Audio scheduling
-                bool priorityActive = false;
-                foreach (var kvp in _toolActiveStates)
-                {
-                    if (kvp.Value && (kvp.Key.Contains("Priority") || kvp.Key.Contains("AudioDG") || kvp.Key.Contains("P-Core")))
-                    {
-                        priorityActive = true;
-                        break;
-                    }
-                }
-                if (priorityActive || (ChkAudioStabilization != null && ChkAudioStabilization.IsChecked == true))
-                {
-                    latencySavedMs += 2.2;
-                    breakdown.AppendLine("• High Process & Audio Priority: ~2.2ms scheduling jitter eliminated");
-                }
-
-                // 4. DirectFlip / Fullscreen Optimization bypass
-                bool displayActive = false;
-                foreach (var kvp in _toolActiveStates)
-                {
-                    if (kvp.Value && (kvp.Key.Contains("DirectFlip") || kvp.Key.Contains("Fullscreen") || kvp.Key.Contains("Borderless")))
-                    {
-                        displayActive = true;
-                        break;
-                    }
-                }
-                if (displayActive)
-                {
-                    latencySavedMs += 3.5;
-                    breakdown.AppendLine("• DirectFlip / DWM Bypass: ~3.5ms composition lag saved");
-                }
-
-                // 5. TCPNoDelay / Network DSCP QoS
-                bool netActive = false;
-                foreach (var kvp in _toolActiveStates)
-                {
-                    if (kvp.Value && (kvp.Key.Contains("TCPNoDelay") || kvp.Key.Contains("QoS") || kvp.Key.Contains("Socket")))
-                    {
-                        netActive = true;
-                        break;
-                    }
-                }
+                bool netActive = (_monitorService != null && _monitorService.NetworkService != null && _monitorService.NetworkService.IsOptimized());
                 if (netActive)
                 {
-                    latencySavedMs += 2.0;
-                    breakdown.AppendLine("• TCPNoDelay Sub-1ms Sockets: ~2.0ms packet dispatch latency saved");
+                    activeSubsystems++;
+                    breakdown.AppendLine("- Network QoS & TCPNoDelay: ACTIVE (DSCP prioritized)");
                 }
 
-                // 6. 1-Frame / Reflex Max Pre-rendered frames
-                bool reflexActive = false;
-                foreach (var kvp in _toolActiveStates)
+                if (activeSubsystems > 0)
                 {
-                    if (kvp.Value && (kvp.Key.Contains("Reflex") || kvp.Key.Contains("Pre-Rendered") || kvp.Key.Contains("60.00 FPS") || kvp.Key.Contains("Pacing")))
-                    {
-                        reflexActive = true;
-                        break;
-                    }
+                    TxtLatencySaved.Text = timerActive 
+                        ? string.Format("{0:0.000}ms Timer - {1} Subsystems Tuned", currentTimerMs, activeSubsystems)
+                        : string.Format("{0} Subsystems Tuned", activeSubsystems);
                 }
-                if (reflexActive)
+                else
                 {
-                    latencySavedMs += 8.3;
-                    breakdown.AppendLine("• Driver 1-Frame Pre-Render / Reflex: ~8.3ms render queue latency saved");
+                    TxtLatencySaved.Text = "Standard Kernel State";
                 }
 
-                if (latencySavedMs < 15.1) latencySavedMs = 15.1;
-
-                TxtLatencySaved.Text = string.Format("~{0:0.0}ms Latency Saved", latencySavedMs);
                 BadgeLatencySaved.ToolTip = breakdown.ToString().TrimEnd();
             }
             catch { }
@@ -241,51 +223,60 @@ namespace ZenithOptimizer
         {
             _isDarkMode = isDark;
             FrozenTheme.SetMode(isDark);
+            if (_monitorService != null && _monitorService.Settings != null)
+            {
+                _monitorService.Settings.Theme = isDark ? "Dark" : "Light";
+                _monitorService.Settings.Save();
+            }
 
             if (isDark)
             {
-                Resources["BgBase"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(217, 14, 16, 19)));
-                Resources["BgCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(179, 22, 25, 31)));
-                Resources["BgCardHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(204, 30, 34, 42)));
-                Resources["BgSidebar"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(204, 18, 20, 24)));
-                Resources["BgSunken"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(179, 10, 12, 14)));
-                Resources["BorderSubtle"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)));
-                Resources["BorderCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(31, 255, 255, 255)));
+                Resources["BgBase"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(250, 11, 14, 20)));
+                Resources["BgCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(170, 19, 23, 34)));
+                Resources["BgCardHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(200, 26, 32, 46)));
+                Resources["BgSidebar"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(245, 14, 18, 26)));
+                Resources["BgSunken"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(100, 26, 32, 46)));
+                Resources["BorderSubtle"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(24, 255, 255, 255)));
+                Resources["BorderCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)));
                 Resources["BorderStrong"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)));
-                Resources["TextPrimary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(237, 237, 237)));
-                Resources["TextSecondary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(148, 155, 166)));
-                Resources["TextMuted"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(93, 100, 114)));
-                Resources["AccentAction"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(237, 237, 237)));
-                Resources["AccentActionFg"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(17, 18, 21)));
-                Resources["AccentActionHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(212, 212, 216)));
-                Resources["ActiveStateBg"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(204, 34, 39, 48)));
-                Resources["ActiveStateBorder"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(77, 255, 255, 255)));
-                Resources["ActiveStateText"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(237, 237, 237)));
+                Resources["TextPrimary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(241, 245, 249)));
+                Resources["TextSecondary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(148, 163, 184)));
+                Resources["TextMuted"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(100, 116, 139)));
+                Resources["AccentAction"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(241, 245, 249)));
+                Resources["AccentActionFg"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(11, 14, 20)));
+                Resources["AccentActionHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(255, 255, 255)));
+                Resources["ActiveStateBg"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(180, 32, 40, 54)));
+                Resources["ActiveStateBorder"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(70, 255, 255, 255)));
+                Resources["ActiveStateText"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(248, 250, 252)));
 
-                if (BtnThemeToggle != null) BtnThemeToggle.Content = "Theme: Dark";
+                if (IconSun != null) IconSun.Visibility = Visibility.Collapsed;
+                if (IconMoon != null) IconMoon.Visibility = Visibility.Visible;
+                if (BtnThemeToggle != null) BtnThemeToggle.ToolTip = "Switch to Light Mode";
                 ShowNotificationBanner("Dark Mode Active");
             }
             else
             {
-                Resources["BgBase"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(230, 244, 245, 248)));
-                Resources["BgCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(230, 255, 255, 255)));
-                Resources["BgCardHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(242, 248, 249, 251)));
-                Resources["BgSidebar"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(204, 234, 236, 239)));
-                Resources["BgSunken"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(217, 237, 240, 245)));
-                Resources["BorderSubtle"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(38, 0, 0, 0)));
-                Resources["BorderCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(31, 0, 0, 0)));
-                Resources["BorderStrong"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(77, 0, 0, 0)));
-                Resources["TextPrimary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(18, 20, 23)));
-                Resources["TextSecondary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(90, 98, 114)));
-                Resources["TextMuted"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(136, 146, 162)));
-                Resources["AccentAction"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(18, 20, 23)));
+                Resources["BgBase"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(250, 248, 250, 252)));
+                Resources["BgCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(210, 255, 255, 255)));
+                Resources["BgCardHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(240, 255, 255, 255)));
+                Resources["BgSidebar"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(245, 241, 245, 249)));
+                Resources["BgSunken"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(120, 226, 232, 240)));
+                Resources["BorderSubtle"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(16, 0, 0, 0)));
+                Resources["BorderCard"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(24, 0, 0, 0)));
+                Resources["BorderStrong"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(48, 0, 0, 0)));
+                Resources["TextPrimary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(15, 23, 42)));
+                Resources["TextSecondary"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(71, 85, 105)));
+                Resources["TextMuted"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(148, 163, 184)));
+                Resources["AccentAction"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(15, 23, 42)));
                 Resources["AccentActionFg"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(255, 255, 255)));
-                Resources["AccentActionHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(42, 46, 53)));
-                Resources["ActiveStateBg"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(204, 226, 230, 238)));
-                Resources["ActiveStateBorder"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(77, 0, 0, 0)));
-                Resources["ActiveStateText"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(18, 20, 23)));
+                Resources["AccentActionHover"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(30, 41, 59)));
+                Resources["ActiveStateBg"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(180, 226, 232, 240)));
+                Resources["ActiveStateBorder"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromArgb(50, 0, 0, 0)));
+                Resources["ActiveStateText"] = FrozenTheme.Freeze(new SolidColorBrush(Color.FromRgb(15, 23, 42)));
 
-                if (BtnThemeToggle != null) BtnThemeToggle.Content = "Theme: Light";
+                if (IconSun != null) IconSun.Visibility = Visibility.Visible;
+                if (IconMoon != null) IconMoon.Visibility = Visibility.Collapsed;
+                if (BtnThemeToggle != null) BtnThemeToggle.ToolTip = "Switch to Dark Mode";
                 ShowNotificationBanner("Light Mode Active");
             }
 
@@ -298,6 +289,5 @@ namespace ZenithOptimizer
 
             PopulateGameProfiles();
         }
-
     }
 }

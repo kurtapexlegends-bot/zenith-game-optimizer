@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
@@ -1641,6 +1641,29 @@ namespace ZenithOptimizer.Services
             catch (Exception ex)
             {
                 message = "Mouse Pacing: " + ex.Message;
+                return false;
+            }
+        }
+
+        public bool RestoreMouseInputPacing(out string message)
+        {
+            try
+            {
+                using (var key = Registry.CurrentUser.CreateSubKey(@"Control Panel\Mouse"))
+                {
+                    if (key != null)
+                    {
+                        key.SetValue("MouseSpeed", "1", RegistryValueKind.String);
+                        key.SetValue("MouseThreshold1", "6", RegistryValueKind.String);
+                        key.SetValue("MouseThreshold2", "10", RegistryValueKind.String);
+                    }
+                }
+                message = "Standard Windows mouse curve restored.";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = "Mouse Pacing Restore: " + ex.Message;
                 return false;
             }
         }

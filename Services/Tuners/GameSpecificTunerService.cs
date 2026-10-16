@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
@@ -105,31 +106,43 @@ namespace ZenithOptimizer.Services
         }
 
         private static string ReplaceOrInsert(string content, string section, string key, string value)
-
         {
+            if (content == null) content = string.Empty;
 
-            string pattern = @"(" + Regex.Escape(key) + @"=)\d+";
+            // Pattern for matching section header [SectionName]
+            string sectionHeaderPattern = @"(?m)^\[\s*" + Regex.Escape(section) + @"\s*\]";
+            Match secMatch = Regex.Match(content, sectionHeaderPattern, RegexOptions.IgnoreCase);
 
-            if (Regex.IsMatch(content, pattern))
+            // Pattern supporting integers, floating-point numbers, booleans, quoted strings, and arbitrary value strings
+            string keyLinePattern = @"(?m)^([ \t]*" + Regex.Escape(key) + @"[ \t]*=[ \t]*)(?:""[^""\r\n]*""|'[^'\r\n]*'|[+-]?\d+(?:\.\d+)?|true|false|[^\r\n]*)";
 
+            if (secMatch.Success)
             {
+                int sectionBodyStart = secMatch.Index + secMatch.Length;
+                // Find next section header or EOF
+                Match nextSecMatch = Regex.Match(content.Substring(sectionBodyStart), @"(?m)^\[[^\]]+\]");
+                int sectionBodyLength = nextSecMatch.Success ? nextSecMatch.Index : (content.Length - sectionBodyStart);
+                string sectionBody = content.Substring(sectionBodyStart, sectionBodyLength);
 
-                return Regex.Replace(content, pattern, m => m.Groups[1].Value + value);
-
+                if (Regex.IsMatch(sectionBody, keyLinePattern, RegexOptions.IgnoreCase))
+                {
+                    // Key exists within this section: replace value in-place without corrupting other sections
+                    string updatedSectionBody = Regex.Replace(sectionBody, keyLinePattern, "$1" + value, RegexOptions.IgnoreCase);
+                    return content.Substring(0, sectionBodyStart) + updatedSectionBody + content.Substring(sectionBodyStart + sectionBodyLength);
+                }
+                else
+                {
+                    // Section exists but key does not: insert key into this section
+                    string insertion = "\r\n" + key + "=" + value;
+                    return content.Substring(0, sectionBodyStart) + insertion + content.Substring(sectionBodyStart);
+                }
             }
-
-            string sectionHeader = "[" + section + "]";
-
-            if (content.Contains(sectionHeader))
-
+            else
             {
-
-                return content.Replace(sectionHeader, sectionHeader + "\r\n" + key + "=" + value);
-
+                // Section does not exist: create section and insert key
+                string prefix = string.IsNullOrEmpty(content) || content.EndsWith("\r\n") || content.EndsWith("\n") ? "" : "\r\n";
+                return content + prefix + "[" + section + "]\r\n" + key + "=" + value + "\r\n";
             }
-
-            return content + "\r\n[" + section + "]\r\n" + key + "=" + value;
-
         }
 
         private static long CleanFolderFiles(string folder)
@@ -403,126 +416,148 @@ namespace ZenithOptimizer.Services
 
         }
 
-        private string RegexReplaceOrInsert(string content, string key, string value)
-
+        public static string UpdateJsonSetting(string content, string key, object value)
         {
+            if (string.IsNullOrEmpty(key)) return content ?? "{\r\n}";
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            Dictionary<string, object> dict = null;
 
+            if (!string.IsNullOrWhiteSpace(content))
+            {
+                try
+                {
+                    dict = serializer.Deserialize<Dictionary<string, object>>(content);
+                }
+                catch { }
+            }
+
+            if (dict == null)
+            {
+                dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            }
+
+            if (value == null)
+            {
+                dict[key] = "";
+            }
+            else if (value is bool || value is int || value is long || value is double || value is float)
+            {
+                dict[key] = value;
+            }
+            else
+            {
+                string s = value.ToString().Trim();
+                if (s.Equals("true", StringComparison.OrdinalIgnoreCase))
+                {
+                    dict[key] = true;
+                }
+                else if (s.Equals("false", StringComparison.OrdinalIgnoreCase))
+                {
+                    dict[key] = false;
+                }
+                else
+                {
+                    long lVal;
+                    double dVal;
+                    if (long.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out lVal))
+                    {
+                        dict[key] = lVal;
+                    }
+                    else if (double.TryParse(s, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out dVal))
+                    {
+                        dict[key] = dVal;
+                    }
+                    else
+                    {
+                        if (s.Length >= 2 && s.StartsWith("\"") && s.EndsWith("\""))
+                        {
+                            s = s.Substring(1, s.Length - 2);
+                        }
+                        dict[key] = s;
+                    }
+                }
+            }
+
+            // Ensure FFlag booleans are native booleans
+            if (key.StartsWith("FFlag", StringComparison.OrdinalIgnoreCase) || key.StartsWith("DFFlag", StringComparison.OrdinalIgnoreCase))
+            {
+                if (dict[key] is string)
+                {
+                    string s = (string)dict[key];
+                    if (s.Equals("true", StringComparison.OrdinalIgnoreCase)) dict[key] = true;
+                    else if (s.Equals("false", StringComparison.OrdinalIgnoreCase)) dict[key] = false;
+                }
+            }
+
+            return SerializeFormattedJson(dict);
+        }
+
+        public static string SerializeFormattedJson(Dictionary<string, object> dict)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("{");
+            int i = 0;
+            int count = dict.Count;
+            foreach (var kvp in dict)
+            {
+                i++;
+                sb.Append("  \"").Append(kvp.Key).Append("\": ");
+                if (kvp.Value is bool)
+                {
+                    sb.Append((bool)kvp.Value ? "true" : "false");
+                }
+                else if (kvp.Value is int || kvp.Value is long || kvp.Value is short || kvp.Value is byte)
+                {
+                    sb.Append(kvp.Value.ToString());
+                }
+                else if (kvp.Value is double || kvp.Value is float || kvp.Value is decimal)
+                {
+                    sb.Append(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", kvp.Value));
+                }
+                else
+                {
+                    string strVal = kvp.Value != null ? kvp.Value.ToString() : "";
+                    sb.Append("\"").Append(strVal.Replace("\"", "\\\"")).Append("\"");
+                }
+                if (i < count)
+                {
+                    sb.Append(",");
+                }
+                sb.AppendLine();
+            }
+            sb.AppendLine("}");
+            return sb.ToString();
+        }
+
+        private string RegexReplaceOrInsert(string content, string key, string value)
+        {
             if (string.IsNullOrEmpty(content)) content = "";
 
-            // Check if this is a JSON file/flag (e.g. Roblox ClientAppSettings.json)
-
             string trimmed = content.Trim();
-
             if (trimmed.StartsWith("{") || key.StartsWith("FFlag") || key.StartsWith("DFInt") || key.StartsWith("FInt") || key.StartsWith("DFFlag"))
-
             {
-
-                if (string.IsNullOrEmpty(trimmed) || trimmed == "{}")
-
-                {
-
-                    return "{\r\n  \"" + key + "\": " + FormatJsonValue(value) + "\r\n}";
-
-                }
-
-                string jsonPattern = @"(""" + Regex.Escape(key) + @"""\s*:\s*)([^,\}\r\n]+)";
-
-                if (Regex.IsMatch(content, jsonPattern))
-
-                {
-
-                    return Regex.Replace(content, jsonPattern, m => m.Groups[1].Value + FormatJsonValue(value));
-
-                }
-
-                int lastBrace = content.LastIndexOf('}');
-
-                if (lastBrace >= 0)
-
-                {
-
-                    string before = content.Substring(0, lastBrace).TrimEnd();
-
-                    string comma = (before.EndsWith("{") || before.EndsWith(",")) ? "" : ",\r\n";
-
-                    return before + comma + "  \"" + key + "\": " + FormatJsonValue(value) + "\r\n" + content.Substring(lastBrace);
-
-                }
-
-                return "{\r\n  \"" + key + "\": " + FormatJsonValue(value) + "\r\n}";
-
+                return UpdateJsonSetting(content, key, value);
             }
 
             // For BlueStacks config, ensure the value is enclosed in quotes: key="value"
-
             if (key.StartsWith("bst.") && !value.StartsWith("\""))
-
             {
-
                 value = "\"" + value + "\"";
-
             }
 
-            string pattern = @"(" + Regex.Escape(key) + @"=)(.*)";
-
+            string pattern = @"(?m)^(" + Regex.Escape(key) + @"=)(.*)";
             if (Regex.IsMatch(content, pattern))
-
             {
-
                 return Regex.Replace(content, pattern, m => m.Groups[1].Value + value);
-
             }
 
             if (key.StartsWith("bst."))
-
             {
-
                 // Strict schema protection: Never append unknown keys to bluestacks.conf
-
                 return content;
-
             }
 
             return content + "\r\n" + key + "=" + value;
-
-        }
-
-        private static string FormatJsonValue(string val)
-
-        {
-
-            if (string.IsNullOrEmpty(val)) return "\"\"";
-
-            string lower = val.Trim().ToLowerInvariant();
-
-            if (lower == "true" || lower == "false")
-
-            {
-
-                return lower;
-
-            }
-
-            double num;
-
-            if (double.TryParse(val.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out num))
-
-            {
-
-                return val.Trim();
-
-            }
-
-            if (val.StartsWith("\"") && val.EndsWith("\""))
-
-            {
-
-                return val;
-
-            }
-
-            return "\"" + val + "\"";
-
         }
 
 

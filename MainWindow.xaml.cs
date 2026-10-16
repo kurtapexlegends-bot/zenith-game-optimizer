@@ -21,6 +21,7 @@ namespace ZenithOptimizer
         private readonly Dictionary<string, bool> _toolActiveStates = new Dictionary<string, bool>();
 
         private bool _isDarkMode = false; // Default Light Mode (White first)
+        private bool _isLoadingSettings = false;
 
         public MainWindow()
         {
@@ -39,6 +40,34 @@ namespace ZenithOptimizer
             StateChanged += MainWindow_StateChanged;
 
             InitializeTrayIcon();
+        }
+
+        private void BtnWinMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnWinMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMaximize();
+        }
+
+        private void BtnWinClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ToggleMaximize()
+        {
+            this.WindowState = (this.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                ToggleMaximize();
+            }
         }
 
         private void InitializeTrayIcon()
@@ -133,40 +162,40 @@ namespace ZenithOptimizer
                     _notifyIcon.ShowBalloonTip(1500, "Zenith", "All settings restored to Windows factory defaults.", System.Windows.Forms.ToolTipIcon.Info);
                 }));
 
-                                var presetMenu = new System.Windows.Forms.MenuItem("Quick-Arm Tournament Suites");
+                                var presetMenu = new System.Windows.Forms.MenuItem("Quick-Arm Gaming Suites");
                 presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm BedWars & Roblox PvP Suite", (s, e) =>
                 {
                     string msg;
                     _monitorService.GameTuner.ApplyBedwarsArsenalGrandChampionSuite(out msg);
-                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", " BedWars & Roblox PvP Suite Armed!", System.Windows.Forms.ToolTipIcon.Info);
+                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", "BedWars & Roblox PvP Suite Armed.", System.Windows.Forms.ToolTipIcon.Info);
                     UpdateLatencyReductionBadge();
                 }));
-                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm Valorant Radiant Immortals Suite", (s, e) =>
+                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm Valorant Radiant Suite", (s, e) =>
                 {
                     string msg;
                     _monitorService.GameTuner.ApplyRadiantImmortalsTournamentSuite(out msg);
-                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", " Valorant Radiant Immortals Suite Armed!", System.Windows.Forms.ToolTipIcon.Info);
+                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", "Valorant Radiant Suite Armed.", System.Windows.Forms.ToolTipIcon.Info);
                     UpdateLatencyReductionBadge();
                 }));
-                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm LoL Challenger Apex Suite", (s, e) =>
+                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm LoL Challenger Suite", (s, e) =>
                 {
                     string msg;
                     _monitorService.GameTuner.ApplyChallengerApexMacroCombo(out msg);
-                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", " LoL Challenger Apex Suite Armed!", System.Windows.Forms.ToolTipIcon.Info);
+                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", "LoL Challenger Suite Armed.", System.Windows.Forms.ToolTipIcon.Info);
                     UpdateLatencyReductionBadge();
                 }));
-                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm Mobile Legends Mythical Glory Suite", (s, e) =>
+                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm Mobile Legends Mythical Suite", (s, e) =>
                 {
                     string msg;
                     _monitorService.GameTuner.ApplyMythicalGloryDominanceSuite(out msg);
-                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", " Mobile Legends Mythical Glory Suite Armed!", System.Windows.Forms.ToolTipIcon.Info);
+                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", "Mobile Legends Mythical Suite Armed.", System.Windows.Forms.ToolTipIcon.Info);
                     UpdateLatencyReductionBadge();
                 }));
-                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm Tekken 7 Iron Fist Master Suite", (s, e) =>
+                presetMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Arm Tekken 7 Master Suite", (s, e) =>
                 {
                     string msg;
                     _monitorService.GameTuner.ApplyIronFistMasterTournamentSuite(out msg);
-                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", " Tekken 7 Iron Fist Master Suite Armed!", System.Windows.Forms.ToolTipIcon.Info);
+                    _notifyIcon.ShowBalloonTip(1500, "Zenith Quick-Arm", "Tekken 7 Master Suite Armed.", System.Windows.Forms.ToolTipIcon.Info);
                     UpdateLatencyReductionBadge();
                 }));
                 contextMenu.MenuItems.Add(presetMenu);
@@ -221,8 +250,67 @@ namespace ZenithOptimizer
         private static readonly IntPtr ICON_SMALL = new IntPtr(0);
         private static readonly IntPtr ICON_BIG = new IntPtr(1);
 
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int GetSystemMetrics(int nIndex);
+        private const int SM_CXSMICON = 49;
+        private const int SM_CYSMICON = 50;
+
         private static System.Drawing.Icon _persistentIconBig;
         private static System.Drawing.Icon _persistentIconSmall;
+
+        private static System.Drawing.Icon LoadBestAppIcon(int width, int height)
+        {
+            try
+            {
+                string[] candidates = new string[]
+                {
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app.ico"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\app.ico")
+                };
+
+                foreach (string candidate in candidates)
+                {
+                    if (File.Exists(candidate))
+                    {
+                        return new System.Drawing.Icon(candidate, width, height);
+                    }
+                }
+
+                // Fallback: embedded WPF pack resource
+                try
+                {
+                    Uri packUri = new Uri("pack://application:,,,/ZenithOptimizer;component/app.ico", UriKind.Absolute);
+                    var sri = System.Windows.Application.GetResourceStream(packUri);
+                    if (sri == null || sri.Stream == null)
+                    {
+                        sri = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/app.ico", UriKind.RelativeOrAbsolute));
+                    }
+                    if (sri != null && sri.Stream != null)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            sri.Stream.CopyTo(ms);
+                            ms.Position = 0;
+                            return new System.Drawing.Icon(ms, width, height);
+                        }
+                    }
+                }
+                catch { }
+
+                // Fallback: PE embedded icon inside executable
+                try
+                {
+                    var exeIcon = System.Drawing.Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    if (exeIcon != null)
+                    {
+                        return new System.Drawing.Icon(exeIcon, width, height);
+                    }
+                }
+                catch { }
+            }
+            catch { }
+            return null;
+        }
 
         protected override void OnSourceInitialized(EventArgs e)
         {
@@ -232,17 +320,20 @@ namespace ZenithOptimizer
                 IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
                 if (hwnd != IntPtr.Zero)
                 {
-                    string icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app.ico");
-                    if (!File.Exists(icoPath))
-                    {
-                        icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\app.ico");
-                    }
+                    int smWidth = GetSystemMetrics(SM_CXSMICON);
+                    int smHeight = GetSystemMetrics(SM_CYSMICON);
+                    if (smWidth <= 0) smWidth = 16;
+                    if (smHeight <= 0) smHeight = 16;
 
-                    if (File.Exists(icoPath))
+                    _persistentIconBig = LoadBestAppIcon(64, 64) ?? LoadBestAppIcon(32, 32);
+                    _persistentIconSmall = LoadBestAppIcon(smWidth, smHeight) ?? LoadBestAppIcon(16, 16);
+
+                    if (_persistentIconBig != null)
                     {
-                        _persistentIconBig = new System.Drawing.Icon(icoPath, 32, 32);
-                        _persistentIconSmall = new System.Drawing.Icon(icoPath, 16, 16);
                         SendMessage(hwnd, WM_SETICON, ICON_BIG, _persistentIconBig.Handle);
+                    }
+                    if (_persistentIconSmall != null)
+                    {
                         SendMessage(hwnd, WM_SETICON, ICON_SMALL, _persistentIconSmall.Handle);
                     }
 
@@ -301,14 +392,15 @@ namespace ZenithOptimizer
         {
             try
             {
-                string icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app.ico");
-                if (!File.Exists(icoPath))
+                int smWidth = GetSystemMetrics(SM_CXSMICON);
+                int smHeight = GetSystemMetrics(SM_CYSMICON);
+                if (smWidth <= 0) smWidth = 16;
+                if (smHeight <= 0) smHeight = 16;
+
+                var icon = LoadBestAppIcon(smWidth, smHeight) ?? LoadBestAppIcon(16, 16);
+                if (icon != null)
                 {
-                    icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\app.ico");
-                }
-                if (File.Exists(icoPath))
-                {
-                    return new System.Drawing.Icon(icoPath, 16, 16);
+                    return icon;
                 }
 
                 // Fallback: programmatic Apple monochrome squircle
@@ -383,8 +475,38 @@ namespace ZenithOptimizer
                 this.Hide();
                 _monitorService.MemoryService.TrimSelfMemory();
             }
+            else if (this.WindowState == WindowState.Maximized)
+            {
+                if (IconMaximize != null && IconRestore != null)
+                {
+                    IconMaximize.Visibility = Visibility.Collapsed;
+                    IconRestore.Visibility = Visibility.Visible;
+                }
+                if (BtnWinMaximize != null)
+                {
+                    BtnWinMaximize.ToolTip = "Restore Down";
+                }
+                if (RootGrid != null)
+                {
+                    RootGrid.Margin = new Thickness(7);
+                }
+                _monitorService.TriggerTelemetryRefresh();
+            }
             else if (this.WindowState == WindowState.Normal)
             {
+                if (IconMaximize != null && IconRestore != null)
+                {
+                    IconMaximize.Visibility = Visibility.Visible;
+                    IconRestore.Visibility = Visibility.Collapsed;
+                }
+                if (BtnWinMaximize != null)
+                {
+                    BtnWinMaximize.ToolTip = "Maximize / Fullscreen";
+                }
+                if (RootGrid != null)
+                {
+                    RootGrid.Margin = new Thickness(0);
+                }
                 _monitorService.TriggerTelemetryRefresh();
             }
         }
@@ -392,8 +514,8 @@ namespace ZenithOptimizer
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             GameSpecificTunerService.ProtectUserKeymaps();
-            PopulateGameProfiles();
             UpdateInitialStates();
+            PopulateGameProfiles();
 
             Log("Zenith Game Optimizer engine initialized.");
             Log("High-precision timer engine ready (0.500 ms target resolution).");
@@ -432,10 +554,31 @@ namespace ZenithOptimizer
             else
             {
                 // Full application shutdown
+                try
+                {
+                    if (_monitorService != null && _monitorService.Settings != null)
+                    {
+                        _monitorService.Settings.ToolActiveStates = new Dictionary<string, bool>(_toolActiveStates);
+                        _monitorService.Settings.Theme = _isDarkMode ? "Dark" : "Light";
+                        _monitorService.Settings.Save();
+                    }
+                }
+                catch { }
+
                 if (_notifyIcon != null)
                 {
                     _notifyIcon.Visible = false;
                     _notifyIcon.Dispose();
+                }
+                if (_persistentIconBig != null)
+                {
+                    try { _persistentIconBig.Dispose(); } catch { }
+                    _persistentIconBig = null;
+                }
+                if (_persistentIconSmall != null)
+                {
+                    try { _persistentIconSmall.Dispose(); } catch { }
+                    _persistentIconSmall = null;
                 }
                 _monitorService.Dispose();
             }
@@ -443,37 +586,93 @@ namespace ZenithOptimizer
 
         private void UpdateInitialStates()
         {
-            bool isNetOptimized = _monitorService.NetworkService.IsOptimized();
-            TxtNetworkStatus.Text = isNetOptimized 
-                ? "Status: Low-latency network profile currently ACTIVE." 
-                : "Status: Windows default network settings active.";
-
-            TxtBsConfigStatus.Text = _monitorService.BlueStacksService.AnalyzeConfiguration();
-
-            ChkAutoOptimize.IsChecked = _monitorService.Settings.AutoOptimizeOnGameLaunch;
-            ChkTweakTimer.IsChecked = _monitorService.Settings.EnableHighPrecisionTimer;
-            ChkAudioStabilization.IsChecked = _monitorService.Settings.EnableAudioStabilization;
-            ChkTweakPCores.IsChecked = _monitorService.Settings.EnablePCoreAffinity;
-            ChkTweakPriority.IsChecked = _monitorService.Settings.EnableHighPriority;
-            ChkGpuPriority.IsChecked = _monitorService.Settings.EnableGpuPriority;
-            ChkTweakThrottle.IsChecked = _monitorService.Settings.EnableBackgroundThrottling;
-            ChkDisableGameDvr.IsChecked = _monitorService.Settings.DisableGameDVR;
-            ChkAutoPurge.IsChecked = _monitorService.Settings.EnableAutoStandbyPurge;
-            ChkPowerPlan.IsChecked = _monitorService.Settings.EnablePowerPlanSwitching;
-            if (ChkLaptopCooler != null)
+            _isLoadingSettings = true;
+            try
             {
-                ChkLaptopCooler.IsChecked = _monitorService.Settings.EnableLaptopThermalGuard;
-            }
-            if (_trayCoolerMenuItem != null)
-            {
-                _trayCoolerMenuItem.Checked = _monitorService.Settings.EnableLaptopThermalGuard;
-            }
+                bool isNetOptimized = _monitorService.NetworkService.IsOptimized();
+                TxtNetworkStatus.Text = isNetOptimized 
+                    ? "Status: Low-latency network profile currently ACTIVE." 
+                    : "Status: Windows default network settings active.";
 
-            // Hardware details
-            TxtDetectedCpu.Text = _monitorService.SystemTweaks.GetCpuName();
-            TxtDetectedGpu.Text = _monitorService.SystemTweaks.GetGpuName();
-            TxtGameModeState.Text = _monitorService.SystemTweaks.IsWindowsGameModeEnabled() ? "Active (Stock Latency Reduction)" : "Standard";
-            TxtGameDvrState.Text = _monitorService.SystemTweaks.IsGameDvrDisabled() ? "Disabled (GPU Bandwidth Saved)" : "Active";
+                TxtBsConfigStatus.Text = _monitorService.BlueStacksService.AnalyzeConfiguration();
+
+                ChkAutoOptimize.IsChecked = _monitorService.Settings.AutoOptimizeOnGameLaunch;
+                ChkTweakTimer.IsChecked = _monitorService.Settings.EnableHighPrecisionTimer;
+                ChkAudioStabilization.IsChecked = _monitorService.Settings.EnableAudioStabilization;
+                ChkTweakPCores.IsChecked = _monitorService.Settings.EnablePCoreAffinity;
+                ChkTweakPriority.IsChecked = _monitorService.Settings.EnableHighPriority;
+                ChkGpuPriority.IsChecked = _monitorService.Settings.EnableGpuPriority;
+                ChkTweakThrottle.IsChecked = _monitorService.Settings.EnableBackgroundThrottling;
+                ChkDisableGameDvr.IsChecked = _monitorService.Settings.DisableGameDVR;
+                ChkAutoPurge.IsChecked = _monitorService.Settings.EnableAutoStandbyPurge;
+                ChkPowerPlan.IsChecked = _monitorService.Settings.EnablePowerPlanSwitching;
+                if (ChkLaptopCooler != null)
+                {
+                    ChkLaptopCooler.IsChecked = _monitorService.Settings.EnableLaptopThermalGuard;
+                }
+                if (_trayCoolerMenuItem != null)
+                {
+                    _trayCoolerMenuItem.Checked = _monitorService.Settings.EnableLaptopThermalGuard;
+                }
+
+                // Hardware details
+                TxtDetectedCpu.Text = _monitorService.SystemTweaks.GetCpuName();
+                TxtDetectedGpu.Text = _monitorService.SystemTweaks.GetGpuName();
+                TxtGameModeState.Text = _monitorService.SystemTweaks.IsWindowsGameModeEnabled() ? "Active (Stock Latency Reduction)" : "Standard";
+                TxtGameDvrState.Text = _monitorService.SystemTweaks.IsGameDvrDisabled() ? "Disabled (GPU Bandwidth Saved)" : "Active";
+
+                // Re-engage active kernel and hardware features loaded from persistent settings
+                if (_monitorService.Settings.EnableHighPrecisionTimer)
+                {
+                    _monitorService.TimerEngine.EnableHighResolution();
+                }
+                if (_monitorService.Settings.EnableAudioStabilization)
+                {
+                    _monitorService.SystemTweaks.StabilizeAudioEngine();
+                }
+                if (_monitorService.Settings.DisableGameDVR)
+                {
+                    string dvrMsg;
+                    _monitorService.SystemTweaks.SetGameDvrDisabled(true, out dvrMsg);
+                }
+                if (_monitorService.Settings.EnableGpuPriority)
+                {
+                    string mmcssMsg;
+                    _monitorService.SystemTweaks.SetMmcssGamingPriority(true, out mmcssMsg);
+                }
+                if (_monitorService.Settings.EnablePowerPlanSwitching)
+                {
+                    _monitorService.PowerService.SetHighPerformanceScheme();
+                }
+                if (_monitorService.Settings.EnableLaptopThermalGuard)
+                {
+                    string coolerMsg;
+                    _monitorService.PowerService.EnableLaptopThermalGuard(out coolerMsg);
+                }
+
+                // Restore Tool Active States from Settings
+                if (_monitorService.Settings.ToolActiveStates != null)
+                {
+                    foreach (var kvp in _monitorService.Settings.ToolActiveStates)
+                    {
+                        _toolActiveStates[kvp.Key] = kvp.Value;
+                    }
+                }
+
+                // Restore Theme from Settings
+                if (!string.IsNullOrEmpty(_monitorService.Settings.Theme))
+                {
+                    bool shouldBeDark = _monitorService.Settings.Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
+                    if (shouldBeDark != _isDarkMode)
+                    {
+                        SetThemeMode(shouldBeDark);
+                    }
+                }
+            }
+            finally
+            {
+                _isLoadingSettings = false;
+            }
         }
 
         private void AnimateViewIn(FrameworkElement view)
@@ -530,6 +729,10 @@ namespace ZenithOptimizer
 
             if (targetView != null)
             {
+                if (MainScrollViewer != null)
+                {
+                    MainScrollViewer.ScrollToTop();
+                }
                 AnimateViewIn(targetView);
             }
         }
@@ -539,8 +742,18 @@ namespace ZenithOptimizer
             ScrollViewer scv = sender as ScrollViewer;
             if (scv == null) return;
 
+            // If mouse is over a scrollable TextBox or child ScrollViewer, let the child handle scrolling!
+            DependencyObject dep = e.OriginalSource as DependencyObject;
+            while (dep != null && dep != scv)
+            {
+                if (dep is TextBox || dep is ComboBox)
+                {
+                    return;
+                }
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
             // Dampen mouse wheel delta for silky-smooth, controlled scrolling
-            // (fixes erratic hypersensitive scrolling on laptop touchpads and high-polling gaming mice)
             double scrollDelta = -e.Delta * 0.35;
             double newOffset = scv.VerticalOffset + scrollDelta;
 
@@ -558,7 +771,7 @@ namespace ZenithOptimizer
 
         private void Option_Changed(object sender, RoutedEventArgs e)
         {
-            if (_monitorService == null || _monitorService.Settings == null) return;
+            if (_isLoadingSettings || _monitorService == null || _monitorService.Settings == null) return;
 
             _monitorService.Settings.AutoOptimizeOnGameLaunch = ChkAutoOptimize.IsChecked == true;
             _monitorService.Settings.EnableHighPrecisionTimer = ChkTweakTimer.IsChecked == true;
@@ -615,6 +828,8 @@ namespace ZenithOptimizer
             {
                 _monitorService.SystemTweaks.StabilizeAudioEngine();
             }
+
+            _monitorService.Settings.Save();
         }
 
         private void BtnPurgeRam_Click(object sender, RoutedEventArgs e)

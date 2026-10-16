@@ -23,7 +23,7 @@ namespace ZenithOptimizer.Services
 
         {
 
-            return "-novid -nojoy +fps_max 0 -tickrate 128";
+            return "-novid -nojoy +fps_max 0";
 
         }
 
@@ -37,7 +37,7 @@ namespace ZenithOptimizer.Services
 
                    "rate 786432\n" +
 
-                   "cl_updaterate 128\n" +
+
 
                    "cl_interp 0.015625\n" +
 
@@ -45,7 +45,7 @@ namespace ZenithOptimizer.Services
 
                    "fps_max 0\n" +
 
-                   "cl_forcepreload 1\n" +
+
 
                    "snd_mixahead 0.015\n";
 
@@ -2126,12 +2126,12 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagGameBasicSettingsDisableMouseSmoothing\": true,\r\n  \"FIntCameraMouseSpeedMultiplier\": 100\r\n}";
 
+
+                    content = UpdateJsonSetting(content, "FFlagGameBasicSettingsDisableMouseSmoothing", true);
+                    content = UpdateJsonSetting(content, "FIntCameraMouseSpeedMultiplier", 100);
                     File.WriteAllText(mainFile, content);
 
                 }
@@ -2174,12 +2174,12 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDebugStreamerSkipInitialBudget\": true,\r\n  \"FIntRuntimeMaxTileLoadTimePerFrame\": 100\r\n}";
 
+
+                    content = UpdateJsonSetting(content, "FFlagDebugStreamerSkipInitialBudget", true);
+                    content = UpdateJsonSetting(content, "FIntRuntimeMaxTileLoadTimePerFrame", 100);
                     File.WriteAllText(mainFile, content);
 
                 }
@@ -2222,11 +2222,11 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDebugDisableDamagePostFx\": true\r\n}";
+
+
+                    content = UpdateJsonSetting(content, "FFlagDebugDisableDamagePostFx", true);
 
                     File.WriteAllText(mainFile, content);
 
@@ -2314,11 +2314,11 @@ namespace ZenithOptimizer.Services
 
                 {
 
-                    content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                    if (content.Length > 2) content += ",\r\n";
 
-                    content += "  \"FFlagDebugDisableParticleEmitters\": true\r\n}";
+
+
+                    content = UpdateJsonSetting(content, "FFlagDebugDisableParticleEmitters", true);
 
                     File.WriteAllText(mainFile, content);
 
@@ -2358,11 +2358,11 @@ namespace ZenithOptimizer.Services
 
                 string content = File.Exists(mainFile) ? File.ReadAllText(mainFile) : "{\r\n}";
 
-                content = content.TrimEnd('}', ' ', '\r', '\n');
 
-                if (content.Length > 2) content += ",\r\n";
 
-                content += "  \"DFIntCameraFieldOfView\": " + fovDegrees + "\r\n}";
+
+
+                content = UpdateJsonSetting(content, "DFIntCameraFieldOfView", fovDegrees);
 
                 File.WriteAllText(mainFile, content);
 
