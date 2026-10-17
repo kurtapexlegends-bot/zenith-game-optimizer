@@ -434,6 +434,12 @@ namespace ZenithOptimizer.Services
             return false;
         }
 
+        public bool SetSensorPositionToCursor()
+        {
+            int x, y;
+            return SetSensorToCurrentCursor(out x, out y);
+        }
+
         public void CalibrateTarget(int x, int y)
         {
             _targetClickPos = new POINT { X = x, Y = y };
@@ -848,6 +854,11 @@ namespace ZenithOptimizer.Services
                     Thread.Sleep(60);
                 }
             });
+        }
+
+        public void TurboBurstClick(int count = 5)
+        {
+            TriggerTurboBurst(count);
         }
 
         private void WorkerLoop()

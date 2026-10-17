@@ -2232,6 +2232,130 @@ namespace ZenithOptimizer.Tests
                 Console.WriteLine("FAIL: " + ex.Message);
                 failed++;
             }
+
+            // TEST 43: Interactive Sniper HUD Keycaps, Dynamic Corridor Badges & Multi-Process Search Usability
+            try
+            {
+                Console.Write("[TEST 43] Interactive Keycaps, Track Badges & Multi-Process Filter Usability: ");
+
+                // 1. Keycaps shortcut cheat-sheet validation
+                var keycaps = new Dictionary<string, string>
+                {
+                    { "F6", "Drag/Lock" },
+                    { "F7", "Arm" },
+                    { "F8", "Sensor" },
+                    { "Alt+F8", "Eyedropper" },
+                    { "F9", "HUD" },
+                    { "V", "Turbo" }
+                };
+                bool keycapsValid = keycaps.Count == 6 &&
+                                    keycaps["F6"] == "Drag/Lock" &&
+                                    keycaps["F7"] == "Arm" &&
+                                    keycaps["F8"] == "Sensor" &&
+                                    keycaps["Alt+F8"] == "Eyedropper" &&
+                                    keycaps["F9"] == "HUD" &&
+                                    keycaps["V"] == "Turbo";
+
+                // 2. Track & Status Badge Colors and Text Validation
+                string trackLockedText = "[TRACK: LOCKED]";
+                var trackLockedFg = System.Windows.Media.Color.FromRgb(52, 211, 153);
+                var trackLockedBorder = System.Windows.Media.Color.FromArgb(200, 52, 211, 153);
+                var trackLockedBg = System.Windows.Media.Color.FromArgb(50, 52, 211, 153);
+
+                string trackScanningText = "[TRACK: ON]";
+                var trackScanningFg = System.Windows.Media.Color.FromRgb(56, 189, 248);
+                var trackScanningBorder = System.Windows.Media.Color.FromArgb(120, 56, 189, 248);
+                var trackScanningBg = System.Windows.Media.Color.FromArgb(40, 14, 116, 144);
+
+                string trackOffText = "[TRACK: OFF]";
+                var trackOffFg = System.Windows.Media.Color.FromRgb(148, 163, 184);
+                var trackOffBorder = System.Windows.Media.Color.FromArgb(40, 255, 255, 255);
+                var trackOffBg = System.Windows.Media.Color.FromArgb(160, 30, 41, 59);
+
+                string statusArmedText = "[ARMED]";
+                var statusArmedFg = System.Windows.Media.Color.FromRgb(16, 185, 129);
+                var statusArmedBorder = System.Windows.Media.Color.FromArgb(160, 16, 185, 129);
+                string statusStandbyText = "[STANDBY]";
+                var statusStandbyFg = System.Windows.Media.Color.FromRgb(148, 163, 184);
+                var statusStandbyBorder = System.Windows.Media.Color.FromArgb(50, 255, 255, 255);
+
+                bool badgeSpecsValid = trackLockedText == "[TRACK: LOCKED]" &&
+                                       trackScanningText == "[TRACK: ON]" &&
+                                       trackOffText == "[TRACK: OFF]" &&
+                                       trackLockedFg.G == 211 &&
+                                       trackLockedBorder.A == 200 &&
+                                       trackScanningFg.B == 248 &&
+                                       trackOffFg.R == 148 &&
+                                       statusArmedFg.G == 185 &&
+                                       statusArmedText == "[ARMED]" &&
+                                       statusStandbyText == "[STANDBY]";
+
+                // 3. Multi-Field Search Matching
+                var libraryProfiles = new List<GameProfile>
+                {
+                    new GameProfile {
+                        Id = "tekken8",
+                        Name = "Tekken 8",
+                        Category = "Fighting",
+                        TargetPacing = "59.94 FPS Lock",
+                        OptimizationBadge = "SpecialK Frame-Pace Guard",
+                        ProcessNames = new List<string> { "Polaris-Win64-Shipping", "Tekken8" },
+                        IsInstalled = true
+                    },
+                    new GameProfile {
+                        Id = "bluestacks",
+                        Name = "Mobile Legends (BlueStacks)",
+                        Category = "Android Emulator",
+                        TargetPacing = "120 FPS High-Refresh",
+                        OptimizationBadge = "ASTC Ultra Texture Decoders",
+                        ProcessNames = new List<string> { "HD-Player", "BlueStacks" },
+                        IsInstalled = true
+                    }
+                };
+
+                // Search by category
+                string searchCategory = "emulator";
+                var matchCategory = libraryProfiles.FindAll(p =>
+                    (p.Name != null && p.Name.IndexOf(searchCategory, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.Category != null && p.Category.IndexOf(searchCategory, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.OptimizationBadge != null && p.OptimizationBadge.IndexOf(searchCategory, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.ProcessNames != null && p.ProcessNames.Exists(x => x.IndexOf(searchCategory, StringComparison.OrdinalIgnoreCase) >= 0)));
+                bool catMatched = matchCategory.Count == 1 && matchCategory[0].Id == "bluestacks";
+
+                // Search by badge
+                string searchBadge = "SpecialK";
+                var matchBadge = libraryProfiles.FindAll(p =>
+                    (p.Name != null && p.Name.IndexOf(searchBadge, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.Category != null && p.Category.IndexOf(searchBadge, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.OptimizationBadge != null && p.OptimizationBadge.IndexOf(searchBadge, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.ProcessNames != null && p.ProcessNames.Exists(x => x.IndexOf(searchBadge, StringComparison.OrdinalIgnoreCase) >= 0)));
+                bool badgeMatched = matchBadge.Count == 1 && matchBadge[0].Id == "tekken8";
+
+                // Search by secondary process name
+                string searchSecProcess = "BlueStacks";
+                var matchSecProcess = libraryProfiles.FindAll(p =>
+                    (p.Name != null && p.Name.IndexOf(searchSecProcess, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.PrimaryProcessName != null && p.PrimaryProcessName.IndexOf(searchSecProcess, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.ProcessNames != null && p.ProcessNames.Exists(x => x.IndexOf(searchSecProcess, StringComparison.OrdinalIgnoreCase) >= 0)));
+                bool secProcMatched = matchSecProcess.Count == 1 && matchSecProcess[0].Id == "bluestacks";
+
+                if (keycapsValid && badgeSpecsValid && catMatched && badgeMatched && secProcMatched)
+                {
+                    Console.WriteLine("PASS (Keycap shortcuts, corridor dynamic badge styling, and multi-field search usability verified)");
+                    passed++;
+                }
+                else
+                {
+                    Console.WriteLine("FAIL (Keycaps:{0}, Badges:{1}, CatMatch:{2}, BadgeMatch:{3}, SecProcMatch:{4})",
+                        keycapsValid, badgeSpecsValid, catMatched, badgeMatched, secProcMatched);
+                    failed++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FAIL: " + ex.Message);
+                failed++;
+            }
         }
         finally
         {

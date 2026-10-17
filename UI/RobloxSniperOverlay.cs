@@ -61,6 +61,7 @@ namespace ZenithOptimizer.UI
         private Window _clickTargetWindow;
         private Border _hudCard;
         private TextBlock _statusBadge;
+        private Border _statusBadgeBorder;
         private TextBlock _lockBadge;
         private Border _lockBadgeBorder;
         private Border _colorSwatch;
@@ -404,6 +405,7 @@ namespace ZenithOptimizer.UI
                 ToolTip = "Click to toggle Armed / Standby [F7]",
                 Child = _statusBadge
             };
+            _statusBadgeBorder = statusBorder;
             statusBorder.PreviewMouseLeftButtonDown += (s, e) =>
             {
                 e.Handled = true;
@@ -530,12 +532,13 @@ namespace ZenithOptimizer.UI
             });
             presetRow.Children.Add(_btnPresetOrange);
 
-            _btnPresetCustom = CreatePresetPill("Pipette [Alt+F8]", Color.FromRgb(244, 114, 182), () =>
+            _btnPresetCustom = CreatePresetPill("Eyedropper [Alt+F8]", Color.FromRgb(244, 114, 182), () =>
             {
                 int cr, cg, cb;
                 if (RobloxBidSniperService.Instance.SampleTargetColorAtCursor(out cr, out cg, out cb))
                 {
                     UpdatePresetButtonsVisuals("Custom");
+                    FlashActionText("EYEDROPPER CALIBRATED", Color.FromRgb(244, 114, 182));
                 }
             });
             presetRow.Children.Add(_btnPresetCustom);
@@ -553,12 +556,40 @@ namespace ZenithOptimizer.UI
                 Orientation = Orientation.Horizontal,
                 VerticalAlignment = VerticalAlignment.Center
             };
-            hotkeysPanel.Children.Add(CreateKeycapPill("F6", "Drag/Lock", "Toggle HUD & reticle dragging vs click pass-through [F6]"));
-            hotkeysPanel.Children.Add(CreateKeycapPill("F7", "Arm", "Toggle auto-sniper armed / standby [F7]"));
-            hotkeysPanel.Children.Add(CreateKeycapPill("F8", "Sensor", "Set sweet-spot optical sensor coordinate to mouse [F8]"));
-            hotkeysPanel.Children.Add(CreateKeycapPill("Alt+F8", "Pipette", "Sample target RGB color under mouse cursor [Alt+F8]"));
-            hotkeysPanel.Children.Add(CreateKeycapPill("F9", "HUD", "Toggle overlay HUD visibility [F9]"));
-            hotkeysPanel.Children.Add(CreateKeycapPill("V", "Turbo", "Turbo bid click burst [V]"));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F6", "Drag/Lock", "Toggle HUD & reticle dragging vs click pass-through [F6]", () =>
+            {
+                ToggleMarkersLock();
+                FlashActionText(_isReticleLocked ? "LOCK ENGAGED" : "DRAGGABLE", Color.FromRgb(250, 204, 21));
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F7", "Arm", "Toggle auto-sniper armed / standby [F7]", () =>
+            {
+                var sniper = RobloxBidSniperService.Instance;
+                sniper.IsArmed = !sniper.IsArmed;
+                FlashActionText(sniper.IsArmed ? "ARMED" : "STANDBY", sniper.IsArmed ? Color.FromRgb(52, 211, 153) : Color.FromRgb(148, 163, 184));
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F8", "Sensor", "Set sweet-spot optical sensor coordinate to mouse [F8]", () =>
+            {
+                RobloxBidSniperService.Instance.SetSensorPositionToCursor();
+                FlashActionText("SENSOR SET", Color.FromRgb(56, 189, 248));
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("Alt+F8", "Eyedropper", "Sample target RGB color under mouse cursor [Alt+F8]", () =>
+            {
+                int cr, cg, cb;
+                if (RobloxBidSniperService.Instance.SampleTargetColorAtCursor(out cr, out cg, out cb))
+                {
+                    UpdatePresetButtonsVisuals("Custom");
+                    FlashActionText("EYEDROPPER CALIBRATED", Color.FromRgb(244, 114, 182));
+                }
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F9", "HUD", "Toggle overlay HUD visibility [F9]", () =>
+            {
+                Hide();
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("V", "Turbo", "Turbo bid click burst [V]", () =>
+            {
+                RobloxBidSniperService.Instance.TurboBurstClick(5);
+                FlashActionText("⚡ TURBO BURST (5x)", Color.FromRgb(250, 204, 21));
+            }));
 
             Grid.SetColumn(hotkeysPanel, 0);
             row3Grid.Children.Add(hotkeysPanel);
@@ -590,7 +621,23 @@ namespace ZenithOptimizer.UI
             };
         }
 
-        private Border CreateKeycapPill(string key, string label, string tooltip)
+        private void FlashActionText(string text, Color color)
+        {
+            if (_actionFlashText == null) return;
+            _actionFlashText.Text = text;
+            _actionFlashText.Foreground = new SolidColorBrush(color);
+            if (_hudCard != null)
+            {
+                _hudCard.BorderBrush = new SolidColorBrush(color);
+            }
+            if (_flashResetTimer != null)
+            {
+                _flashResetTimer.Stop();
+                _flashResetTimer.Start();
+            }
+        }
+
+        private Border CreateKeycapPill(string key, string label, string tooltip, Action onClick = null)
         {
             StackPanel sp = new StackPanel
             {
@@ -635,7 +682,7 @@ namespace ZenithOptimizer.UI
                 CornerRadius = new CornerRadius(3),
                 Padding = new Thickness(4, 1, 5, 1),
                 Margin = new Thickness(0, 0, 4, 0),
-                Cursor = Cursors.Help,
+                Cursor = onClick != null ? Cursors.Hand : Cursors.Help,
                 ToolTip = tooltip,
                 Child = sp
             };
@@ -652,6 +699,15 @@ namespace ZenithOptimizer.UI
                 pill.Background = new SolidColorBrush(Color.FromArgb(120, 30, 41, 59));
                 lbl.Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184));
             };
+
+            if (onClick != null)
+            {
+                pill.PreviewMouseLeftButtonDown += (s, e) =>
+                {
+                    e.Handled = true;
+                    onClick();
+                };
+            }
 
             return pill;
         }
@@ -1136,6 +1192,15 @@ namespace ZenithOptimizer.UI
             {
                 _statusBadge.Text = isArmed ? "[ARMED]" : "[STANDBY]";
                 _statusBadge.Foreground = isArmed ? new SolidColorBrush(Color.FromRgb(16, 185, 129)) : new SolidColorBrush(Color.FromRgb(148, 163, 184));
+                if (_statusBadgeBorder != null)
+                {
+                    _statusBadgeBorder.BorderBrush = isArmed
+                        ? new SolidColorBrush(Color.FromArgb(160, 16, 185, 129))
+                        : new SolidColorBrush(Color.FromArgb(50, 255, 255, 255));
+                    _statusBadgeBorder.Background = isArmed
+                        ? new SolidColorBrush(Color.FromArgb(40, 16, 185, 129))
+                        : new SolidColorBrush(Color.FromArgb(160, 30, 41, 59));
+                }
             });
         }
 
@@ -1243,6 +1308,11 @@ namespace ZenithOptimizer.UI
                         _trackBadge.Text = "[TRACK: LOCKED]";
                         _trackBadge.Foreground = new SolidColorBrush(Color.FromRgb(52, 211, 153));
                     }
+                    if (_trackBadgeBorder != null)
+                    {
+                        _trackBadgeBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(200, 52, 211, 153));
+                        _trackBadgeBorder.Background = new SolidColorBrush(Color.FromArgb(50, 52, 211, 153));
+                    }
                 }
                 else
                 {
@@ -1267,6 +1337,15 @@ namespace ZenithOptimizer.UI
                             ? new SolidColorBrush(Color.FromRgb(56, 189, 248))
                             : new SolidColorBrush(Color.FromRgb(148, 163, 184));
                     }
+                    if (_trackBadgeBorder != null)
+                    {
+                        _trackBadgeBorder.BorderBrush = sniper.DynamicTrackingEnabled
+                            ? new SolidColorBrush(Color.FromArgb(120, 56, 189, 248))
+                            : new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
+                        _trackBadgeBorder.Background = sniper.DynamicTrackingEnabled
+                            ? new SolidColorBrush(Color.FromArgb(40, 14, 116, 144))
+                            : new SolidColorBrush(Color.FromArgb(160, 30, 41, 59));
+                    }
                 }
 
                 UpdateStatsText();
@@ -1283,6 +1362,15 @@ namespace ZenithOptimizer.UI
                 _trackBadge.Foreground = enabled
                     ? new SolidColorBrush(Color.FromRgb(56, 189, 248))
                     : new SolidColorBrush(Color.FromRgb(148, 163, 184));
+                if (_trackBadgeBorder != null)
+                {
+                    _trackBadgeBorder.BorderBrush = enabled
+                        ? new SolidColorBrush(Color.FromArgb(120, 56, 189, 248))
+                        : new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
+                    _trackBadgeBorder.Background = enabled
+                        ? new SolidColorBrush(Color.FromArgb(40, 14, 116, 144))
+                        : new SolidColorBrush(Color.FromArgb(160, 30, 41, 59));
+                }
                 if (_corridorBox != null)
                 {
                     _corridorBox.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
@@ -1358,6 +1446,7 @@ namespace ZenithOptimizer.UI
         {
             var sniper = RobloxBidSniperService.Instance;
             OnArmedChanged(sniper.IsArmed);
+            OnDynamicTrackingToggled(sniper.DynamicTrackingEnabled);
             OnSensorPositionChanged(sniper.SensorPosition.X, sniper.SensorPosition.Y);
             if (sniper.CalibratedClickPosition.HasValue)
             {

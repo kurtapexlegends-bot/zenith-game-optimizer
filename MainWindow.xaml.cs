@@ -855,6 +855,8 @@ namespace ZenithOptimizer
                 _monitorService.RestoreAllDefaults();
                 UpdateInitialStates();
                 Log("User triggered full default restoration. All settings reset to stock Windows.");
+                ShowNotificationBanner("All Windows system defaults restored", "cooling");
+                UpdateEnginePulseBadge("Stock Defaults Restored", Color.FromRgb(148, 163, 184));
             }
         }
 
@@ -864,6 +866,7 @@ namespace ZenithOptimizer
             bool success = _monitorService.NetworkService.ApplyNetworkOptimizations(out message);
             TxtNetworkStatus.Text = message;
             Log(message);
+            ShowNotificationBanner(message, success ? "emerald" : "warning");
         }
 
         private void BtnRestoreNetwork_Click(object sender, RoutedEventArgs e)
@@ -872,6 +875,7 @@ namespace ZenithOptimizer
             bool success = _monitorService.NetworkService.RestoreDefaultNetworkSettings(out message);
             TxtNetworkStatus.Text = message;
             Log(message);
+            ShowNotificationBanner(message, "cooling");
         }
 
         private void BtnOptimizeBlueStacks_Click(object sender, RoutedEventArgs e)
@@ -880,6 +884,7 @@ namespace ZenithOptimizer
             bool success = _monitorService.BlueStacksService.OptimizeForMobileLegends(out message);
             TxtBsConfigStatus.Text = message;
             Log(message);
+            ShowNotificationBanner(message, success ? "emerald" : "warning");
         }
 
         private void BtnRestoreBlueStacks_Click(object sender, RoutedEventArgs e)
@@ -888,6 +893,7 @@ namespace ZenithOptimizer
             bool success = _monitorService.BlueStacksService.RestoreConfig(out message);
             TxtBsConfigStatus.Text = message;
             Log(message);
+            ShowNotificationBanner(message, "cooling");
         }
 
         private void TxtSearchGames_TextChanged(object sender, TextChangedEventArgs e)
@@ -905,6 +911,18 @@ namespace ZenithOptimizer
                     : Visibility.Collapsed;
             }
             PopulateGameProfiles();
+        }
+
+        private void TxtSearchGames_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                if (TxtSearchGames != null)
+                {
+                    TxtSearchGames.Text = string.Empty;
+                }
+                e.Handled = true;
+            }
         }
 
         private void BtnClearSearch_Click(object sender, RoutedEventArgs e)

@@ -51,9 +51,11 @@ namespace ZenithOptimizer
             {
                 profilesList = profilesList.FindAll(p =>
                     (p.Name != null && p.Name.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.ProcessNames != null && p.ProcessNames.Exists(proc => proc != null && proc.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0)) ||
                     (p.PrimaryProcessName != null && p.PrimaryProcessName.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0) ||
                     (p.Category != null && p.Category.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (p.TargetPacing != null && p.TargetPacing.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0));
+                    (p.TargetPacing != null && p.TargetPacing.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.OptimizationBadge != null && p.OptimizationBadge.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0));
             }
 
             // Sort profiles
@@ -139,6 +141,25 @@ namespace ZenithOptimizer
 
                 if (!string.IsNullOrEmpty(searchQuery))
                 {
+                    Border iconBadge = new Border
+                    {
+                        Width = 44,
+                        Height = 44,
+                        CornerRadius = new CornerRadius(22),
+                        Background = (SolidColorBrush)FindResource("BgSunken"),
+                        BorderBrush = (SolidColorBrush)FindResource("BorderSubtle"),
+                        BorderThickness = new Thickness(1),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(0, 0, 0, 10),
+                        Child = new System.Windows.Shapes.Path
+                        {
+                            Data = Geometry.Parse("M 6,6 A 5,5 0 1,1 6,16 A 5,5 0 1,1 6,6 Z M 14,14 L 18,18"),
+                            Stroke = (SolidColorBrush)FindResource("TextMuted"),
+                            StrokeThickness = 1.6,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center
+                        }
+                    };
                     TextBlock emptySearchTitle = new TextBlock
                     {
                         Text = string.Format("No Games Matching \"{0}\"", searchQuery),
@@ -159,7 +180,7 @@ namespace ZenithOptimizer
                     };
                     Button clearFilterBtn = new Button
                     {
-                        Content = "Clear Search Filter",
+                        Content = "✕ Clear Search Filter",
                         Style = (Style)FindResource("SecondaryBtn"),
                         FontSize = 11,
                         Padding = new Thickness(14, 6, 14, 6),
@@ -172,12 +193,32 @@ namespace ZenithOptimizer
                             TxtSearchGames.Text = string.Empty;
                         }
                     };
+                    emptyStack.Children.Add(iconBadge);
                     emptyStack.Children.Add(emptySearchTitle);
                     emptyStack.Children.Add(emptySearchDesc);
                     emptyStack.Children.Add(clearFilterBtn);
                 }
                 else
                 {
+                    Border iconBadge = new Border
+                    {
+                        Width = 44,
+                        Height = 44,
+                        CornerRadius = new CornerRadius(22),
+                        Background = (SolidColorBrush)FindResource("BgSunken"),
+                        BorderBrush = (SolidColorBrush)FindResource("BorderSubtle"),
+                        BorderThickness = new Thickness(1),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(0, 0, 0, 10),
+                        Child = new System.Windows.Shapes.Path
+                        {
+                            Data = Geometry.Parse("M 2,7 A 5,5 0 0,1 18,7 L 18,13 A 2,2 0 0,1 15,15 L 14,13 L 6,13 L 5,15 A 2,2 0 0,1 2,13 Z M 5,6 L 7,6 M 6,5 L 6,7 M 13,6 L 15,6"),
+                            Stroke = (SolidColorBrush)FindResource("TextMuted"),
+                            StrokeThickness = 1.4,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center
+                        }
+                    };
                     TextBlock emptyTitle = new TextBlock
                     {
                         Text = "No Installed Games Detected",
@@ -189,14 +230,44 @@ namespace ZenithOptimizer
                     };
                     TextBlock emptyDesc = new TextBlock
                     {
-                        Text = "Install supported titles or click 'Scan Running Windows' / 'Add Executable' to optimize any game running on your system.",
+                        Text = "Install supported titles or click below to discover active user processes or add custom game executables.",
                         FontSize = 11,
                         Foreground = (SolidColorBrush)FindResource("TextSecondary"),
                         HorizontalAlignment = HorizontalAlignment.Center,
-                        TextWrapping = TextWrapping.Wrap
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 12)
                     };
+                    StackPanel actionButtons = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+                    Button scanBtn = new Button
+                    {
+                        Content = "Scan Running Windows",
+                        Style = (Style)FindResource("AccentBtn"),
+                        FontSize = 11,
+                        Padding = new Thickness(12, 6, 12, 6),
+                        Margin = new Thickness(0, 0, 8, 0)
+                    };
+                    scanBtn.Click += (s, e) => { BtnDetectGames_Click(s, e); };
+
+                    Button addBtn = new Button
+                    {
+                        Content = "+ Add Executable (.exe)",
+                        Style = (Style)FindResource("SecondaryBtn"),
+                        FontSize = 11,
+                        Padding = new Thickness(12, 6, 12, 6)
+                    };
+                    addBtn.Click += (s, e) => { BtnAddCustomGame_Click(s, e); };
+
+                    actionButtons.Children.Add(scanBtn);
+                    actionButtons.Children.Add(addBtn);
+
+                    emptyStack.Children.Add(iconBadge);
                     emptyStack.Children.Add(emptyTitle);
                     emptyStack.Children.Add(emptyDesc);
+                    emptyStack.Children.Add(actionButtons);
                 }
 
                 emptyCard.Child = emptyStack;
@@ -230,14 +301,16 @@ namespace ZenithOptimizer
         {
             Border gripHandle = new Border
             {
-                Width = 16,
+                Width = 18,
                 Height = 32,
                 Background = Brushes.Transparent,
-                CornerRadius = new CornerRadius(4),
+                BorderBrush = Brushes.Transparent,
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(5),
                 Margin = new Thickness(0, 0, 8, 0),
                 Cursor = Cursors.SizeAll,
                 VerticalAlignment = VerticalAlignment.Center,
-                ToolTip = "Drag to reorder in library (Custom Order)"
+                ToolTip = "Drag handle to reorder in library (Custom Order)"
             };
 
             Grid gripDots = new Grid
@@ -245,7 +318,8 @@ namespace ZenithOptimizer
                 Width = 10,
                 Height = 18,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                IsHitTestVisible = false
             };
             gripDots.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(4) });
             gripDots.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2) });
@@ -279,6 +353,7 @@ namespace ZenithOptimizer
             gripHandle.MouseEnter += (s, e) =>
             {
                 gripHandle.Background = (SolidColorBrush)FindResource("BgSunken");
+                gripHandle.BorderBrush = (SolidColorBrush)FindResource("BorderSubtle");
                 foreach (UIElement child in gripDots.Children)
                 {
                     var el = child as Ellipse;
@@ -288,6 +363,7 @@ namespace ZenithOptimizer
             gripHandle.MouseLeave += (s, e) =>
             {
                 gripHandle.Background = Brushes.Transparent;
+                gripHandle.BorderBrush = Brushes.Transparent;
                 foreach (UIElement child in gripDots.Children)
                 {
                     var el = child as Ellipse;
@@ -547,23 +623,28 @@ namespace ZenithOptimizer
                     toolsToggleBtn.Content = "Loading...";
                     toolsPanel = BuildGameSpecificToolsPanel(profile);
                     toolsPanel.Tag = "ToolsPanel";
-                    
-                    var panelTrans = new TranslateTransform(0, -8);
-                    toolsPanel.RenderTransform = panelTrans;
                     toolsPanel.Opacity = 0.0;
+                    toolsPanel.MaxHeight = 0;
                     toolsPanel.Visibility = Visibility.Visible;
                     cardContainer.Children.Add(toolsPanel);
 
-                    var openAnim = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(200)))
+                    toolsPanel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    double targetHeight = Math.Max(120, toolsPanel.DesiredSize.Height);
+
+                    var openHeightAnim = new DoubleAnimation(0.0, targetHeight, new Duration(TimeSpan.FromMilliseconds(240)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
-                    var slideAnim = new DoubleAnimation(-8, 0, new Duration(TimeSpan.FromMilliseconds(200)))
+                    var openFadeAnim = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(200)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
-                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, openAnim);
-                    panelTrans.BeginAnimation(TranslateTransform.YProperty, slideAnim);
+                    openHeightAnim.Completed += (asender, aargs) =>
+                    {
+                        toolsPanel.MaxHeight = double.PositiveInfinity;
+                    };
+                    toolsPanel.BeginAnimation(FrameworkElement.MaxHeightProperty, openHeightAnim);
+                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, openFadeAnim);
 
                     toolsToggleBtn.Content = "Close ▲";
                     return;
@@ -573,36 +654,48 @@ namespace ZenithOptimizer
                 if (isExpanded)
                 {
                     toolsToggleBtn.Content = "Options ▼";
-                    var closeAnim = new DoubleAnimation(toolsPanel.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(150)))
+                    double currentH = toolsPanel.ActualHeight > 0 ? toolsPanel.ActualHeight : 150;
+                    toolsPanel.MaxHeight = currentH;
+
+                    var closeHeightAnim = new DoubleAnimation(currentH, 0.0, new Duration(TimeSpan.FromMilliseconds(200)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
                     };
-                    closeAnim.Completed += (cs, ce) =>
+                    var closeFadeAnim = new DoubleAnimation(toolsPanel.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(160)))
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+                    };
+                    closeHeightAnim.Completed += (cs, ce) =>
                     {
                         if ((toolsToggleBtn.Content as string) == "Options ▼")
                         {
                             toolsPanel.Visibility = Visibility.Collapsed;
                         }
                     };
-                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, closeAnim);
+                    toolsPanel.BeginAnimation(FrameworkElement.MaxHeightProperty, closeHeightAnim);
+                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, closeFadeAnim);
                 }
                 else
                 {
                     toolsToggleBtn.Content = "Close ▲";
                     toolsPanel.Visibility = Visibility.Visible;
-                    var panelTrans = toolsPanel.RenderTransform as TranslateTransform ?? new TranslateTransform(0, -8);
-                    toolsPanel.RenderTransform = panelTrans;
-                    
-                    var openAnim = new DoubleAnimation(toolsPanel.Opacity, 1.0, new Duration(TimeSpan.FromMilliseconds(200)))
+                    toolsPanel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    double targetHeight = Math.Max(120, toolsPanel.DesiredSize.Height);
+
+                    var openHeightAnim = new DoubleAnimation(0.0, targetHeight, new Duration(TimeSpan.FromMilliseconds(240)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
-                    var slideAnim = new DoubleAnimation(-8, 0, new Duration(TimeSpan.FromMilliseconds(200)))
+                    var openFadeAnim = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(200)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
-                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, openAnim);
-                    panelTrans.BeginAnimation(TranslateTransform.YProperty, slideAnim);
+                    openHeightAnim.Completed += (asender, aargs) =>
+                    {
+                        toolsPanel.MaxHeight = double.PositiveInfinity;
+                    };
+                    toolsPanel.BeginAnimation(FrameworkElement.MaxHeightProperty, openHeightAnim);
+                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, openFadeAnim);
                 }
             };
             btnPanel.Children.Add(toolsToggleBtn);
@@ -1093,6 +1186,8 @@ namespace ZenithOptimizer
                 settings.GameSortMode = "Custom";
                 settings.Save();
                 PopulateGameProfiles();
+                var movedProfile = _monitorService.Profiles.Find(p => p.Id == sourceId);
+                ShowNotificationBanner(string.Format("Reordered: {0}", movedProfile != null ? movedProfile.Name : sourceId), "emerald");
             }
         }
 
@@ -1210,11 +1305,15 @@ namespace ZenithOptimizer
 
         private Border CreateGameProfileMetricsRow(GameProfile profile)
         {
+            string monogram;
+            Color accentColor;
+            GetGameBadgeInfo(profile.Name, out monogram, out accentColor);
+
             Border row = new Border
             {
                 Background = (SolidColorBrush)FindResource("BgCard"),
-                BorderBrush = (SolidColorBrush)FindResource("BorderCard"),
-                BorderThickness = new Thickness(1),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(70, accentColor.R, accentColor.G, accentColor.B)),
+                BorderThickness = new Thickness(3, 1, 1, 1),
                 CornerRadius = new CornerRadius(6),
                 Padding = new Thickness(12, 6, 12, 6),
                 Margin = new Thickness(0, 0, 0, 4),
@@ -1223,12 +1322,12 @@ namespace ZenithOptimizer
 
             row.MouseEnter += (s, e) =>
             {
-                row.BorderBrush = (SolidColorBrush)FindResource("BorderStrong");
+                row.BorderBrush = new SolidColorBrush(Color.FromArgb(180, accentColor.R, accentColor.G, accentColor.B));
                 row.Background = (SolidColorBrush)FindResource("BgCardHover");
             };
             row.MouseLeave += (s, e) =>
             {
-                row.BorderBrush = (SolidColorBrush)FindResource("BorderCard");
+                row.BorderBrush = new SolidColorBrush(Color.FromArgb(70, accentColor.R, accentColor.G, accentColor.B));
                 row.Background = (SolidColorBrush)FindResource("BgCard");
             };
             row.MouseLeftButtonUp += (s, e) =>
@@ -1272,10 +1371,6 @@ namespace ZenithOptimizer
                 ToggleGameFavorite(profile);
             };
             titleStack.Children.Add(favBtn);
-
-            string monogram;
-            Color accentColor;
-            GetGameBadgeInfo(profile.Name, out monogram, out accentColor);
 
             Border iconBadge = new Border
             {
@@ -1435,7 +1530,7 @@ namespace ZenithOptimizer
             Border toolsPanel = null;
             Button toolsToggleBtn = new Button
             {
-                Content = "Tools",
+                Content = "Tools ▼",
                 Style = (Style)FindResource("SecondaryBtn"),
                 FontSize = 9.5,
                 Padding = new Thickness(8, 3, 8, 3)
@@ -1445,24 +1540,82 @@ namespace ZenithOptimizer
                 e.Handled = true;
                 if (toolsPanel == null)
                 {
-                    toolsToggleBtn.Content = "Close";
+                    toolsToggleBtn.Content = "Loading...";
                     toolsPanel = BuildGameSpecificToolsPanel(profile);
                     toolsPanel.Tag = "ToolsPanel";
+                    toolsPanel.Opacity = 0.0;
+                    toolsPanel.MaxHeight = 0;
                     toolsPanel.Visibility = Visibility.Visible;
                     rowContainer.Children.Add(toolsPanel);
+
+                    toolsPanel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    double targetHeight = Math.Max(100, toolsPanel.DesiredSize.Height);
+
+                    var openHeightAnim = new DoubleAnimation(0.0, targetHeight, new Duration(TimeSpan.FromMilliseconds(220)))
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                    };
+                    var openFadeAnim = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                    };
+                    openHeightAnim.Completed += (asender, aargs) =>
+                    {
+                        toolsPanel.MaxHeight = double.PositiveInfinity;
+                    };
+                    toolsPanel.BeginAnimation(FrameworkElement.MaxHeightProperty, openHeightAnim);
+                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, openFadeAnim);
+
+                    toolsToggleBtn.Content = "Close ▲";
                     return;
                 }
 
-                bool isExpanded = (toolsToggleBtn.Content as string) == "Close";
+                bool isExpanded = (toolsToggleBtn.Content as string) == "Close ▲" || (toolsToggleBtn.Content as string) == "Close";
                 if (isExpanded)
                 {
-                    toolsToggleBtn.Content = "Tools";
-                    toolsPanel.Visibility = Visibility.Collapsed;
+                    toolsToggleBtn.Content = "Tools ▼";
+                    double currentH = toolsPanel.ActualHeight > 0 ? toolsPanel.ActualHeight : 120;
+                    toolsPanel.MaxHeight = currentH;
+
+                    var closeHeightAnim = new DoubleAnimation(currentH, 0.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+                    };
+                    var closeFadeAnim = new DoubleAnimation(toolsPanel.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(140)))
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+                    };
+                    closeHeightAnim.Completed += (cs, ce) =>
+                    {
+                        if ((toolsToggleBtn.Content as string) == "Tools ▼")
+                        {
+                            toolsPanel.Visibility = Visibility.Collapsed;
+                        }
+                    };
+                    toolsPanel.BeginAnimation(FrameworkElement.MaxHeightProperty, closeHeightAnim);
+                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, closeFadeAnim);
                 }
                 else
                 {
-                    toolsToggleBtn.Content = "Close";
+                    toolsToggleBtn.Content = "Close ▲";
                     toolsPanel.Visibility = Visibility.Visible;
+                    toolsPanel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    double targetHeight = Math.Max(100, toolsPanel.DesiredSize.Height);
+
+                    var openHeightAnim = new DoubleAnimation(0.0, targetHeight, new Duration(TimeSpan.FromMilliseconds(220)))
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                    };
+                    var openFadeAnim = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                    };
+                    openHeightAnim.Completed += (asender, aargs) =>
+                    {
+                        toolsPanel.MaxHeight = double.PositiveInfinity;
+                    };
+                    toolsPanel.BeginAnimation(FrameworkElement.MaxHeightProperty, openHeightAnim);
+                    toolsPanel.BeginAnimation(UIElement.OpacityProperty, openFadeAnim);
                 }
             };
             btnPanel.Children.Add(toolsToggleBtn);

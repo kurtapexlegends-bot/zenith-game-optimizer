@@ -99,6 +99,7 @@ namespace ZenithOptimizer
                 if (TxtStatusBadge != null)
                 {
                     TxtStatusBadge.Text = statusText;
+                    TxtStatusBadge.Foreground = new SolidColorBrush(dotColor);
                 }
                 if (StatusDot != null)
                 {
@@ -106,6 +107,8 @@ namespace ZenithOptimizer
                 }
                 if (StatusBadgeBorder != null)
                 {
+                    StatusBadgeBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(90, dotColor.R, dotColor.G, dotColor.B));
+                    StatusBadgeBorder.Background = new SolidColorBrush(Color.FromArgb(30, dotColor.R, dotColor.G, dotColor.B));
                     var fadeAnim = new DoubleAnimation(0.4, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
                     {
                         EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
@@ -169,20 +172,67 @@ namespace ZenithOptimizer
                                 ? "Pre-armed mode active: 0.500ms kernel timer, high performance power scheme, and audio shield engaged."
                                 : "Game mode engaged: 0.500ms ultra-low input response, audio shield, and priority scheduling are active.";
                             StatusText.Text = isPreArmed ? "Pre-Armed: " + telem.ActiveGameName.Replace(" (Pre-Armed)", "") : "Game Active: " + telem.ActiveGameName;
-                            StatusBadgeBorder.Background = FrozenTheme.StatusBadgeActiveBg;
-                            StatusDot.Fill = FrozenTheme.StatusDotActive;
+
+                            Color activeColor = Color.FromRgb(16, 185, 129);
+                            if (TxtStatusBadge != null)
+                            {
+                                TxtStatusBadge.Text = isPreArmed ? "Pre-Armed" : "Boosted";
+                                TxtStatusBadge.Foreground = new SolidColorBrush(activeColor);
+                            }
+                            StatusBadgeBorder.Background = new SolidColorBrush(Color.FromArgb(30, activeColor.R, activeColor.G, activeColor.B));
+                            StatusBadgeBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(90, activeColor.R, activeColor.G, activeColor.B));
+                            StatusDot.Fill = new SolidColorBrush(activeColor);
                             TxtFooterStatus.Text = "Zenith Active: " + telem.ActiveGameName + " | Input Response: " + telem.CurrentTimerResolutionMs.ToString("0.000") + " ms";
                         }
                         else
                         {
-                            if (BtnManualBoost.Content != null && BtnManualBoost.Content.ToString() != "Boosted (Active)")
+                            bool isCooling = _monitorService.PowerService.IsInstantCooldownActive();
+                            bool isManualBoost = BtnManualBoost.Content != null && BtnManualBoost.Content.ToString() == "Boosted (Active)";
+
+                            if (isCooling)
                             {
-                                DashHeroTitle.Text = "System Monitoring Active";
-                                DashHeroDesc.Text = "Whenever a supported game starts, Zenith automatically engages 0.500ms precision scheduling, AudioDG isolation, and unparked CPU cores.";
+                                Color coolColor = Color.FromRgb(56, 189, 248);
+                                if (TxtStatusBadge != null)
+                                {
+                                    TxtStatusBadge.Text = "Cooling";
+                                    TxtStatusBadge.Foreground = new SolidColorBrush(coolColor);
+                                }
+                                StatusText.Text = "Laptop Cooldown Active (80% Ceiling)";
+                                StatusBadgeBorder.Background = new SolidColorBrush(Color.FromArgb(30, coolColor.R, coolColor.G, coolColor.B));
+                                StatusBadgeBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(90, coolColor.R, coolColor.G, coolColor.B));
+                                StatusDot.Fill = new SolidColorBrush(coolColor);
                             }
-                            StatusText.Text = "Zenith Active - Auto-Optimizing";
-                            StatusBadgeBorder.Background = FrozenTheme.StatusBadgeActiveBg;
-                            StatusDot.Fill = FrozenTheme.StatusDotActive;
+                            else if (isManualBoost)
+                            {
+                                Color boostColor = Color.FromRgb(16, 185, 129);
+                                if (TxtStatusBadge != null)
+                                {
+                                    TxtStatusBadge.Text = "Boosted";
+                                    TxtStatusBadge.Foreground = new SolidColorBrush(boostColor);
+                                }
+                                StatusText.Text = "High-Performance Boost Active";
+                                StatusBadgeBorder.Background = new SolidColorBrush(Color.FromArgb(30, boostColor.R, boostColor.G, boostColor.B));
+                                StatusBadgeBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(90, boostColor.R, boostColor.G, boostColor.B));
+                                StatusDot.Fill = new SolidColorBrush(boostColor);
+                            }
+                            else
+                            {
+                                if (BtnManualBoost.Content != null && BtnManualBoost.Content.ToString() != "Boosted (Active)")
+                                {
+                                    DashHeroTitle.Text = "System Monitoring Active";
+                                    DashHeroDesc.Text = "Whenever a supported game starts, Zenith automatically engages 0.500ms precision scheduling, AudioDG isolation, and unparked CPU cores.";
+                                }
+                                StatusText.Text = "Zenith Active - Auto-Optimizing";
+                                if (TxtStatusBadge != null && TxtStatusBadge.Text != "Stock Defaults Restored")
+                                {
+                                    TxtStatusBadge.Text = "Ready";
+                                    TxtStatusBadge.Foreground = (SolidColorBrush)FindResource("TextPrimary");
+                                }
+                                StatusBadgeBorder.Background = FrozenTheme.StatusBadgeActiveBg;
+                                StatusBadgeBorder.BorderBrush = (SolidColorBrush)FindResource("BorderSubtle");
+                                StatusDot.Fill = FrozenTheme.StatusDotActive;
+                            }
+
                             TxtFooterStatus.Text = "Zenith Engine Ready. 0 games running. Input Response: " + telem.CurrentTimerResolutionMs.ToString("0.000") + " ms";
                         }
                     }
