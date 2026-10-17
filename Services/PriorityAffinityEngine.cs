@@ -18,12 +18,17 @@ namespace ZenithOptimizer.Services
 
         public bool OptimizeGameProcess(Process process, bool enablePCores, bool enableHighPriority)
         {
-            if (process == null || process.HasExited) return false;
+            if (process == null) return false;
 
             try
             {
+                bool hasExited = false;
+                try { hasExited = process.HasExited; } catch { }
+                if (hasExited) return false;
+
                 int pid = process.Id;
-                string pName = process.ProcessName.ToLower();
+                string pName = "";
+                try { pName = (process.ProcessName ?? "").ToLower(); } catch { }
                 bool isEmulator = pName.Contains("hd-player") || pName.Contains("bluestacks") || pName.Contains("bstksvc");
                 bool isValorant = pName.Contains("valorant");
 

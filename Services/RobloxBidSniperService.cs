@@ -86,6 +86,77 @@ namespace ZenithOptimizer.Services
 
         private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
         private const uint MOUSEEVENTF_LEFTUP = 0x0004;
+
+        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, uint nFlags);
+
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr CreateCompatibleDC(IntPtr hdc);
+
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
+
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
+
+        [DllImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DeleteObject(IntPtr hObject);
+
+        [DllImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DeleteDC(IntPtr hdc);
+
+        [DllImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private const uint WM_MOUSEMOVE = 0x0200;
+        private const uint WM_LBUTTONDOWN = 0x0201;
+        private const uint WM_LBUTTONUP = 0x0202;
+        private const uint PW_RENDERFULLCONTENT = 0x00000002;
+        private const uint SRCCOPY = 0x00CC0020;
         #endregion
 
         private static RobloxBidSniperService _instance;
@@ -145,12 +216,74 @@ namespace ZenithOptimizer.Services
         public event Action<string> OnLog;
         public event Action<bool> OnArmedChanged;
         public event Action<int, int, int, bool> OnColorSampled;
+        public event Action<int, int, int, bool, string> OnColorSampledEx;
         public event Action<int, int, int> OnSnipeFired;
         public event Action<int, int> OnSensorPositionChanged;
         public event Action<int?, int?> OnClickTargetChanged;
         public event Action<int, int, int, bool> OnTargetColorChanged;
         public event Action<int, int, bool> OnTrackPositionChanged;
         public event Action<bool> OnDynamicTrackingToggled;
+        public event Action<string> OnCaptureSourceChanged;
+
+        private string _captureMethod = "Auto"; // "Auto", "RobloxWindowDc", "DesktopDc", "BitBltFallback"
+        private string _clickMode = "Dual"; // "Dual" (direct message + hardware), "Hardware", "Message"
+        private int _auctionCountdownSeconds = 5;
+        private string _lastActiveCaptureSource = "Desktop DC";
+        private IntPtr _lastRobloxHwnd = IntPtr.Zero;
+        private CancellationTokenSource _timerSnipeCts;
+
+        public string CaptureMethod
+        {
+            get { return _captureMethod; }
+            set
+            {
+                _captureMethod = string.IsNullOrEmpty(value) ? "Auto" : value;
+                SaveCurrentSettings();
+                if (OnCaptureSourceChanged != null)
+                {
+                    try { OnCaptureSourceChanged(_captureMethod); } catch { }
+                }
+            }
+        }
+
+        public string ClickMode
+        {
+            get { return _clickMode; }
+            set { _clickMode = string.IsNullOrEmpty(value) ? "Dual" : value; SaveCurrentSettings(); }
+        }
+
+        public int AuctionCountdownSeconds
+        {
+            get { return _auctionCountdownSeconds; }
+            set { _auctionCountdownSeconds = Math.Max(1, Math.Min(value, 60)); SaveCurrentSettings(); }
+        }
+
+        public event Action<string> OnClickTargetModeChanged;
+        private string _clickTargetMode = "FixedTarget"; // "FixedTarget" (calibrated BID target), "Hover" (current mouse position)
+        private bool _restoreCursorAfterClick = false;
+
+        public string ClickTargetMode
+        {
+            get { return _clickTargetMode; }
+            set
+            {
+                _clickTargetMode = string.IsNullOrEmpty(value) ? "FixedTarget" : value;
+                SaveCurrentSettings();
+                if (OnClickTargetModeChanged != null)
+                {
+                    try { OnClickTargetModeChanged(_clickTargetMode); } catch { }
+                }
+            }
+        }
+
+        public bool RestoreCursorAfterClick
+        {
+            get { return _restoreCursorAfterClick; }
+            set { _restoreCursorAfterClick = value; SaveCurrentSettings(); }
+        }
+
+        public string LastActiveCaptureSource { get { return _lastActiveCaptureSource; } }
+        public IntPtr LastRobloxHwnd { get { return _lastRobloxHwnd; } }
 
         public bool IsRunning { get { return _isRunning; } }
         public bool IsArmed
@@ -225,6 +358,7 @@ namespace ZenithOptimizer.Services
             }
             catch { }
             _sensorPos = new POINT { X = screenW / 2, Y = (int)(screenH * 0.65) };
+            _targetClickPos = new POINT { X = screenW / 2, Y = (int)(screenH * 0.78) };
             try
             {
                 LoadFromSettings(OptimizationSettings.Load());
@@ -257,7 +391,7 @@ namespace ZenithOptimizer.Services
                 }
                 else
                 {
-                    _targetClickPos = null;
+                    _targetClickPos = new POINT { X = _sensorPos.X, Y = (int)(_sensorPos.Y + 120) };
                 }
 
                 _useCalibratedColor = settings.SniperUseCalibratedColor;
@@ -296,6 +430,23 @@ namespace ZenithOptimizer.Services
                 {
                     _trackScanStep = settings.SniperTrackScanStep;
                 }
+                if (!string.IsNullOrEmpty(settings.SniperCaptureMethod))
+                {
+                    _captureMethod = settings.SniperCaptureMethod;
+                }
+                if (!string.IsNullOrEmpty(settings.SniperClickMode))
+                {
+                    _clickMode = settings.SniperClickMode;
+                }
+                if (settings.SniperAuctionCountdownSeconds > 0)
+                {
+                    _auctionCountdownSeconds = settings.SniperAuctionCountdownSeconds;
+                }
+                if (!string.IsNullOrEmpty(settings.SniperClickTargetMode))
+                {
+                    _clickTargetMode = settings.SniperClickTargetMode;
+                }
+                _restoreCursorAfterClick = settings.SniperRestoreCursor;
             }
             catch { }
         }
@@ -325,6 +476,11 @@ namespace ZenithOptimizer.Services
                 settings.SniperTrackCorridorWidth = _trackCorridorWidth;
                 settings.SniperTrackCorridorHeight = _trackCorridorHeight;
                 settings.SniperTrackScanStep = _trackScanStep;
+                settings.SniperCaptureMethod = _captureMethod;
+                settings.SniperClickMode = _clickMode;
+                settings.SniperAuctionCountdownSeconds = _auctionCountdownSeconds;
+                settings.SniperClickTargetMode = _clickTargetMode;
+                settings.SniperRestoreCursor = _restoreCursorAfterClick;
                 settings.Save();
             }
             catch { }
@@ -655,29 +811,283 @@ namespace ZenithOptimizer.Services
             return false;
         }
 
-        public bool SampleColorAtPoint(int x, int y, out int r, out int g, out int b)
+        public static IntPtr FindRobloxClientHwnd()
         {
-            IntPtr hdc = IntPtr.Zero;
+            IntPtr fg = GetForegroundWindow();
+            if (fg != IntPtr.Zero && IsRobloxClientWindow(fg))
+            {
+                return fg;
+            }
+
+            IntPtr found = FindWindow("WINDOWSCLIENT", null);
+            if (found != IntPtr.Zero && IsRobloxClientWindow(found)) return found;
+
+            IntPtr bestHwnd = IntPtr.Zero;
+            long bestArea = 0;
             try
             {
-                hdc = GetDC(IntPtr.Zero);
-                uint p = GetPixel(hdc, x, y);
-                if (p != 0xFFFFFFFF)
+                EnumWindows((h, lp) =>
                 {
-                    r = (int)(p & 0x000000FF);
-                    g = (int)((p & 0x0000FF00) >> 8);
-                    b = (int)((p & 0x00FF0000) >> 16);
-                    CalibrateTargetColor(r, g, b, _colorTolerance);
+                    if (IsRobloxClientWindow(h))
+                    {
+                        RECT rc;
+                        if (GetClientRect(h, out rc))
+                        {
+                            long area = (long)rc.Right * rc.Bottom;
+                            if (area > bestArea)
+                            {
+                                bestArea = area;
+                                bestHwnd = h;
+                            }
+                        }
+                    }
                     return true;
+                }, IntPtr.Zero);
+            }
+            catch { }
+
+            return bestHwnd;
+        }
+
+        public static bool IsRobloxClientWindow(IntPtr hWnd)
+        {
+            if (hWnd == IntPtr.Zero || !IsWindowVisible(hWnd) || IsIconic(hWnd)) return false;
+
+            RECT rc;
+            if (!GetClientRect(hWnd, out rc)) return false;
+            if (rc.Right < 320 || rc.Bottom < 240) return false;
+
+            StringBuilder sbClass = new StringBuilder(256);
+            GetClassName(hWnd, sbClass, 256);
+            string clsName = sbClass.ToString();
+            if (clsName.IndexOf("WINDOWSCLIENT", StringComparison.OrdinalIgnoreCase) >= 0)
+                return true;
+
+            StringBuilder sbTitle = new StringBuilder(256);
+            GetWindowText(hWnd, sbTitle, 256);
+            string title = sbTitle.ToString();
+            if (title.IndexOf("Roblox", StringComparison.OrdinalIgnoreCase) >= 0)
+                return true;
+
+            uint pid;
+            GetWindowThreadProcessId(hWnd, out pid);
+            if (pid != 0)
+            {
+                try
+                {
+                    string pName = Process.GetProcessById((int)pid).ProcessName;
+                    if (pName.IndexOf("RobloxPlayer", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                        pName.IndexOf("Crash", StringComparison.OrdinalIgnoreCase) < 0 &&
+                        pName.IndexOf("Installer", StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        return true;
+                    }
+                }
+                catch { }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Multi-tier pixel sampling for Windows 11 DirectX 11 DirectFlip,
+        /// DWM hardware overlay bypass, and standard GDI composition.
+        /// </summary>
+        public uint SamplePixelWithFallback(int screenX, int screenY, out string captureSource)
+        {
+            captureSource = "Unknown";
+            IntPtr robloxHwnd = FindRobloxClientHwnd();
+            _lastRobloxHwnd = robloxHwnd;
+
+            string mode = _captureMethod ?? "Auto";
+
+            // Tier 1: Roblox Client Window DC (Direct window capture bypasses DWM DirectFlip compositing black pixels)
+            if (mode == "Auto" || mode.Equals("RobloxWindowDc", StringComparison.OrdinalIgnoreCase))
+            {
+                if (robloxHwnd != IntPtr.Zero)
+                {
+                    POINT pt = new POINT { X = screenX, Y = screenY };
+                    if (ScreenToClient(robloxHwnd, ref pt))
+                    {
+                        RECT rc;
+                        if (GetClientRect(robloxHwnd, out rc) && pt.X >= 0 && pt.Y >= 0 && pt.X < rc.Right && pt.Y < rc.Bottom)
+                        {
+                            IntPtr hdcRoblox = GetDC(robloxHwnd);
+                            if (hdcRoblox != IntPtr.Zero)
+                            {
+                                try
+                                {
+                                    uint px = GetPixel(hdcRoblox, pt.X, pt.Y);
+                                    if (px != 0xFFFFFFFF && px != 0x00000000)
+                                    {
+                                        captureSource = "Roblox Window DC";
+                                        _lastActiveCaptureSource = captureSource;
+                                        return px;
+                                    }
+                                    if (px != 0xFFFFFFFF && mode.Equals("RobloxWindowDc", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        captureSource = "Roblox Window DC (Black)";
+                                        _lastActiveCaptureSource = captureSource;
+                                        return px;
+                                    }
+                                }
+                                finally
+                                {
+                                    ReleaseDC(robloxHwnd, hdcRoblox);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Tier 2: Desktop DC
+            if (mode == "Auto" || mode.Equals("DesktopDc", StringComparison.OrdinalIgnoreCase))
+            {
+                IntPtr hdcScreen = GetDC(IntPtr.Zero);
+                if (hdcScreen != IntPtr.Zero)
+                {
+                    try
+                    {
+                        uint px = GetPixel(hdcScreen, screenX, screenY);
+                        if (px != 0xFFFFFFFF && px != 0x00000000)
+                        {
+                            captureSource = "Desktop DC";
+                            _lastActiveCaptureSource = captureSource;
+                            return px;
+                        }
+                        if (px != 0xFFFFFFFF && mode.Equals("DesktopDc", StringComparison.OrdinalIgnoreCase))
+                        {
+                            captureSource = "Desktop DC";
+                            _lastActiveCaptureSource = captureSource;
+                            return px;
+                        }
+                    }
+                    finally
+                    {
+                        ReleaseDC(IntPtr.Zero, hdcScreen);
+                    }
+                }
+            }
+
+            // Tier 3: 1x1 BitBlt memory buffer fallback (Forces DWM render target surface resolve)
+            if (mode == "Auto" || mode.Equals("BitBltFallback", StringComparison.OrdinalIgnoreCase))
+            {
+                uint bltPx = SamplePixelBitBlt(screenX, screenY, robloxHwnd);
+                if (bltPx != 0xFFFFFFFF && bltPx != 0x00000000)
+                {
+                    captureSource = "BitBlt Fallback";
+                    _lastActiveCaptureSource = captureSource;
+                    return bltPx;
+                }
+            }
+
+            // Absolute fast return for black/dark pixels:
+            // Direct return in microseconds without heavy full-screen window blitting
+            captureSource = robloxHwnd != IntPtr.Zero ? "Roblox Window DC" : "Desktop DC";
+            _lastActiveCaptureSource = captureSource;
+            return 0x00000000;
+        }
+
+        public uint SamplePixelBitBlt(int screenX, int screenY, IntPtr rbxHwnd)
+        {
+            IntPtr srcWnd = (rbxHwnd != IntPtr.Zero) ? rbxHwnd : IntPtr.Zero;
+            IntPtr srcHdc = GetDC(srcWnd);
+            if (srcHdc == IntPtr.Zero)
+            {
+                srcWnd = IntPtr.Zero;
+                srcHdc = GetDC(IntPtr.Zero);
+            }
+            if (srcHdc == IntPtr.Zero) return 0xFFFFFFFF;
+
+            IntPtr memDc = IntPtr.Zero;
+            IntPtr hBmp = IntPtr.Zero;
+            IntPtr oldBmp = IntPtr.Zero;
+            try
+            {
+                memDc = CreateCompatibleDC(srcHdc);
+                if (memDc == IntPtr.Zero) return 0xFFFFFFFF;
+                hBmp = CreateCompatibleBitmap(srcHdc, 1, 1);
+                if (hBmp == IntPtr.Zero) return 0xFFFFFFFF;
+                oldBmp = SelectObject(memDc, hBmp);
+
+                int srcX = screenX;
+                int srcY = screenY;
+                if (srcWnd != IntPtr.Zero)
+                {
+                    POINT pt = new POINT { X = screenX, Y = screenY };
+                    ScreenToClient(srcWnd, ref pt);
+                    srcX = pt.X;
+                    srcY = pt.Y;
+                }
+
+                if (BitBlt(memDc, 0, 0, 1, 1, srcHdc, srcX, srcY, SRCCOPY))
+                {
+                    return GetPixel(memDc, 0, 0);
                 }
             }
             catch { }
             finally
             {
-                if (hdc != IntPtr.Zero)
+                if (oldBmp != IntPtr.Zero) SelectObject(memDc, oldBmp);
+                if (hBmp != IntPtr.Zero) DeleteObject(hBmp);
+                if (memDc != IntPtr.Zero) DeleteDC(memDc);
+                if (srcHdc != IntPtr.Zero) ReleaseDC(srcWnd, srcHdc);
+            }
+            return 0xFFFFFFFF;
+        }
+
+        public uint SamplePixelPrintWindow(int screenX, int screenY, IntPtr rbxHwnd)
+        {
+            if (rbxHwnd == IntPtr.Zero) return 0xFFFFFFFF;
+            RECT rc;
+            if (!GetClientRect(rbxHwnd, out rc) || rc.Right <= 0 || rc.Bottom <= 0) return 0xFFFFFFFF;
+
+            POINT pt = new POINT { X = screenX, Y = screenY };
+            ScreenToClient(rbxHwnd, ref pt);
+            if (pt.X < 0 || pt.Y < 0 || pt.X >= rc.Right || pt.Y >= rc.Bottom) return 0xFFFFFFFF;
+
+            IntPtr wndDc = GetDC(rbxHwnd);
+            if (wndDc == IntPtr.Zero) return 0xFFFFFFFF;
+
+            IntPtr memDc = IntPtr.Zero;
+            IntPtr hBmp = IntPtr.Zero;
+            IntPtr oldBmp = IntPtr.Zero;
+            try
+            {
+                memDc = CreateCompatibleDC(wndDc);
+                if (memDc == IntPtr.Zero) return 0xFFFFFFFF;
+                hBmp = CreateCompatibleBitmap(wndDc, rc.Right, rc.Bottom);
+                if (hBmp == IntPtr.Zero) return 0xFFFFFFFF;
+                oldBmp = SelectObject(memDc, hBmp);
+
+                if (PrintWindow(rbxHwnd, memDc, PW_RENDERFULLCONTENT))
                 {
-                    try { ReleaseDC(IntPtr.Zero, hdc); } catch { }
+                    return GetPixel(memDc, pt.X, pt.Y);
                 }
+            }
+            catch { }
+            finally
+            {
+                if (oldBmp != IntPtr.Zero) SelectObject(memDc, oldBmp);
+                if (hBmp != IntPtr.Zero) DeleteObject(hBmp);
+                if (memDc != IntPtr.Zero) DeleteDC(memDc);
+                if (wndDc != IntPtr.Zero) ReleaseDC(rbxHwnd, wndDc);
+            }
+            return 0xFFFFFFFF;
+        }
+
+        public bool SampleColorAtPoint(int x, int y, out int r, out int g, out int b)
+        {
+            string source;
+            uint p = SamplePixelWithFallback(x, y, out source);
+            if (p != 0xFFFFFFFF)
+            {
+                r = (int)(p & 0x000000FF);
+                g = (int)((p & 0x0000FF00) >> 8);
+                b = (int)((p & 0x00FF0000) >> 16);
+                CalibrateTargetColor(r, g, b, _colorTolerance);
+                Log(string.Format("Sampled color RGB({0}, {1}, {2}) from {3}", r, g, b, source));
+                return true;
             }
             r = g = b = 0;
             return false;
@@ -838,7 +1248,10 @@ namespace ZenithOptimizer.Services
         /// </summary>
         public void TriggerTestClick()
         {
-            ExecuteSnipeClick(_sensorPos.X, _sensorPos.Y, "TEST");
+            int clickX = _targetClickPos.HasValue ? _targetClickPos.Value.X : _sensorPos.X;
+            int clickY = _targetClickPos.HasValue ? _targetClickPos.Value.Y : (int)(_sensorPos.Y + 120);
+            ExecuteSnipeClick(clickX, clickY, "TEST");
+            PlayBeep(1800, 90);
         }
 
         /// <summary>
@@ -863,11 +1276,8 @@ namespace ZenithOptimizer.Services
 
         private void WorkerLoop()
         {
-            IntPtr hdcScreen = IntPtr.Zero;
             try
             {
-                hdcScreen = GetDC(IntPtr.Zero);
-
                 bool f6WasDown = false;
                 bool f7WasDown = false;
                 bool f8WasDown = false;
@@ -972,32 +1382,49 @@ namespace ZenithOptimizer.Services
                     }
                     f9WasDown = f9Down;
 
-                    // 2. Window Filtering: Check if Roblox is active OR global mode is enabled
+                    // 2. Window Filtering: Check if Roblox is active OR global mode is enabled OR user is on Zenith HUD
                     bool isTargetWindowActive = _globalMode;
                     if (!isTargetWindowActive)
                     {
                         IntPtr fgWnd = GetForegroundWindow();
                         if (fgWnd != IntPtr.Zero)
                         {
-                            StringBuilder sbTitle = new StringBuilder(256);
-                            GetWindowText(fgWnd, sbTitle, 256);
-                            string title = sbTitle.ToString();
-
-                            StringBuilder sbClass = new StringBuilder(256);
-                            GetClassName(fgWnd, sbClass, 256);
-                            string clsName = sbClass.ToString();
-
-                            uint pid;
-                            GetWindowThreadProcessId(fgWnd, out pid);
-                            string procName = "";
-                            try { procName = Process.GetProcessById((int)pid).ProcessName; } catch { }
-
-                            if (title.IndexOf("Roblox", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                procName.IndexOf("Roblox", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                clsName.IndexOf("WINDOWSCLIENT", StringComparison.OrdinalIgnoreCase) >= 0)
+                            if (IsRobloxClientWindow(fgWnd))
                             {
                                 isTargetWindowActive = true;
                             }
+                            else
+                            {
+                                StringBuilder sbTitle = new StringBuilder(256);
+                                GetWindowText(fgWnd, sbTitle, 256);
+                                string title = sbTitle.ToString();
+
+                                StringBuilder sbClass = new StringBuilder(256);
+                                GetClassName(fgWnd, sbClass, 256);
+                                string clsName = sbClass.ToString();
+
+                                uint pid;
+                                GetWindowThreadProcessId(fgWnd, out pid);
+                                string procName = "";
+                                try { procName = Process.GetProcessById((int)pid).ProcessName; } catch { }
+
+                                if (title.IndexOf("Roblox", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                    procName.IndexOf("Roblox", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                    clsName.IndexOf("WINDOWSCLIENT", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    isTargetWindowActive = true;
+                                }
+                                else if (procName.IndexOf("Zenith", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                         title.IndexOf("Zenith", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    // User is interacting with Zenith's HUD overlay on top of Roblox
+                                    isTargetWindowActive = true;
+                                }
+                            }
+                        }
+                        else if (FindRobloxClientHwnd() != IntPtr.Zero)
+                        {
+                            isTargetWindowActive = true;
                         }
                     }
 
@@ -1016,7 +1443,8 @@ namespace ZenithOptimizer.Services
                             // Fast-path: If already locked onto sweet-spot, check if current lock position is still valid
                             if (_hasTrackLock && _currentTrackedPos.HasValue)
                             {
-                                uint lockPixel = GetPixel(hdcScreen, _currentTrackedPos.Value.X, _currentTrackedPos.Value.Y);
+                                string lockSrc;
+                                uint lockPixel = SamplePixelWithFallback(_currentTrackedPos.Value.X, _currentTrackedPos.Value.Y, out lockSrc);
                                 if (lockPixel != 0xFFFFFFFF)
                                 {
                                     int lr = (int)(lockPixel & 0x000000FF);
@@ -1036,7 +1464,7 @@ namespace ZenithOptimizer.Services
                             {
                                 int foundTrackX, foundTrackY;
                                 bool trackFound = ScanCorridorForTarget(
-                                    (px, py) => GetPixel(hdcScreen, px, py),
+                                    (px, py) => { string s; return SamplePixelWithFallback(px, py, out s); },
                                     sx, sy, _trackCorridorWidth, _trackCorridorHeight, _trackScanStep,
                                     out foundTrackX, out foundTrackY);
 
@@ -1067,15 +1495,9 @@ namespace ZenithOptimizer.Services
                             _hasTrackLock = false;
                         }
 
-                        // Primary focal center pixel at active tracking coordinate
-                        uint pixel = GetPixel(hdcScreen, activeX, activeY);
-                        if (pixel == 0xFFFFFFFF)
-                        {
-                            // Reset DC if GDI handle became invalid
-                            try { ReleaseDC(IntPtr.Zero, hdcScreen); } catch { }
-                            hdcScreen = GetDC(IntPtr.Zero);
-                            pixel = GetPixel(hdcScreen, activeX, activeY);
-                        }
+                        // Primary focal center pixel at active tracking coordinate using multi-tier sampling
+                        string frameSource;
+                        uint pixel = SamplePixelWithFallback(activeX, activeY, out frameSource);
 
                         int r = (int)(pixel & 0x000000FF);
                         int g = (int)((pixel & 0x0000FF00) >> 8);
@@ -1086,11 +1508,11 @@ namespace ZenithOptimizer.Services
                         bool shouldFire = EvaluateTriggerFrame(r, g, b, out isMatch, out firingMode);
 
                         // 4. Turbo Bidding Mode: Hold [V] to rapid-bid
-                        // Guarded: only turbo-bids when sensor IS CONFIRMED ON THE GREEN!
+                        // Guarded: only turbo-bids when sensor IS CONFIRMED ON THE GREEN/TARGET!
                         bool vDown = (GetAsyncKeyState(VK_V) & 0x8000) != 0;
                         if (vDown && isMatch)
                         {
-                            if ((DateTime.UtcNow - _lastTurboClickTime).TotalMilliseconds >= 80)
+                            if ((DateTime.UtcNow - _lastTurboClickTime).TotalMilliseconds >= 75)
                             {
                                 _lastTurboClickTime = DateTime.UtcNow;
                                 ExecuteSnipeClick(activeX, activeY, "TURBO-HOLD");
@@ -1105,6 +1527,11 @@ namespace ZenithOptimizer.Services
                             if (_dynamicTrackingEnabled && OnTrackPositionChanged != null)
                             {
                                 try { OnTrackPositionChanged(activeX, activeY, _hasTrackLock); } catch { }
+                            }
+
+                            if (OnColorSampledEx != null)
+                            {
+                                try { OnColorSampledEx(r, g, b, isMatch, frameSource); } catch { }
                             }
 
                             if (OnColorSampled != null)
@@ -1128,13 +1555,6 @@ namespace ZenithOptimizer.Services
             catch (Exception ex)
             {
                 Log("Roblox Bid Sniper worker exception: " + ex.Message);
-            }
-            finally
-            {
-                if (hdcScreen != IntPtr.Zero)
-                {
-                    try { ReleaseDC(IntPtr.Zero, hdcScreen); } catch { }
-                }
             }
         }
 
@@ -1183,7 +1603,27 @@ namespace ZenithOptimizer.Services
             bool shouldFire = false;
             string mode = _triggerMode ?? "Auto";
 
-            if (mode.Equals("Continuous", StringComparison.OrdinalIgnoreCase))
+            if (mode.Equals("Turbo", StringComparison.OrdinalIgnoreCase))
+            {
+                if (focalMatch)
+                {
+                    bool canTurboTime = (DateTime.UtcNow - _lastSnipeTime).TotalMilliseconds >= 75;
+                    if (canTurboTime || ignoreCooldown)
+                    {
+                        shouldFire = true;
+                        firingMode = "TURBO";
+                    }
+                }
+            }
+            else if (mode.Equals("TimerSnipe", StringComparison.OrdinalIgnoreCase))
+            {
+                if (focalMatch)
+                {
+                    shouldFire = true;
+                    firingMode = "TIMER";
+                }
+            }
+            else if (mode.Equals("Continuous", StringComparison.OrdinalIgnoreCase))
             {
                 // Rapid bids while actively sustained inside the green sweet spot
                 if (focalMatch)
@@ -1215,7 +1655,7 @@ namespace ZenithOptimizer.Services
             }
 
             // CRITICAL POSITIVE DETECTION GUARD:
-            // In Auto, Edge, and Continuous modes: NEVER allow firing if focalMatch is false!
+            // In Auto, Edge, Continuous, Turbo, and TimerSnipe modes: NEVER allow firing if focalMatch is false!
             if (!mode.Equals("Disruption", StringComparison.OrdinalIgnoreCase) && !focalMatch)
             {
                 shouldFire = false;
@@ -1225,67 +1665,149 @@ namespace ZenithOptimizer.Services
             return shouldFire;
         }
 
-        private void ExecuteSnipeClick(int hitX, int hitY, string mode)
+        public void DispatchMouseClick(int targetX, int targetY, string mode)
         {
-            // Optical pre-bid verification guard:
-            // Confirm the target is still on green immediately before sending mouse clicks
-            if (mode != "TEST" && mode != "DISRUPTION")
+            IntPtr robloxHwnd = FindRobloxClientHwnd();
+            POINT origPos;
+            GetCursorPos(out origPos);
+
+            int clickScreenX = targetX > 0 ? targetX : (_targetClickPos.HasValue ? _targetClickPos.Value.X : origPos.X);
+            int clickScreenY = targetY > 0 ? targetY : (_targetClickPos.HasValue ? _targetClickPos.Value.Y : origPos.Y);
+
+            // If test click, ensure Roblox gets foreground focus so the click registers in-game
+            if (mode == "TEST" && robloxHwnd != IntPtr.Zero)
             {
-                IntPtr hdc = IntPtr.Zero;
+                try { SetForegroundWindow(robloxHwnd); } catch { }
+            }
+
+            // Direct Window Message dispatch to Roblox HWND (with WM_MOUSEMOVE preamble so GUI hover registers)
+            if (robloxHwnd != IntPtr.Zero && (_clickMode == "Dual" || _clickMode == "Message"))
+            {
                 try
                 {
-                    hdc = GetDC(IntPtr.Zero);
-                    uint p = GetPixel(hdc, hitX, hitY);
-                    if (p != 0xFFFFFFFF)
+                    POINT clientPt = new POINT { X = clickScreenX, Y = clickScreenY };
+                    if (ScreenToClient(robloxHwnd, ref clientPt))
                     {
-                        int r = (int)(p & 0x000000FF);
-                        int g = (int)((p & 0x0000FF00) >> 8);
-                        int b = (int)((p & 0x00FF0000) >> 16);
-                        if (!IsTargetMatch(r, g, b))
+                        IntPtr lParam = (IntPtr)(((clientPt.Y & 0xFFFF) << 16) | (clientPt.X & 0xFFFF));
+                        PostMessage(robloxHwnd, WM_MOUSEMOVE, (IntPtr)0, lParam);
+                        PostMessage(robloxHwnd, WM_LBUTTONDOWN, (IntPtr)1, lParam);
+                        if (_clickMode == "Message")
                         {
-                            Log(string.Format("[{0}] Snipe aborted: Target moved off green before click execution.", mode));
-                            return;
+                            Thread.Sleep(25);
+                            PostMessage(robloxHwnd, WM_LBUTTONUP, (IntPtr)0, lParam);
                         }
                     }
                 }
                 catch { }
-                finally
-                {
-                    if (hdc != IntPtr.Zero)
-                    {
-                        try { ReleaseDC(IntPtr.Zero, hdc); } catch { }
-                    }
-                }
             }
 
-            POINT origPos;
-            GetCursorPos(out origPos);
-
-            if (_targetClickPos.HasValue)
+            // Hardware OS mouse_event dispatch
+            if (_clickMode == "Dual" || _clickMode == "Hardware")
             {
-                SetCursorPos(_targetClickPos.Value.X, _targetClickPos.Value.Y);
-                // 25ms mouse down dwell time guarantees Roblox UI event loop registers the click
-                mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
-                Thread.Sleep(25);
-                mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
-                SetCursorPos(origPos.X, origPos.Y);
+                try
+                {
+                    bool isHover = _clickTargetMode == "Hover" && mode != "TEST";
+
+                    if (!isHover)
+                    {
+                        SetCursorPos(clickScreenX, clickScreenY);
+                    }
+
+                    mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
+                    Thread.Sleep(25);
+                    mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+
+                    // If dual mode, also complete the message up event
+                    if (robloxHwnd != IntPtr.Zero && _clickMode == "Dual")
+                    {
+                        POINT clientPt = new POINT { X = clickScreenX, Y = clickScreenY };
+                        if (ScreenToClient(robloxHwnd, ref clientPt))
+                        {
+                            IntPtr lParam = (IntPtr)(((clientPt.Y & 0xFFFF) << 16) | (clientPt.X & 0xFFFF));
+                            PostMessage(robloxHwnd, WM_LBUTTONUP, (IntPtr)0, lParam);
+                        }
+                    }
+
+                    // Only restore cursor if explicitly enabled, avoiding rapid back-and-forth camera whip
+                    if (_restoreCursorAfterClick && !isHover && mode != "TEST")
+                    {
+                        Thread.Sleep(5);
+                        SetCursorPos(origPos.X, origPos.Y);
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private void ExecuteSnipeClick(int hitX, int hitY, string mode)
+        {
+            int clickX, clickY;
+            if (_clickTargetMode == "Hover" && mode != "TEST")
+            {
+                POINT cur;
+                GetCursorPos(out cur);
+                clickX = cur.X;
+                clickY = cur.Y;
+            }
+            else if (_targetClickPos.HasValue)
+            {
+                clickX = _targetClickPos.Value.X;
+                clickY = _targetClickPos.Value.Y;
             }
             else
             {
-                // Click at current cursor location (where player is aiming their mouse on the BID button)
-                mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
-                Thread.Sleep(25);
-                mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+                clickX = hitX;
+                clickY = hitY + 120;
             }
+
+            DispatchMouseClick(clickX, clickY, mode);
 
             _successfulSnipes++;
 
             if (OnSnipeFired != null)
             {
-                try { OnSnipeFired(hitX, hitY, _successfulSnipes); } catch { }
+                try { OnSnipeFired(clickX, clickY, _successfulSnipes); } catch { }
             }
 
-            Log(string.Format("[{0}] SNIPE #{1} FIRED at ({2}, {3})", mode, _successfulSnipes, _targetClickPos.HasValue ? _targetClickPos.Value.X : origPos.X, _targetClickPos.HasValue ? _targetClickPos.Value.Y : origPos.Y));
+            Log(string.Format("[{0}] SNIPE #{1} FIRED at ({2}, {3}) via {4} ({5})",
+                mode, _successfulSnipes, clickX, clickY, _clickMode, _clickTargetMode));
+        }
+
+        public void TriggerAuctionTimerSnipe(double countdownSeconds = 5.0, int burstCount = 4)
+        {
+            if (_timerSnipeCts != null)
+            {
+                try { _timerSnipeCts.Cancel(); } catch { }
+                _timerSnipeCts = null;
+            }
+
+            _timerSnipeCts = new CancellationTokenSource();
+            var token = _timerSnipeCts.Token;
+
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                try
+                {
+                    Log(string.Format("Auction Timer Sniper armed for {0:0.0}s countdown. Sniping in final 0.5s...", countdownSeconds));
+                    PlayBeep(1300, 80);
+
+                    int waitMs = (int)Math.Max(0, (countdownSeconds - 0.5) * 1000);
+                    if (waitMs > 0)
+                    {
+                        if (token.WaitHandle.WaitOne(waitMs)) return;
+                    }
+
+                    PlayBeep(2100, 100);
+                    Log(string.Format("FINAL GAVEL SNIPE! Executing {0}x bid burst!", burstCount));
+
+                    for (int i = 0; i < burstCount && !token.IsCancellationRequested; i++)
+                    {
+                        ExecuteSnipeClick(_sensorPos.X, _sensorPos.Y, "TIMER");
+                        Thread.Sleep(60);
+                    }
+                }
+                catch { }
+            }, token);
         }
 
         private static void PlayBeep(int freq, int duration)

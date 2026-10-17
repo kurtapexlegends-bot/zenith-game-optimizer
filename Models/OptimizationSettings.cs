@@ -47,6 +47,11 @@ namespace ZenithOptimizer.Models
         public int SniperTrackCorridorWidth { get; set; }
         public int SniperTrackCorridorHeight { get; set; }
         public int SniperTrackScanStep { get; set; }
+        public string SniperCaptureMethod { get; set; }
+        public string SniperClickMode { get; set; }
+        public int SniperAuctionCountdownSeconds { get; set; }
+        public string SniperClickTargetMode { get; set; }
+        public bool SniperRestoreCursor { get; set; }
 
         public OptimizationSettings()
         {
@@ -90,6 +95,11 @@ namespace ZenithOptimizer.Models
             SniperTrackCorridorWidth = 260;
             SniperTrackCorridorHeight = 32;
             SniperTrackScanStep = 4;
+            SniperCaptureMethod = "Auto";
+            SniperClickMode = "Dual";
+            SniperAuctionCountdownSeconds = 5;
+            SniperClickTargetMode = "FixedTarget";
+            SniperRestoreCursor = false;
         }
 
         public static string GetSettingsFilePath()
@@ -158,6 +168,22 @@ namespace ZenithOptimizer.Models
                         if (loaded.SniperTrackScanStep <= 0)
                         {
                             loaded.SniperTrackScanStep = 4;
+                        }
+                        if (string.IsNullOrEmpty(loaded.SniperCaptureMethod))
+                        {
+                            loaded.SniperCaptureMethod = "Auto";
+                        }
+                        if (string.IsNullOrEmpty(loaded.SniperClickMode))
+                        {
+                            loaded.SniperClickMode = "Dual";
+                        }
+                        if (loaded.SniperAuctionCountdownSeconds <= 0)
+                        {
+                            loaded.SniperAuctionCountdownSeconds = 5;
+                        }
+                        if (string.IsNullOrEmpty(loaded.SniperClickTargetMode))
+                        {
+                            loaded.SniperClickTargetMode = "FixedTarget";
                         }
 
                         // If recovered from tempFile and main file is missing, restore main file

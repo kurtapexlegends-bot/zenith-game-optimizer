@@ -2929,12 +2929,12 @@ namespace ZenithOptimizer.Services
 
                     if (enable)
                     {
-                        dict["FFlagDisablePostFx"] = "True";
-                        dict["DFIntDebugForceFoliageCutoffDistance"] = "10000";
-                        dict["DFIntDebugFRMQualityLevelOverride"] = "21";
-                        dict["FIntRenderDistanceStuds"] = "100000";
-                        dict["FIntRenderShadowIntensity"] = "0";
-                        dict["DFFlagDebugRenderForceTechnologyVoxel"] = "True";
+                        dict["FFlagDisablePostFx"] = true;
+                        dict["DFIntDebugForceFoliageCutoffDistance"] = 10000;
+                        dict["DFIntDebugFRMQualityLevelOverride"] = 21;
+                        dict["FIntRenderDistanceStuds"] = 100000;
+                        dict["FIntRenderShadowIntensity"] = 0;
+                        dict["DFFlagDebugRenderForceTechnologyVoxel"] = true;
                     }
                     else
                     {
@@ -2948,7 +2948,7 @@ namespace ZenithOptimizer.Services
 
                     if (dict.Count > 0)
                     {
-                        string updatedJson = serializer.Serialize(dict);
+                        string updatedJson = SerializeFormattedJson(dict);
                         File.WriteAllText(file, updatedJson);
                     }
                     else if (File.Exists(file))

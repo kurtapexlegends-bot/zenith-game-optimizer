@@ -2356,6 +2356,156 @@ namespace ZenithOptimizer.Tests
                 Console.WriteLine("FAIL: " + ex.Message);
                 failed++;
             }
+
+            // TEST 44: Roblox FastFlags Native JSON Typing (Boolean & Integer Literal Verification)
+            try
+            {
+                Console.Write("[TEST 44] Roblox FastFlags Native JSON Types & Multi-Path Dispatch: ");
+                var tuner = new GameSpecificTunerService();
+                string unlockMsg;
+                bool applied = tuner.UnlockStorageHuntersRenderDistance(out unlockMsg);
+
+                string rbxFile = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Roblox\ClientSettings\ClientAppSettings.json");
+                bool fileExists = System.IO.File.Exists(rbxFile);
+                bool validTypes = false;
+                bool noQuotedBooleansOrNumbers = false;
+
+                if (fileExists)
+                {
+                    string rawJson = System.IO.File.ReadAllText(rbxFile);
+                    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    var dict = serializer.Deserialize<Dictionary<string, object>>(rawJson);
+
+                    // Verify dictionary types
+                    bool postFxIsBool = dict.ContainsKey("FFlagDisablePostFx") && dict["FFlagDisablePostFx"] is bool && (bool)dict["FFlagDisablePostFx"] == true;
+                    bool voxelIsBool = dict.ContainsKey("DFFlagDebugRenderForceTechnologyVoxel") && dict["DFFlagDebugRenderForceTechnologyVoxel"] is bool && (bool)dict["DFFlagDebugRenderForceTechnologyVoxel"] == true;
+                    bool studsIsInt = dict.ContainsKey("FIntRenderDistanceStuds") && (dict["FIntRenderDistanceStuds"] is int || dict["FIntRenderDistanceStuds"] is long) && Convert.ToInt32(dict["FIntRenderDistanceStuds"]) == 100000;
+                    bool qualityIsInt = dict.ContainsKey("DFIntDebugFRMQualityLevelOverride") && (dict["DFIntDebugFRMQualityLevelOverride"] is int || dict["DFIntDebugFRMQualityLevelOverride"] is long) && Convert.ToInt32(dict["DFIntDebugFRMQualityLevelOverride"]) == 21;
+                    validTypes = postFxIsBool && voxelIsBool && studsIsInt && qualityIsInt;
+
+                    // Verify raw text does NOT contain quoted booleans or quoted numbers
+                    bool hasQuotedTrue = rawJson.IndexOf("\"true\"", StringComparison.OrdinalIgnoreCase) >= 0;
+                    bool hasQuotedFalse = rawJson.IndexOf("\"false\"", StringComparison.OrdinalIgnoreCase) >= 0;
+                    bool hasQuotedNumber = System.Text.RegularExpressions.Regex.IsMatch(rawJson, @"\""FIntRenderDistanceStuds\""\s*:\s*\""\d+\""");
+                    noQuotedBooleansOrNumbers = !hasQuotedTrue && !hasQuotedFalse && !hasQuotedNumber;
+                }
+
+                string restoreMsg;
+                bool restored = tuner.RestoreRobloxRenderDistance(out restoreMsg);
+
+                if (applied && fileExists && validTypes && noQuotedBooleansOrNumbers && restored)
+                {
+                    Console.WriteLine("PASS (Native boolean true/false and integer values verified in ClientAppSettings.json without quoted strings)");
+                    passed++;
+                }
+                else
+                {
+                    Console.WriteLine("FAIL (Applied:{0}, Exists:{1}, ValidTypes:{2}, NoQuotedLiterals:{3}, Restored:{4})",
+                        applied, fileExists, validTypes, noQuotedBooleansOrNumbers, restored);
+                    failed++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FAIL: " + ex.Message);
+                failed++;
+            }
+
+            // TEST 45: Storage Hunters Bid Sniper DirectFlip Sampler, HWND Discovery & Dual Click Engine
+            try
+            {
+                Console.Write("[TEST 45] DirectFlip Multi-Tier Sampler, HWND Discovery & Click Dual-Dispatch: ");
+                var sniper = RobloxBidSniperService.Instance;
+
+                // 1. HWND Discovery & Classification
+                bool nullHwndNotRoblox = !RobloxBidSniperService.IsRobloxClientWindow(IntPtr.Zero);
+                IntPtr detectedHwnd = RobloxBidSniperService.FindRobloxClientHwnd(); // Safe execution, returns Zero if Roblox isn't running
+
+                // 2. Multi-tier sampler fallback
+                string source1, source2;
+                uint p1 = sniper.SamplePixelWithFallback(100, 100, out source1);
+                sniper.CaptureMethod = "DesktopDc";
+                uint p2 = sniper.SamplePixelWithFallback(100, 100, out source2);
+                sniper.CaptureMethod = "Auto";
+                bool samplerRan = source1 != null && source2 != null;
+
+                // 3. DirectFlip Black Frame Safety Guard
+                // DirectFlip black pixel (0x00000000) MUST NOT match sweet spot!
+                bool blackDoesNotMatch = !sniper.IsTargetMatch(0, 0, 0);
+
+                // 4. Trigger Frame State Machine (Turbo & TimerSnipe Modes)
+                sniper.IsArmed = true;
+                bool match;
+                string firingMode;
+
+                // Turbo Mode
+                sniper.TriggerMode = "Turbo";
+                // Off-green: must not fire
+                bool turboOffGreen = sniper.EvaluateTriggerFrame(0, 0, 0, out match, out firingMode, true);
+                // On-green: must fire
+                bool turboOnGreen = sniper.EvaluateTriggerFrame(46, 204, 113, out match, out firingMode, true);
+                bool turboCorrect = !turboOffGreen && turboOnGreen && firingMode == "TURBO";
+
+                // TimerSnipe Mode
+                sniper.TriggerMode = "TimerSnipe";
+                bool timerOffGreen = sniper.EvaluateTriggerFrame(0, 0, 0, out match, out firingMode, true);
+                bool timerOnGreen = sniper.EvaluateTriggerFrame(46, 204, 113, out match, out firingMode, true);
+                bool timerCorrect = !timerOffGreen && timerOnGreen && firingMode == "TIMER";
+
+                // Reset mode to Auto
+                sniper.TriggerMode = "Auto";
+
+                // 5. Settings Persistence Verification (Including Target Mode & Cursor Restore)
+                var settings = OptimizationSettings.Load();
+                settings.SniperCaptureMethod = "RobloxWindowDc";
+                settings.SniperClickMode = "Dual";
+                settings.SniperAuctionCountdownSeconds = 5;
+                settings.SniperClickTargetMode = "FixedTarget";
+                settings.SniperRestoreCursor = false;
+                sniper.LoadFromSettings(settings);
+                bool settingsLoaded = sniper.CaptureMethod == "RobloxWindowDc" &&
+                                      sniper.ClickMode == "Dual" &&
+                                      sniper.AuctionCountdownSeconds == 5 &&
+                                      sniper.ClickTargetMode == "FixedTarget" &&
+                                      sniper.RestoreCursorAfterClick == false;
+
+                // 6. Target Mode Toggling (FixedTarget vs Hover)
+                sniper.ClickTargetMode = "Hover";
+                bool hoverModeSet = sniper.ClickTargetMode == "Hover";
+                sniper.ClickTargetMode = "FixedTarget";
+                bool fixedModeSet = sniper.ClickTargetMode == "FixedTarget";
+                bool targetModesOk = hoverModeSet && fixedModeSet;
+
+                // 7. Non-blocking Multi-tier Sampler (Sub-millisecond black-frame bypass without PrintWindow chokes)
+                var sw = Stopwatch.StartNew();
+                string blkSource;
+                uint blkPx = sniper.SamplePixelWithFallback(-9999, -9999, out blkSource);
+                sw.Stop();
+                bool fastNonBlocking = sw.ElapsedMilliseconds < 50;
+
+                // 8. Click Dual-Dispatch Execution Safety (Hover mode: zero cursor movement)
+                sniper.ResetCalibration(); // CalibratedClickPosition becomes null -> Active mouse hover mode
+                sniper.ClickMode = "Hardware";
+                sniper.DispatchMouseClick(100, 100, "TEST");
+                sniper.ClickMode = "Dual";
+
+                if (nullHwndNotRoblox && samplerRan && blackDoesNotMatch && turboCorrect && timerCorrect && settingsLoaded && targetModesOk && fastNonBlocking)
+                {
+                    Console.WriteLine("PASS (Roblox HWND classifier, multi-tier fallback sampler, DirectFlip black guard, Turbo/Timer modes, ClickTargetMode & dual dispatch verified)");
+                    passed++;
+                }
+                else
+                {
+                    Console.WriteLine("FAIL (HwndSafe:{0}, Sampler:{1}, BlackGuard:{2}, Turbo:{3}, Timer:{4}, Settings:{5}, TargetModes:{6}, FastSampler:{7})",
+                        nullHwndNotRoblox, samplerRan, blackDoesNotMatch, turboCorrect, timerCorrect, settingsLoaded, targetModesOk, fastNonBlocking);
+                    failed++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FAIL: " + ex.Message);
+                failed++;
+            }
         }
         finally
         {

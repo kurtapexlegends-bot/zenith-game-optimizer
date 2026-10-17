@@ -35,6 +35,14 @@ namespace ZenithOptimizer.UI
         private const int WS_EX_LAYERED = 0x00080000;
         private const int WS_EX_NOACTIVATE = 0x08000000;
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOMOVE = 0x0002;
+        private const uint SWP_NOACTIVATE = 0x0010;
+        private const uint SWP_SHOWWINDOW = 0x0040;
+
         private static RobloxSniperOverlay _instance;
         private static readonly object _syncRoot = new object();
 
@@ -68,6 +76,8 @@ namespace ZenithOptimizer.UI
         private TextBlock _colorText;
         private TextBlock _statsText;
         private TextBlock _modeBadge;
+        private TextBlock _targetModeBadge;
+        private Border _targetModeBadgeBorder;
         private Border _trackBadgeBorder;
         private TextBlock _trackBadge;
         private Border _corridorBox;
@@ -101,7 +111,7 @@ namespace ZenithOptimizer.UI
         {
             if (Application.Current == null) return;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 if (_hudWindow != null) return;
 
@@ -112,6 +122,7 @@ namespace ZenithOptimizer.UI
                 // Wire up events from RobloxBidSniperService
                 var service = RobloxBidSniperService.Instance;
                 service.OnColorSampled += OnColorSampled;
+                service.OnColorSampledEx += OnColorSampledEx;
                 service.OnSnipeFired += OnSnipeFired;
                 service.OnArmedChanged += OnArmedChanged;
                 service.OnSensorPositionChanged += OnSensorPositionChanged;
@@ -119,35 +130,50 @@ namespace ZenithOptimizer.UI
                 service.OnTargetColorChanged += OnTargetColorChanged;
                 service.OnTrackPositionChanged += OnTrackPositionChanged;
                 service.OnDynamicTrackingToggled += OnDynamicTrackingToggled;
-            });
+                service.OnClickTargetModeChanged += OnClickTargetModeChanged;
+            }));
         }
 
         public void Show()
         {
             if (Application.Current == null) return;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 Initialize();
                 if (_hudWindow != null)
                 {
                     _hudWindow.Show();
                     _reticleWindow.Show();
-                    if (RobloxBidSniperService.Instance.CalibratedClickPosition.HasValue && _clickTargetWindow != null)
+                    if (_clickTargetWindow != null)
                     {
                         _clickTargetWindow.Show();
                     }
                     _isVisible = true;
                     UpdateDisplay();
+
+                    try
+                    {
+                        var hHud = new System.Windows.Interop.WindowInteropHelper(_hudWindow).Handle;
+                        if (hHud != IntPtr.Zero) SetWindowPos(hHud, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+                        var hRet = new System.Windows.Interop.WindowInteropHelper(_reticleWindow).Handle;
+                        if (hRet != IntPtr.Zero) SetWindowPos(hRet, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+                        if (_clickTargetWindow != null)
+                        {
+                            var hClk = new System.Windows.Interop.WindowInteropHelper(_clickTargetWindow).Handle;
+                            if (hClk != IntPtr.Zero) SetWindowPos(hClk, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+                        }
+                    }
+                    catch { }
                 }
-            });
+            }));
         }
 
         public void Hide()
         {
             if (Application.Current == null) return;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 if (_hudWindow != null)
                 {
@@ -156,7 +182,7 @@ namespace ZenithOptimizer.UI
                     if (_clickTargetWindow != null) _clickTargetWindow.Hide();
                     _isVisible = false;
                 }
-            });
+            }));
         }
 
         public void Toggle()
@@ -191,9 +217,9 @@ namespace ZenithOptimizer.UI
                 Background = Brushes.Transparent,
                 Topmost = true,
                 ShowInTaskbar = false,
-                Width = 560,
-                Height = 148,
-                Left = Math.Max(20, (SystemParameters.PrimaryScreenWidth - 560) / 2),
+                Width = 680,
+                Height = 152,
+                Left = Math.Max(20, (SystemParameters.PrimaryScreenWidth - 680) / 2),
                 Top = 16
             };
 
@@ -205,6 +231,9 @@ namespace ZenithOptimizer.UI
                     if (helper.Handle != IntPtr.Zero)
                     {
                         SetWindowDisplayAffinity(helper.Handle, WDA_EXCLUDEFROMCAPTURE);
+                        int exStyle = GetWindowLong(helper.Handle, GWL_EXSTYLE);
+                        SetWindowLong(helper.Handle, GWL_EXSTYLE, exStyle | WS_EX_NOACTIVATE);
+                        SetWindowPos(helper.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
                     }
                 }
                 catch { }
@@ -233,9 +262,10 @@ namespace ZenithOptimizer.UI
             mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-            // Row 0: Header with title, click-thru lock, mode badge, live status badge, and close button
+            // Row 0: Header with title, click-thru lock, mode badge, bid target mode, live status badge, and close button
             Grid headerGrid = new Grid();
             headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -275,7 +305,7 @@ namespace ZenithOptimizer.UI
             };
             TextBlock dragGrip = new TextBlock
             {
-                Text = " ⠿ Drag",
+                Text = " [Drag]",
                 FontSize = 9.5,
                 Foreground = new SolidColorBrush(Color.FromArgb(140, 148, 163, 184)),
                 VerticalAlignment = VerticalAlignment.Center,
@@ -288,7 +318,7 @@ namespace ZenithOptimizer.UI
 
             _lockBadge = new TextBlock
             {
-                Text = _isReticleLocked ? "[🔒 Pass-Through]" : "[⇱ Draggable]",
+                Text = _isReticleLocked ? "[PASS-THROUGH]" : "[DRAGGABLE]",
                 FontSize = 9.5,
                 FontWeight = FontWeights.SemiBold,
                 Foreground = _isReticleLocked
@@ -307,7 +337,7 @@ namespace ZenithOptimizer.UI
                 Padding = new Thickness(6, 2, 6, 2),
                 Margin = new Thickness(4, 0, 4, 0),
                 Cursor = Cursors.Hand,
-                ToolTip = "Click to toggle: [⇱ Draggable] (move HUD & markers) / [🔒 Pass-Through] (clicks pass to Roblox)",
+                ToolTip = "Click to toggle: [DRAGGABLE] (move HUD & markers) / [PASS-THROUGH] (clicks pass to Roblox)",
                 Child = _lockBadge
             };
             _lockBadgeBorder.PreviewMouseLeftButtonDown += (s, e) =>
@@ -335,7 +365,7 @@ namespace ZenithOptimizer.UI
                 Padding = new Thickness(6, 2, 6, 2),
                 Margin = new Thickness(4, 0, 4, 0),
                 Cursor = Cursors.Hand,
-                ToolTip = "Click to cycle trigger mode: Auto -> Edge -> Continuous -> Disruption",
+                ToolTip = "Click to cycle trigger mode: Auto -> Edge -> Continuous -> Disruption -> Turbo",
                 Child = _modeBadge
             };
             modeBorder.PreviewMouseLeftButtonDown += (s, e) =>
@@ -347,6 +377,7 @@ namespace ZenithOptimizer.UI
                 if (current.Equals("Auto", StringComparison.OrdinalIgnoreCase)) next = "Edge";
                 else if (current.Equals("Edge", StringComparison.OrdinalIgnoreCase)) next = "Continuous";
                 else if (current.Equals("Continuous", StringComparison.OrdinalIgnoreCase)) next = "Disruption";
+                else if (current.Equals("Disruption", StringComparison.OrdinalIgnoreCase)) next = "Turbo";
                 else next = "Auto";
                 sniper.TriggerMode = next;
                 _modeBadge.Text = "[" + next + "]";
@@ -355,6 +386,43 @@ namespace ZenithOptimizer.UI
             headerGrid.Children.Add(modeBorder);
 
             var currentSniper = RobloxBidSniperService.Instance;
+            _targetModeBadge = new TextBlock
+            {
+                Text = currentSniper.ClickTargetMode == "Hover" ? "[BID: HOVER]" : "[BID: TARGET]",
+                FontSize = 9.5,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = currentSniper.ClickTargetMode == "Hover"
+                    ? new SolidColorBrush(Color.FromRgb(250, 204, 21))
+                    : new SolidColorBrush(Color.FromRgb(56, 189, 248)),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _targetModeBadgeBorder = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(160, 30, 41, 59)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 56, 189, 248)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(6, 2, 6, 2),
+                Margin = new Thickness(4, 0, 4, 0),
+                Cursor = Cursors.Hand,
+                ToolTip = "Click to toggle Bid Targeting: [BID: TARGET] (clicks calibrated BID ring) / [BID: HOVER] (clicks at mouse cursor)",
+                Child = _targetModeBadge
+            };
+            _targetModeBadgeBorder.PreviewMouseLeftButtonDown += (s, e) =>
+            {
+                e.Handled = true;
+                var sniper = RobloxBidSniperService.Instance;
+                string nextMode = sniper.ClickTargetMode == "Hover" ? "FixedTarget" : "Hover";
+                sniper.ClickTargetMode = nextMode;
+                _targetModeBadge.Text = nextMode == "Hover" ? "[BID: HOVER]" : "[BID: TARGET]";
+                _targetModeBadge.Foreground = nextMode == "Hover"
+                    ? new SolidColorBrush(Color.FromRgb(250, 204, 21))
+                    : new SolidColorBrush(Color.FromRgb(56, 189, 248));
+                FlashActionText("BID TARGET: " + (nextMode == "Hover" ? "MOUSE HOVER" : "FIXED TARGET"), Color.FromRgb(56, 189, 248));
+            };
+            Grid.SetColumn(_targetModeBadgeBorder, 3);
+            headerGrid.Children.Add(_targetModeBadgeBorder);
+
             _trackBadge = new TextBlock
             {
                 Text = currentSniper.DynamicTrackingEnabled ? "[TRACK: ON]" : "[TRACK: OFF]",
@@ -382,7 +450,7 @@ namespace ZenithOptimizer.UI
                 e.Handled = true;
                 RobloxBidSniperService.Instance.ToggleDynamicTracking();
             };
-            Grid.SetColumn(_trackBadgeBorder, 3);
+            Grid.SetColumn(_trackBadgeBorder, 4);
             headerGrid.Children.Add(_trackBadgeBorder);
 
             _statusBadge = new TextBlock
@@ -412,7 +480,7 @@ namespace ZenithOptimizer.UI
                 var sniper = RobloxBidSniperService.Instance;
                 sniper.IsArmed = !sniper.IsArmed;
             };
-            Grid.SetColumn(statusBorder, 4);
+            Grid.SetColumn(statusBorder, 5);
             headerGrid.Children.Add(statusBorder);
 
             TextBlock closeBtn = new TextBlock
@@ -439,7 +507,7 @@ namespace ZenithOptimizer.UI
                 e.Handled = true;
                 Hide();
             };
-            Grid.SetColumn(closeBorder, 5);
+            Grid.SetColumn(closeBorder, 6);
             headerGrid.Children.Add(closeBorder);
 
             Grid.SetRow(headerGrid, 0);
@@ -588,7 +656,28 @@ namespace ZenithOptimizer.UI
             hotkeysPanel.Children.Add(CreateKeycapPill("V", "Turbo", "Turbo bid click burst [V]", () =>
             {
                 RobloxBidSniperService.Instance.TurboBurstClick(5);
-                FlashActionText("⚡ TURBO BURST (5x)", Color.FromRgb(250, 204, 21));
+                FlashActionText("TURBO BURST (5x)", Color.FromRgb(250, 204, 21));
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("Ctrl+F8", "Set Bid", "Lock BID button click target to cursor [Ctrl+F8]", () =>
+            {
+                int cx, cy;
+                if (RobloxBidSniperService.Instance.SetClickTargetToCurrentCursor(out cx, out cy))
+                {
+                    FlashActionText(string.Format("BID TARGET LOCKED ({0}, {1})", cx, cy), Color.FromRgb(56, 189, 248));
+                }
+            }));
+            hotkeysPanel.Children.Add(CreateActionPill("[TEST FIRE]", Color.FromRgb(56, 189, 248), "Dispatch single test snipe click to verify feedback loop", () =>
+            {
+                var s = RobloxBidSniperService.Instance;
+                s.TriggerTestClick();
+                int cx = s.CalibratedClickPosition.HasValue ? s.CalibratedClickPosition.Value.X : s.SensorPosition.X;
+                int cy = s.CalibratedClickPosition.HasValue ? s.CalibratedClickPosition.Value.Y : (int)(s.SensorPosition.Y + 120);
+                FlashActionText(string.Format("TEST CLICK -> ({0}, {1})", cx, cy), Color.FromRgb(56, 189, 248));
+            }));
+            hotkeysPanel.Children.Add(CreateActionPill("[5s SNIPE]", Color.FromRgb(250, 204, 21), "Arm 5-second countdown timer snipe for auction hammer / gavel", () =>
+            {
+                RobloxBidSniperService.Instance.TriggerAuctionTimerSnipe(5.0, 4);
+                FlashActionText("5s TIMER SNIPE ARMED", Color.FromRgb(250, 204, 21));
             }));
 
             Grid.SetColumn(hotkeysPanel, 0);
@@ -698,6 +787,53 @@ namespace ZenithOptimizer.UI
                 pill.BorderBrush = new SolidColorBrush(Color.FromArgb(40, 148, 163, 184));
                 pill.Background = new SolidColorBrush(Color.FromArgb(120, 30, 41, 59));
                 lbl.Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184));
+            };
+
+            if (onClick != null)
+            {
+                pill.PreviewMouseLeftButtonDown += (s, e) =>
+                {
+                    e.Handled = true;
+                    onClick();
+                };
+            }
+
+            return pill;
+        }
+
+        private Border CreateActionPill(string label, Color accent, string tooltip, Action onClick)
+        {
+            TextBlock tb = new TextBlock
+            {
+                Text = label,
+                FontSize = 8.5,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(accent),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            Border pill = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(140, 30, 41, 59)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(100, accent.R, accent.G, accent.B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(3),
+                Padding = new Thickness(6, 1, 6, 1),
+                Margin = new Thickness(0, 0, 4, 0),
+                Cursor = Cursors.Hand,
+                ToolTip = tooltip,
+                Child = tb
+            };
+
+            pill.MouseEnter += (s, e) =>
+            {
+                pill.BorderBrush = new SolidColorBrush(accent);
+                pill.Background = new SolidColorBrush(Color.FromArgb(200, 30, 41, 59));
+            };
+            pill.MouseLeave += (s, e) =>
+            {
+                pill.BorderBrush = new SolidColorBrush(Color.FromArgb(100, accent.R, accent.G, accent.B));
+                pill.Background = new SolidColorBrush(Color.FromArgb(140, 30, 41, 59));
             };
 
             if (onClick != null)
@@ -1037,11 +1173,10 @@ namespace ZenithOptimizer.UI
             _clickTargetWindow.Loaded += (s, e) =>
             {
                 GetDpi(_clickTargetWindow, out scaleX, out scaleY);
-                if (sniper.CalibratedClickPosition.HasValue)
-                {
-                    _clickTargetWindow.Left = (sniper.CalibratedClickPosition.Value.X / scaleX) - 18;
-                    _clickTargetWindow.Top = (sniper.CalibratedClickPosition.Value.Y / scaleY) - 18;
-                }
+                int targetX = sniper.CalibratedClickPosition.HasValue ? sniper.CalibratedClickPosition.Value.X : (int)(SystemParameters.PrimaryScreenWidth / 2);
+                int targetY = sniper.CalibratedClickPosition.HasValue ? sniper.CalibratedClickPosition.Value.Y : (int)(SystemParameters.PrimaryScreenHeight * 0.78);
+                _clickTargetWindow.Left = (targetX / scaleX) - 18;
+                _clickTargetWindow.Top = (targetY / scaleY) - 18;
                 try
                 {
                     var helper = new System.Windows.Interop.WindowInteropHelper(_clickTargetWindow);
@@ -1128,6 +1263,12 @@ namespace ZenithOptimizer.UI
 
         private void OnColorSampled(int r, int g, int b, bool isMatch)
         {
+            var sniper = RobloxBidSniperService.Instance;
+            OnColorSampledEx(r, g, b, isMatch, sniper.LastActiveCaptureSource ?? "Desktop DC");
+        }
+
+        private void OnColorSampledEx(int r, int g, int b, bool isMatch, string captureSource)
+        {
             if (!_isVisible || _colorSwatch == null) return;
 
             Application.Current.Dispatcher.InvokeAsync(() =>
@@ -1135,11 +1276,11 @@ namespace ZenithOptimizer.UI
                 _colorSwatch.Background = new SolidColorBrush(Color.FromRgb((byte)r, (byte)g, (byte)b));
 
                 var sniper = RobloxBidSniperService.Instance;
-                string modeLabel = sniper.UseCalibratedColor ? "Custom Target" : (sniper.ColorPreset ?? "HSV Green");
                 string triggerName = sniper.TriggerMode;
 
-                _colorText.Text = string.Format("#{0:X2}{1:X2}{2:X2} [{3}] • {4}", 
+                _colorText.Text = string.Format("#{0:X2}{1:X2}{2:X2} [{3} • {4}] • {5}", 
                     r, g, b, 
+                    captureSource ?? "DC",
                     triggerName,
                     isMatch ? "MATCH (Sweet-Spot)" : "Searching...");
 
@@ -1224,14 +1365,14 @@ namespace ZenithOptimizer.UI
             {
                 if (_isReticleLocked)
                 {
-                    _lockBadge.Text = "[🔒 Pass-Through]";
+                    _lockBadge.Text = "[PASS-THROUGH]";
                     _lockBadge.Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184));
                     _lockBadgeBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255));
                     _lockBadgeBorder.ToolTip = "Clicks pass straight through to Roblox. Click to unlock & drag reticle/bid target.";
                 }
                 else
                 {
-                    _lockBadge.Text = "[⇱ Draggable]";
+                    _lockBadge.Text = "[DRAGGABLE]";
                     _lockBadge.Foreground = new SolidColorBrush(Color.FromRgb(250, 204, 21));
                     _lockBadgeBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(160, 250, 204, 21));
                     _lockBadgeBorder.ToolTip = "Overlays are freely draggable! Click to lock so clicks pass to Roblox.";
@@ -1300,7 +1441,7 @@ namespace ZenithOptimizer.UI
                     }
                     if (_corridorLabel != null)
                     {
-                        _corridorLabel.Text = string.Format("🎯 SWEET-SPOT LOCKED ({0}, {1})", activeX, activeY);
+                        _corridorLabel.Text = string.Format("SWEET-SPOT LOCKED ({0}, {1})", activeX, activeY);
                         _corridorLabel.Foreground = new SolidColorBrush(Color.FromRgb(52, 211, 153));
                     }
                     if (_trackBadge != null)
@@ -1379,6 +1520,23 @@ namespace ZenithOptimizer.UI
             });
         }
 
+        private void OnClickTargetModeChanged(string mode)
+        {
+            if (!_isVisible) return;
+
+            Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                if (_targetModeBadge != null)
+                {
+                    _targetModeBadge.Text = mode == "Hover" ? "[BID: HOVER]" : "[BID: TARGET]";
+                    _targetModeBadge.Foreground = mode == "Hover"
+                        ? new SolidColorBrush(Color.FromRgb(250, 204, 21))
+                        : new SolidColorBrush(Color.FromRgb(56, 189, 248));
+                }
+                UpdateStatsText();
+            });
+        }
+
         private void OnClickTargetChanged(int? physX, int? physY)
         {
             if (!_isVisible) return;
@@ -1424,9 +1582,11 @@ namespace ZenithOptimizer.UI
         {
             if (_statsText == null) return;
             var sniper = RobloxBidSniperService.Instance;
-            string clickDesc = sniper.CalibratedClickPosition.HasValue
-                ? string.Format("({0}, {1})", sniper.CalibratedClickPosition.Value.X, sniper.CalibratedClickPosition.Value.Y)
-                : "Active Mouse";
+            string clickDesc = sniper.ClickTargetMode == "Hover"
+                ? "Hover"
+                : (sniper.CalibratedClickPosition.HasValue
+                    ? string.Format("({0}, {1})", sniper.CalibratedClickPosition.Value.X, sniper.CalibratedClickPosition.Value.Y)
+                    : "Target (Default)");
 
             string trackDesc = sniper.DynamicTrackingEnabled
                 ? (sniper.HasTrackLock && sniper.CurrentTrackedPosition.HasValue
@@ -1434,12 +1594,13 @@ namespace ZenithOptimizer.UI
                     : "Track: SCANNING")
                 : "Track: OFF";
 
-            _statsText.Text = string.Format("Hits: {0} • Spot: ({1}, {2}) • {3} • Bid: {4}", 
+            _statsText.Text = string.Format("Hits: {0} • Spot: ({1}, {2}) • {3} • Bid: {4} [{5}]", 
                 sniper.SuccessfulSnipes, 
                 sniper.SensorPosition.X, 
                 sniper.SensorPosition.Y, 
                 trackDesc,
-                clickDesc);
+                clickDesc,
+                sniper.ClickTargetMode);
         }
 
         private void UpdateDisplay()
@@ -1452,6 +1613,11 @@ namespace ZenithOptimizer.UI
             {
                 OnClickTargetChanged(sniper.CalibratedClickPosition.Value.X, sniper.CalibratedClickPosition.Value.Y);
             }
+            else
+            {
+                OnClickTargetChanged(sniper.SensorPosition.X, (int)(sniper.SensorPosition.Y + 120));
+            }
+            OnClickTargetModeChanged(sniper.ClickTargetMode);
             OnTargetColorChanged(sniper.CalibratedR, sniper.CalibratedG, sniper.CalibratedB, sniper.UseCalibratedColor);
             UpdateLockBadgeVisuals();
             UpdatePresetButtonsVisuals(sniper.UseCalibratedColor ? "Custom" : (sniper.ColorPreset ?? "Green"));
@@ -1461,7 +1627,7 @@ namespace ZenithOptimizer.UI
         {
             if (Application.Current != null)
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     try { if (_hudWindow != null) _hudWindow.Close(); } catch { }
                     try { if (_reticleWindow != null) _reticleWindow.Close(); } catch { }
@@ -1469,7 +1635,7 @@ namespace ZenithOptimizer.UI
                     _hudWindow = null;
                     _reticleWindow = null;
                     _clickTargetWindow = null;
-                });
+                }));
             }
         }
     }
