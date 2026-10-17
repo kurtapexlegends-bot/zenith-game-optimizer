@@ -81,6 +81,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\MainWindow.ProfilesView.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UI\MainWindow.ToolsPanel.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -89,7 +93,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\Library\GameSearchFilter.cs" />
+    <Compile Include="UI\Library\GameDragDropManager.cs" />
+    <Compile Include="UI\Library\GameCardRenderer.cs" />
+    <Compile Include="UI\Library\GameCardRenderer.Badges.cs" />
+    <Compile Include="UI\Library\GameMetricsDeckRenderer.cs" />
     <Compile Include="UI\RobloxSniperOverlay.cs" />
+    <Compile Include="UI\Sniper\SniperHudWindow.cs" />
+    <Compile Include="UI\Sniper\SniperReticleWindow.cs" />
+    <Compile Include="UI\Sniper\SniperClickTargetWindow.cs" />
+    <Compile Include="Services\Sniper\OpticalSamplingEngine.cs" />
+    <Compile Include="Services\Sniper\ColorClassifier.cs" />
+    <Compile Include="Services\Sniper\TrackCorridorScanner.cs" />
+    <Compile Include="Services\Sniper\ClickDispatchEngine.cs" />
     <Compile Include="UI\FpsMeterOverlay.cs" />
     <Compile Include="Models\GameProfile.cs" />
     <Compile Include="Models\SystemTelemetry.cs" />
@@ -102,6 +118,16 @@
     <Compile Include="Services\NetworkOptimizer.cs" />
     <Compile Include="Services\BlueStacksOptimizer.cs" />
     <Compile Include="Services\SystemTweaksService.cs" />
+    <Compile Include="Services\Tuners\IGameTuner.cs" />
+    <Compile Include="Services\Tuners\TunerHelper.cs" />
+    <Compile Include="Services\Tuners\ProcessTunerHelper.cs" />
+    <Compile Include="Services\Tuners\RobloxTuner.cs" />
+    <Compile Include="Services\Tuners\RobloxTuner.Sniper.cs" />
+    <Compile Include="Services\Tuners\BlueStacksTuner.cs" />
+    <Compile Include="Services\Tuners\LeagueTuner.cs" />
+    <Compile Include="Services\Tuners\ValorantTuner.cs" />
+    <Compile Include="Services\Tuners\TekkenTuner.cs" />
+    <Compile Include="Services\Tuners\OtherGamesTuner.cs" />
     <Compile Include="Services\Tuners\GameSpecificTunerService.cs" />
     <Compile Include="Services\Tuners\GameSpecificTunerService.BlueStacks.cs" />
     <Compile Include="Services\Tuners\GameSpecificTunerService.Roblox.cs" />
@@ -111,6 +137,11 @@
     <Compile Include="Services\Tuners\GameSpecificTunerService.OtherGames.cs" />
     <Compile Include="Services\Tuners\GameSpecificTunerService.CombatAndQueries.cs" />
     <Compile Include="Services\ProcessMonitorService.cs" />
+    <Compile Include="Services\Launcher\IconExtractor.cs" />
+    <Compile Include="Services\Launcher\SteamGameDetector.cs" />
+    <Compile Include="Services\Launcher\RiotGameDetector.cs" />
+    <Compile Include="Services\Launcher\BlueStacksDetector.cs" />
+    <Compile Include="Services\Launcher\StandaloneGameDetector.cs" />
     <Compile Include="Services\GameLauncherService.cs" />
     <Compile Include="Services\RobloxBidSniperService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
