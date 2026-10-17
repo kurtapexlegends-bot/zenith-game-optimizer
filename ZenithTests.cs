@@ -1712,7 +1712,7 @@ namespace ZenithOptimizer.Tests
                     string json = System.IO.File.ReadAllText(rbxFile);
                     flagsPresent = json.IndexOf("FIntRenderDistanceStuds", StringComparison.OrdinalIgnoreCase) >= 0 &&
                                    json.IndexOf("DFIntDebugFRMQualityLevelOverride", StringComparison.OrdinalIgnoreCase) >= 0 &&
-                                   json.IndexOf("FFlagDisablePostFx", StringComparison.OrdinalIgnoreCase) >= 0;
+                                   json.IndexOf("DFIntDebugForceFoliageCutoffDistance", StringComparison.OrdinalIgnoreCase) >= 0;
                 }
 
                 string restoreMsg;
@@ -1721,7 +1721,7 @@ namespace ZenithOptimizer.Tests
 
                 if (unlockOk && isUnlocked && flagsPresent && restoreOk && isRestored)
                 {
-                    Console.WriteLine("PASS (100k studs render radius + Level 21 FRM override applied via ClientAppSettings & cleanly restored)");
+                    Console.WriteLine("PASS (100k studs render radius + Level 1 decoupled FRM override applied via ClientAppSettings & cleanly restored)");
                     passed++;
                 }
                 else
@@ -2377,11 +2377,9 @@ namespace ZenithOptimizer.Tests
                     var dict = serializer.Deserialize<Dictionary<string, object>>(rawJson);
 
                     // Verify dictionary types
-                    bool postFxIsBool = dict.ContainsKey("FFlagDisablePostFx") && dict["FFlagDisablePostFx"] is bool && (bool)dict["FFlagDisablePostFx"] == true;
-                    bool voxelIsBool = dict.ContainsKey("DFFlagDebugRenderForceTechnologyVoxel") && dict["DFFlagDebugRenderForceTechnologyVoxel"] is bool && (bool)dict["DFFlagDebugRenderForceTechnologyVoxel"] == true;
                     bool studsIsInt = dict.ContainsKey("FIntRenderDistanceStuds") && (dict["FIntRenderDistanceStuds"] is int || dict["FIntRenderDistanceStuds"] is long) && Convert.ToInt32(dict["FIntRenderDistanceStuds"]) == 100000;
-                    bool qualityIsInt = dict.ContainsKey("DFIntDebugFRMQualityLevelOverride") && (dict["DFIntDebugFRMQualityLevelOverride"] is int || dict["DFIntDebugFRMQualityLevelOverride"] is long) && Convert.ToInt32(dict["DFIntDebugFRMQualityLevelOverride"]) == 21;
-                    validTypes = postFxIsBool && voxelIsBool && studsIsInt && qualityIsInt;
+                    bool qualityIsInt = dict.ContainsKey("DFIntDebugFRMQualityLevelOverride") && (dict["DFIntDebugFRMQualityLevelOverride"] is int || dict["DFIntDebugFRMQualityLevelOverride"] is long) && Convert.ToInt32(dict["DFIntDebugFRMQualityLevelOverride"]) == 1;
+                    validTypes = studsIsInt && qualityIsInt;
 
                     // Verify raw text does NOT contain quoted booleans or quoted numbers
                     bool hasQuotedTrue = rawJson.IndexOf("\"true\"", StringComparison.OrdinalIgnoreCase) >= 0;
@@ -2532,9 +2530,8 @@ namespace ZenithOptimizer.Tests
                     bool grassCull = dict.ContainsKey("FIntFRMMaxGrassDistance") && Convert.ToInt32(dict["FIntFRMMaxGrassDistance"]) == 0;
                     bool bgFps = dict.ContainsKey("DFIntTaskSchedulerTargetFpsInBackground") && Convert.ToInt32(dict["DFIntTaskSchedulerTargetFpsInBackground"]) == 15;
                     bool bufferExpand = dict.ContainsKey("DFIntClientReplicatorBuffer") && Convert.ToInt32(dict["DFIntClientReplicatorBuffer"]) == 262144;
-                    bool shadowCull = dict.ContainsKey("FIntRenderShadowIntensity") && Convert.ToInt32(dict["FIntRenderShadowIntensity"]) == 0;
 
-                    fastFlagsValid = fps240 && lightCulling && textureDelay && grassCull && bgFps && bufferExpand && shadowCull;
+                    fastFlagsValid = fps240 && lightCulling && textureDelay && grassCull && bgFps && bufferExpand;
                 }
 
                 string restoreMsg;

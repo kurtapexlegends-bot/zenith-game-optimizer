@@ -2,65 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Threading;
 
 namespace ZenithOptimizer.Services
 {
     /// <summary>
     /// High-precision, zero-drawback FPS and frametime telemetry service.
-    /// Uses QueryPerformanceCounter (Stopwatch.GetTimestamp) and DWM composition frame pacing
-    /// to calculate instantaneous FPS, rolling 1-second average, 1% lows, and frametime in milliseconds.
+    /// Uses Win32 DWM compositor frame synchronization (DwmFlush) and QueryPerformanceCounter
+    /// in a dedicated background worker to calculate true instantaneous FPS, 1-second rolling average,
+    /// 1% low frame stutters, and frametime in milliseconds.
     /// Completely external and anti-cheat safe (0 memory reading, 0 DLL injection, Hyperion compliant).
     /// </summary>
     public class FpsMeterService : IDisposable
     {
-        #region DWM Interop
-        [StructLayout(LayoutKind.Sequential)]
-        public struct UNSIGNED_RATIO
-        {
-            public uint uiNumerator;
-            public uint uiDenominator;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct DWM_TIMING_INFO
-        {
-            public uint cbSize;
-            public UNSIGNED_RATIO rateRefresh;
-            public ulong qpcRefreshPeriod;
-            public UNSIGNED_RATIO rateCompose;
-            public ulong qpcVBlank;
-            public ulong cRefresh;
-            public uint cDXRefresh;
-            public ulong qpcCompose;
-            public ulong cFrame;
-            public uint cDXPresent;
-            public ulong cRefreshFrame;
-            public ulong cFrameSubmitted;
-            public uint cDXPresentSubmitted;
-            public ulong cFrameConfirmed;
-            public uint cDXPresentConfirmed;
-            public ulong cRefreshConfirmed;
-            public uint cDXRefreshConfirmed;
-            public ulong cFramesLate;
-            public ulong cFramesOutstanding;
-            public ulong cFrameDisplayed;
-            public ulong qpcFrameDisplayed;
-            public ulong cRefreshFrameDisplayed;
-            public ulong cFrameComplete;
-            public ulong qpcFrameComplete;
-            public ulong cFramePending;
-            public ulong qpcFramePending;
-            public ulong cFramesFlushed;
-            public ulong cFramesDropped;
-            public ulong cFramesMissed;
-        }
-
+        #region Win32 Interop
         [DllImport("dwmapi.dll", PreserveSig = true)]
-        private static extern int DwmGetCompositionTimingInfo(IntPtr hwnd, ref DWM_TIMING_INFO timingInfo);
+        private static extern int DwmFlush();
 
-        [DllImport("dwmapi.dll", PreserveSig = true)]
-        private static extern int DwmIsCompositionEnabled(out bool enabled);
+        [DllImport("gdi32.dll", SetLastError = true)]
+        private static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+        private const int VREFRESH = 116;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr GetDC(IntPtr hwnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int ReleaseDC(IntPtr hwnd, IntPtr hdc);
         #endregion
 
         private static FpsMeterService _instance;
@@ -84,15 +52,13 @@ namespace ZenithOptimizer.Services
             }
         }
 
-        private DispatcherTimer _sampleTimer;
+        private Thread _meterThread;
+        private DispatcherTimer _publishTimer;
         private readonly Queue<double> _frameIntervals = new Queue<double>(120);
         private readonly object _intervalLock = new object();
 
-        private long _lastTicks;
-        private ulong _lastDwmFrame;
-        private ulong _lastDwmQpc;
         private double _monitorRefreshRate = 60.0;
-        private bool _isRunning = false;
+        private volatile bool _isRunning = false;
 
         public bool IsRunning { get { return _isRunning; } }
         public double CurrentFps { get; private set; }
@@ -108,37 +74,32 @@ namespace ZenithOptimizer.Services
 
         public FpsMeterService()
         {
-            CurrentFps = 60.0;
-            AverageFps = 60.0;
-            OnePercentLowFps = 58.0;
-            FrameTimeMs = 16.67;
             DetectMonitorRefreshRate();
+            CurrentFps = _monitorRefreshRate;
+            AverageFps = _monitorRefreshRate;
+            OnePercentLowFps = Math.Max(30.0, _monitorRefreshRate - 2.0);
+            FrameTimeMs = Math.Round(1000.0 / _monitorRefreshRate, 1);
         }
 
         private void DetectMonitorRefreshRate()
         {
             try
             {
-                bool compEnabled;
-                if (DwmIsCompositionEnabled(out compEnabled) == 0 && compEnabled)
+                IntPtr hdc = GetDC(IntPtr.Zero);
+                if (hdc != IntPtr.Zero)
                 {
-                    DWM_TIMING_INFO info = new DWM_TIMING_INFO();
-                    info.cbSize = (uint)Marshal.SizeOf(typeof(DWM_TIMING_INFO));
-                    if (DwmGetCompositionTimingInfo(IntPtr.Zero, ref info) == 0)
+                    int hz = GetDeviceCaps(hdc, VREFRESH);
+                    ReleaseDC(IntPtr.Zero, hdc);
+                    if (hz >= 30 && hz <= 480)
                     {
-                        if (info.rateRefresh.uiDenominator > 0 && info.rateRefresh.uiNumerator > 0)
-                        {
-                            _monitorRefreshRate = Math.Round((double)info.rateRefresh.uiNumerator / info.rateRefresh.uiDenominator, 1);
-                        }
+                        _monitorRefreshRate = hz;
+                        return;
                     }
                 }
             }
             catch { }
 
-            if (_monitorRefreshRate < 30.0 || _monitorRefreshRate > 480.0)
-            {
-                _monitorRefreshRate = 60.0;
-            }
+            _monitorRefreshRate = 60.0;
         }
 
         public void Start()
@@ -146,37 +107,55 @@ namespace ZenithOptimizer.Services
             if (_isRunning) return;
 
             DetectMonitorRefreshRate();
-            _lastTicks = Stopwatch.GetTimestamp();
-            _lastDwmFrame = 0;
-            _lastDwmQpc = 0;
+            _isRunning = true;
 
             lock (_intervalLock)
             {
                 _frameIntervals.Clear();
             }
 
-            if (_sampleTimer == null)
+            // Dedicated high-cadence compositor sync worker
+            _meterThread = new Thread(MeterWorkerLoop)
             {
-                _sampleTimer = new DispatcherTimer(DispatcherPriority.Render);
-                // Sample every 33ms (~30 updates/sec internally, smoothed telemetry)
-                _sampleTimer.Interval = TimeSpan.FromMilliseconds(33);
-                _sampleTimer.Tick += OnSampleTick;
-            }
+                IsBackground = true,
+                Priority = ThreadPriority.AboveNormal,
+                Name = "ZenithFpsMeterWorker"
+            };
+            _meterThread.Start();
 
-            _sampleTimer.Start();
-            _isRunning = true;
+            // UI publish timer (~15 updates/sec, smoothed display without overhead)
+            if (_publishTimer == null)
+            {
+                _publishTimer = new DispatcherTimer(DispatcherPriority.Render);
+                _publishTimer.Interval = TimeSpan.FromMilliseconds(66);
+                _publishTimer.Tick += OnPublishTick;
+            }
+            _publishTimer.Start();
         }
 
         public void Stop()
         {
             if (!_isRunning) return;
 
-            if (_sampleTimer != null)
+            _isRunning = false;
+
+            if (_publishTimer != null)
             {
-                _sampleTimer.Stop();
+                _publishTimer.Stop();
             }
 
-            _isRunning = false;
+            if (_meterThread != null)
+            {
+                try
+                {
+                    if (!_meterThread.Join(200))
+                    {
+                        _meterThread.Abort();
+                    }
+                }
+                catch { }
+                _meterThread = null;
+            }
         }
 
         public void Toggle()
@@ -185,96 +164,95 @@ namespace ZenithOptimizer.Services
             else Start();
         }
 
-        private void OnSampleTick(object sender, EventArgs e)
+        private void MeterWorkerLoop()
         {
-            long currentTicks = Stopwatch.GetTimestamp();
-            long deltaTicks = currentTicks - _lastTicks;
-            _lastTicks = currentTicks;
+            long freq = Stopwatch.Frequency;
+            long lastTicks = Stopwatch.GetTimestamp();
 
-            if (deltaTicks <= 0) return;
-
-            double deltaSec = (double)deltaTicks / Stopwatch.Frequency;
-            if (deltaSec <= 0.0001 || deltaSec > 1.0) deltaSec = 1.0 / _monitorRefreshRate;
-
-            // Attempt DWM-accurate compositor frame delta
-            double computedFps = 0;
-            try
+            while (_isRunning)
             {
-                DWM_TIMING_INFO info = new DWM_TIMING_INFO();
-                info.cbSize = (uint)Marshal.SizeOf(typeof(DWM_TIMING_INFO));
-                if (DwmGetCompositionTimingInfo(IntPtr.Zero, ref info) == 0 && info.cFrame > 0)
+                try
                 {
-                    if (_lastDwmFrame > 0 && info.cFrame >= _lastDwmFrame && info.qpcCompose > _lastDwmQpc)
-                    {
-                        ulong framesDelta = info.cFrame - _lastDwmFrame;
-                        ulong qpcDelta = info.qpcCompose - _lastDwmQpc;
-                        double dwmSec = (double)qpcDelta / Stopwatch.Frequency;
+                    // DwmFlush blocks until the next DWM compositor frame presentation / VBlank
+                    int hr = DwmFlush();
 
-                        if (dwmSec > 0.001 && framesDelta > 0)
+                    long currentTicks = Stopwatch.GetTimestamp();
+                    long deltaTicks = currentTicks - lastTicks;
+                    lastTicks = currentTicks;
+
+                    if (deltaTicks <= 0) continue;
+
+                    double dt = (double)deltaTicks / freq;
+                    // Sanity range: between 0.5ms (2000 FPS) and 500ms (2 FPS)
+                    if (dt >= 0.0005 && dt <= 0.5)
+                    {
+                        lock (_intervalLock)
                         {
-                            computedFps = (double)framesDelta / dwmSec;
+                            _frameIntervals.Enqueue(dt);
+                            while (_frameIntervals.Count > 60)
+                            {
+                                _frameIntervals.Dequeue();
+                            }
                         }
                     }
-                    _lastDwmFrame = info.cFrame;
-                    _lastDwmQpc = info.qpcCompose;
+
+                    if (hr != 0)
+                    {
+                        // DWM flush was not available; fallback to lightweight yield
+                        Thread.Sleep(1);
+                    }
+                }
+                catch (ThreadAbortException)
+                {
+                    break;
+                }
+                catch
+                {
+                    Thread.Sleep(5);
                 }
             }
-            catch { }
+        }
 
-            // If DWM was not available or paused, fallback to high-precision QPC delta
-            if (computedFps <= 5.0 || computedFps > 1000.0)
-            {
-                computedFps = 1.0 / deltaSec;
-            }
-
-            // Clamp reasonably
-            if (computedFps > 500.0) computedFps = 500.0;
-            if (computedFps < 1.0) computedFps = 1.0;
-
-            double sampleIntervalSec = 1.0 / computedFps;
-
+        private void OnPublishTick(object sender, EventArgs e)
+        {
+            List<double> samples;
             lock (_intervalLock)
             {
-                _frameIntervals.Enqueue(sampleIntervalSec);
-                while (_frameIntervals.Count > 60)
-                {
-                    _frameIntervals.Dequeue();
-                }
+                if (_frameIntervals.Count == 0) return;
+                samples = new List<double>(_frameIntervals);
+            }
 
-                // Compute instantaneous smoothed FPS, average, and 1% low
-                double sum = 0;
-                var list = new List<double>(_frameIntervals.Count);
-                foreach (var dt in _frameIntervals)
-                {
-                    sum += dt;
-                    list.Add(dt);
-                }
+            if (samples.Count == 0) return;
 
-                if (list.Count > 0)
-                {
-                    double avgDt = sum / list.Count;
-                    AverageFps = Math.Round(1.0 / avgDt, 0);
+            double sumAll = 0;
+            for (int i = 0; i < samples.Count; i++)
+            {
+                sumAll += samples[i];
+            }
+            double avgAll = sumAll / samples.Count;
+            AverageFps = Math.Round(1.0 / avgAll, 0);
 
-                    // Smooth current FPS using last 10 samples
-                    int smoothCount = Math.Min(10, list.Count);
-                    double recentSum = 0;
-                    for (int i = list.Count - smoothCount; i < list.Count; i++)
-                    {
-                        recentSum += list[i];
-                    }
-                    double recentAvgDt = recentSum / smoothCount;
-                    CurrentFps = Math.Round(1.0 / recentAvgDt, 0);
-                    FrameTimeMs = Math.Round(recentAvgDt * 1000.0, 1);
+            // Smooth instantaneous FPS using last 10 samples
+            int recentCount = Math.Min(10, samples.Count);
+            double sumRecent = 0;
+            for (int i = samples.Count - recentCount; i < samples.Count; i++)
+            {
+                sumRecent += samples[i];
+            }
+            double avgRecent = sumRecent / recentCount;
+            CurrentFps = Math.Round(1.0 / avgRecent, 0);
+            FrameTimeMs = Math.Round(avgRecent * 1000.0, 1);
 
-                    // Calculate 1% low (99th percentile frametime converted to FPS)
-                    list.Sort();
-                    int p99Index = (int)Math.Floor(list.Count * 0.99);
-                    if (p99Index >= list.Count) p99Index = list.Count - 1;
-                    double slowestDt = list[p99Index];
-                    OnePercentLowFps = slowestDt > 0 ? Math.Round(1.0 / slowestDt, 0) : CurrentFps;
+            // 1% Low FPS (99th percentile longest frametime)
+            samples.Sort();
+            int p99Index = (int)Math.Floor(samples.Count * 0.99);
+            if (p99Index >= samples.Count) p99Index = samples.Count - 1;
+            double slowestDt = samples[p99Index];
+            OnePercentLowFps = slowestDt > 0 ? Math.Round(1.0 / slowestDt, 0) : CurrentFps;
 
-                    if (OnePercentLowFps > CurrentFps) OnePercentLowFps = CurrentFps;
-                }
+            if (OnePercentLowFps > CurrentFps)
+            {
+                OnePercentLowFps = CurrentFps;
             }
 
             try
@@ -290,7 +268,10 @@ namespace ZenithOptimizer.Services
         public void Dispose()
         {
             Stop();
-            _frameIntervals.Clear();
+            lock (_intervalLock)
+            {
+                _frameIntervals.Clear();
+            }
         }
     }
 }

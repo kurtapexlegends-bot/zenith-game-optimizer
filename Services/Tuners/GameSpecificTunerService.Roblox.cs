@@ -2929,21 +2929,22 @@ namespace ZenithOptimizer.Services
 
                     if (enable)
                     {
-                        dict["FFlagDisablePostFx"] = true;
                         dict["DFIntDebugForceFoliageCutoffDistance"] = 10000;
-                        dict["DFIntDebugFRMQualityLevelOverride"] = 21;
+                        dict["DFIntDebugFRMQualityLevelOverride"] = 1;
                         dict["FIntRenderDistanceStuds"] = 100000;
-                        dict["FIntRenderShadowIntensity"] = 0;
-                        dict["DFFlagDebugRenderForceTechnologyVoxel"] = true;
+                        // Clean up legacy culling flags if present so modern skybox & atmosphere render cleanly
+                        dict.Remove("FFlagDisablePostFx");
+                        dict.Remove("DFFlagDebugRenderForceTechnologyVoxel");
+                        dict.Remove("FIntRenderShadowIntensity");
                     }
                     else
                     {
-                        dict.Remove("FFlagDisablePostFx");
                         dict.Remove("DFIntDebugForceFoliageCutoffDistance");
                         dict.Remove("DFIntDebugFRMQualityLevelOverride");
                         dict.Remove("FIntRenderDistanceStuds");
-                        dict.Remove("FIntRenderShadowIntensity");
+                        dict.Remove("FFlagDisablePostFx");
                         dict.Remove("DFFlagDebugRenderForceTechnologyVoxel");
+                        dict.Remove("FIntRenderShadowIntensity");
                     }
 
                     if (dict.Count > 0)
@@ -3142,12 +3143,13 @@ namespace ZenithOptimizer.Services
                         dict["DFIntClientReplicatorBuffer"] = 262144;
                         dict["DFIntNetworkPredictionMs"] = 30;
                         dict["FIntFRMMaxGrassDistance"] = 0;
-                        dict["FFlagDisablePostFx"] = true;
-                        dict["FIntRenderShadowIntensity"] = 0;
                         dict["DFIntTaskSchedulerTargetFpsInBackground"] = 15;
-                        dict["DFFlagDebugRenderForceTechnologyVoxel"] = true;
                         dict["FFlagFixGraphicsQuality"] = true;
                         dict["FFlagDebugDisplayFPS"] = true;
+                        // Clean up legacy culling flags if present so modern skybox & atmosphere render cleanly
+                        dict.Remove("FFlagDisablePostFx");
+                        dict.Remove("DFFlagDebugRenderForceTechnologyVoxel");
+                        dict.Remove("FIntRenderShadowIntensity");
                     }
                     else
                     {
@@ -3158,12 +3160,12 @@ namespace ZenithOptimizer.Services
                         dict.Remove("DFIntClientReplicatorBuffer");
                         dict.Remove("DFIntNetworkPredictionMs");
                         dict.Remove("FIntFRMMaxGrassDistance");
-                        dict.Remove("FFlagDisablePostFx");
-                        dict.Remove("FIntRenderShadowIntensity");
                         dict.Remove("DFIntTaskSchedulerTargetFpsInBackground");
-                        dict.Remove("DFFlagDebugRenderForceTechnologyVoxel");
                         dict.Remove("FFlagFixGraphicsQuality");
                         dict.Remove("FFlagDebugDisplayFPS");
+                        dict.Remove("FFlagDisablePostFx");
+                        dict.Remove("FIntRenderShadowIntensity");
+                        dict.Remove("DFFlagDebugRenderForceTechnologyVoxel");
                     }
 
                     if (dict.Count > 0)
