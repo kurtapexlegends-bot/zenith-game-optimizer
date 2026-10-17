@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
@@ -52,7 +52,7 @@ namespace ZenithOptimizer.Services.Tuners
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return candidates[0];
         }
 
@@ -66,7 +66,7 @@ namespace ZenithOptimizer.Services.Tuners
                     string content = File.ReadAllText(path);
                     if (content.Contains("WaitForVerticalSync=0")) return "Optimized (VSync Off • Low Latency)";
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             return "Standard Configuration";
         }
@@ -111,7 +111,7 @@ namespace ZenithOptimizer.Services.Tuners
                 string path = GetLeagueConfigPath();
                 if (File.Exists(path)) return File.ReadAllText(path).Contains(key + "=" + expectedValue);
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 
@@ -205,7 +205,7 @@ namespace ZenithOptimizer.Services.Tuners
             freedBytes = 0;
             try
             {
-                foreach (Process p in Process.GetProcessesByName("LeagueClientUx")) { try { p.MinWorkingSet = (IntPtr)1000; freedBytes += 150 * 1024 * 1024; } catch { } }
+                foreach (Process p in Process.GetProcessesByName("LeagueClientUx")) { try { p.MinWorkingSet = (IntPtr)1000; freedBytes += 150 * 1024 * 1024; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
                 message = "LeagueClientUx Chromium memory leak purged & memory reclaimed.";
                 return true;
             }

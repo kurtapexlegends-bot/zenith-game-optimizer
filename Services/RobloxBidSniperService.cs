@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ZenithOptimizer.Models;
@@ -53,20 +53,20 @@ namespace ZenithOptimizer.Services
         public event Action<int, int, bool> OnTrackPositionChanged;
         public event Action<string> OnCaptureSourceChanged, OnClickTargetModeChanged;
 
-        public string CaptureMethod { get { return _captureMethod; } set { _captureMethod = string.IsNullOrEmpty(value) ? "Auto" : value; SaveCurrentSettings(); if (OnCaptureSourceChanged != null) try { OnCaptureSourceChanged(_captureMethod); } catch { } } }
+        public string CaptureMethod { get { return _captureMethod; } set { _captureMethod = string.IsNullOrEmpty(value) ? "Auto" : value; SaveCurrentSettings(); if (OnCaptureSourceChanged != null) try { OnCaptureSourceChanged(_captureMethod); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } } }
         public string ClickMode { get { return _clickMode; } set { _clickMode = string.IsNullOrEmpty(value) ? "Dual" : value; SaveCurrentSettings(); } }
         public int AuctionCountdownSeconds { get { return _auctionCountdownSeconds; } set { _auctionCountdownSeconds = Math.Max(1, Math.Min(value, 60)); SaveCurrentSettings(); } }
-        public string ClickTargetMode { get { return _clickTargetMode; } set { _clickTargetMode = string.IsNullOrEmpty(value) ? "FixedTarget" : value; SaveCurrentSettings(); if (OnClickTargetModeChanged != null) try { OnClickTargetModeChanged(_clickTargetMode); } catch { } } }
+        public string ClickTargetMode { get { return _clickTargetMode; } set { _clickTargetMode = string.IsNullOrEmpty(value) ? "FixedTarget" : value; SaveCurrentSettings(); if (OnClickTargetModeChanged != null) try { OnClickTargetModeChanged(_clickTargetMode); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } } }
         public bool RestoreCursorAfterClick { get { return _restoreCursorAfterClick; } set { _restoreCursorAfterClick = value; SaveCurrentSettings(); } }
         public string LastActiveCaptureSource { get { return _lastActiveCaptureSource; } }
         public IntPtr LastRobloxHwnd { get { return _lastRobloxHwnd; } }
         public bool IsRunning { get { return _isRunning; } }
-        public bool IsArmed { get { return _isArmed; } set { _isArmed = value; _needsPriming = true; _armCooldownUntil = DateTime.UtcNow.AddMilliseconds(120); if (OnArmedChanged != null) try { OnArmedChanged(_isArmed); } catch { } } }
+        public bool IsArmed { get { return _isArmed; } set { _isArmed = value; _needsPriming = true; _armCooldownUntil = DateTime.UtcNow.AddMilliseconds(120); if (OnArmedChanged != null) try { OnArmedChanged(_isArmed); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } } }
         public bool GlobalMode { get { return _globalMode; } set { _globalMode = value; } }
         public int SuccessfulSnipes { get { return _successfulSnipes; } }
         public POINT SensorPosition { get { return _sensorPos; } }
         public POINT? CalibratedClickPosition { get { return _targetClickPos; } }
-        public bool DynamicTrackingEnabled { get { return _dynamicTrackingEnabled; } set { _dynamicTrackingEnabled = value; SaveCurrentSettings(); if (OnDynamicTrackingToggled != null) try { OnDynamicTrackingToggled(_dynamicTrackingEnabled); } catch { } } }
+        public bool DynamicTrackingEnabled { get { return _dynamicTrackingEnabled; } set { _dynamicTrackingEnabled = value; SaveCurrentSettings(); if (OnDynamicTrackingToggled != null) try { OnDynamicTrackingToggled(_dynamicTrackingEnabled); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } } }
         public int TrackCorridorWidth { get { return _trackCorridorWidth; } set { _trackCorridorWidth = Math.Max(50, Math.Min(value, 800)); SaveCurrentSettings(); } }
         public int TrackCorridorHeight { get { return _trackCorridorHeight; } set { _trackCorridorHeight = Math.Max(10, Math.Min(value, 200)); SaveCurrentSettings(); } }
         public int TrackScanStep { get { return _trackScanStep; } set { _trackScanStep = Math.Max(1, Math.Min(value, 16)); SaveCurrentSettings(); } }
@@ -84,13 +84,13 @@ namespace ZenithOptimizer.Services
         public RobloxBidSniperService()
         {
             int screenW = 1920, screenH = 1080;
-            try { screenW = (int)System.Windows.SystemParameters.PrimaryScreenWidth; screenH = (int)System.Windows.SystemParameters.PrimaryScreenHeight; } catch { }
+            try { screenW = (int)System.Windows.SystemParameters.PrimaryScreenWidth; screenH = (int)System.Windows.SystemParameters.PrimaryScreenHeight; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             _sensorPos = new POINT { X = screenW / 2, Y = (int)(screenH * 0.65) };
             _targetClickPos = new POINT { X = screenW / 2, Y = (int)(screenH * 0.78) };
-            try { LoadFromSettings(OptimizationSettings.Load()); } catch { }
+            try { LoadFromSettings(OptimizationSettings.Load()); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
-        public void SaveCurrentSettings() { try { var s = OptimizationSettings.Load(); SaveToSettings(s); } catch { } }
+        public void SaveCurrentSettings() { try { var s = OptimizationSettings.Load(); SaveToSettings(s); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
         public void LoadFromSettings(OptimizationSettings s) { SniperSettingsSync.Load(this, s, (x, y) => _sensorPos = new POINT { X = x, Y = y }, (x, y) => _targetClickPos = new POINT { X = x, Y = y }, v => _useCalibratedColor = v, (r, g, b) => { _calibratedR = r; _calibratedG = g; _calibratedB = b; }, t => _colorTolerance = t, m => _triggerMode = m, p => _colorPreset = p, rad => _samplingRadius = rad, dt => _dynamicTrackingEnabled = dt, w => _trackCorridorWidth = w, h => _trackCorridorHeight = h, st => _trackScanStep = st, cm => _captureMethod = cm, clm => _clickMode = clm, cd => _auctionCountdownSeconds = cd, ctm => _clickTargetMode = ctm, rc => _restoreCursorAfterClick = rc); }
         public void SaveToSettings(OptimizationSettings s) { SniperSettingsSync.Save(s, _sensorPos, _targetClickPos, _useCalibratedColor, _calibratedR, _calibratedG, _calibratedB, _colorTolerance, _triggerMode, _samplingRadius, _colorPreset, _dynamicTrackingEnabled, _trackCorridorWidth, _trackCorridorHeight, _trackScanStep, _captureMethod, _clickMode, _auctionCountdownSeconds, _clickTargetMode, _restoreCursorAfterClick); }
 
@@ -101,7 +101,7 @@ namespace ZenithOptimizer.Services
                 if (_isRunning) { msg = "Roblox Auction Sweet-Spot Sniper is already running."; return true; }
                 _isRunning = true; _isArmed = true; _wasInSweetSpot = false; _needsPriming = true;
                 _armCooldownUntil = DateTime.UtcNow.AddMilliseconds(120);
-                try { TimeBeginPeriod(1); } catch { }
+                try { TimeBeginPeriod(1); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 _workerThread = new Thread(WorkerLoop) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "ZenithRobloxBidSniperThread" };
                 _workerThread.Start();
                 msg = "Roblox Auction Sweet-Spot Sniper ENGAGED. [F7] Arm/Disarm • [F8] Sensor Spot • [Ctrl+F8] Bid Button • [Alt+F8] Eyedropper • [F9] HUD.";
@@ -115,31 +115,31 @@ namespace ZenithOptimizer.Services
             {
                 if (!_isRunning) { msg = "Roblox Auction Sweet-Spot Sniper is already stopped."; return true; }
                 _isRunning = false;
-                try { if (_workerThread != null && _workerThread.IsAlive) _workerThread.Join(400); } catch { }
+                try { if (_workerThread != null && _workerThread.IsAlive) _workerThread.Join(400); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 _workerThread = null;
-                try { TimeEndPeriod(1); } catch { }
+                try { TimeEndPeriod(1); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 msg = string.Format("Roblox Auction Sweet-Spot Sniper disengaged. Total snipes executed: {0}", _successfulSnipes);
                 Log(msg); return true;
             }
         }
 
         public bool Toggle(out bool isRunning, out string msg) { return _isRunning ? Stop(out msg) & !(isRunning = false) : Start(out msg) & (isRunning = true); }
-        public void SetSensorPosition(int x, int y) { _sensorPos = new POINT { X = x, Y = y }; _needsPriming = true; SaveCurrentSettings(); if (OnSensorPositionChanged != null) try { OnSensorPositionChanged(x, y); } catch { } Log(string.Format("Sensor target spot set to screen ({0}, {1})", x, y)); }
+        public void SetSensorPosition(int x, int y) { _sensorPos = new POINT { X = x, Y = y }; _needsPriming = true; SaveCurrentSettings(); if (OnSensorPositionChanged != null) try { OnSensorPositionChanged(x, y); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } Log(string.Format("Sensor target spot set to screen ({0}, {1})", x, y)); }
         public bool SetSensorToCurrentCursor(out int x, out int y) { POINT cur; if (GetCursorPos(out cur)) { x = cur.X; y = cur.Y; SetSensorPosition(x, y); return true; } x = _sensorPos.X; y = _sensorPos.Y; return false; }
         public bool SetSensorPositionToCursor() { int x, y; return SetSensorToCurrentCursor(out x, out y); }
-        public void CalibrateTarget(int x, int y) { _targetClickPos = new POINT { X = x, Y = y }; SaveCurrentSettings(); if (OnClickTargetChanged != null) try { OnClickTargetChanged(x, y); } catch { } Log(string.Format("Calibrated Bid Click target locked at screen ({0}, {1})", x, y)); }
+        public void CalibrateTarget(int x, int y) { _targetClickPos = new POINT { X = x, Y = y }; SaveCurrentSettings(); if (OnClickTargetChanged != null) try { OnClickTargetChanged(x, y); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } Log(string.Format("Calibrated Bid Click target locked at screen ({0}, {1})", x, y)); }
         public bool SetClickTargetToCurrentCursor(out int x, out int y) { POINT cur; if (GetCursorPos(out cur)) { x = cur.X; y = cur.Y; CalibrateTarget(x, y); return true; } x = _targetClickPos.HasValue ? _targetClickPos.Value.X : 0; y = _targetClickPos.HasValue ? _targetClickPos.Value.Y : 0; return false; }
-        public void ResetCalibration() { _targetClickPos = null; SaveCurrentSettings(); if (OnClickTargetChanged != null) try { OnClickTargetChanged(null, null); } catch { } Log("Bid Click target reset to active mouse cursor position."); }
-        public void CalibrateTargetColor(int r, int g, int b, int tolerance = 45) { _calibratedR = r; _calibratedG = g; _calibratedB = b; _colorTolerance = tolerance; _useCalibratedColor = true; _needsPriming = true; SaveCurrentSettings(); if (OnTargetColorChanged != null) try { OnTargetColorChanged(r, g, b, true); } catch { } Log(string.Format("Target color locked to RGB({0}, {1}, {2}) with tolerance ±{3}", r, g, b, tolerance)); }
-        public void ResetTargetColor() { _useCalibratedColor = false; _colorPreset = "Green"; _calibratedR = 46; _calibratedG = 204; _calibratedB = 113; _needsPriming = true; SaveCurrentSettings(); if (OnTargetColorChanged != null) try { OnTargetColorChanged(46, 204, 113, false); } catch { } Log("Target color reset to Dynamic HSV Green Sweet-Spot mode."); }
+        public void ResetCalibration() { _targetClickPos = null; SaveCurrentSettings(); if (OnClickTargetChanged != null) try { OnClickTargetChanged(null, null); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } Log("Bid Click target reset to active mouse cursor position."); }
+        public void CalibrateTargetColor(int r, int g, int b, int tolerance = 45) { _calibratedR = r; _calibratedG = g; _calibratedB = b; _colorTolerance = tolerance; _useCalibratedColor = true; _needsPriming = true; SaveCurrentSettings(); if (OnTargetColorChanged != null) try { OnTargetColorChanged(r, g, b, true); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } Log(string.Format("Target color locked to RGB({0}, {1}, {2}) with tolerance ±{3}", r, g, b, tolerance)); }
+        public void ResetTargetColor() { _useCalibratedColor = false; _colorPreset = "Green"; _calibratedR = 46; _calibratedG = 204; _calibratedB = 113; _needsPriming = true; SaveCurrentSettings(); if (OnTargetColorChanged != null) try { OnTargetColorChanged(46, 204, 113, false); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } Log("Target color reset to Dynamic HSV Green Sweet-Spot mode."); }
         public void SetColorPreset(string preset)
         {
             _colorPreset = string.IsNullOrEmpty(preset) ? "Green" : preset;
             if (_colorPreset.Equals("Custom", StringComparison.OrdinalIgnoreCase)) _useCalibratedColor = true;
             else { _useCalibratedColor = false; if (_colorPreset.Equals("Gold", StringComparison.OrdinalIgnoreCase) || _colorPreset.Equals("Yellow", StringComparison.OrdinalIgnoreCase)) { _calibratedR = 250; _calibratedG = 204; _calibratedB = 21; } else if (_colorPreset.Equals("Cyan", StringComparison.OrdinalIgnoreCase) || _colorPreset.Equals("Blue", StringComparison.OrdinalIgnoreCase)) { _calibratedR = 56; _calibratedG = 189; _calibratedB = 248; } else if (_colorPreset.Equals("Purple", StringComparison.OrdinalIgnoreCase) || _colorPreset.Equals("Violet", StringComparison.OrdinalIgnoreCase)) { _calibratedR = 168; _calibratedG = 85; _calibratedB = 247; } else if (_colorPreset.Equals("Orange", StringComparison.OrdinalIgnoreCase) || _colorPreset.Equals("Red", StringComparison.OrdinalIgnoreCase) || _colorPreset.Equals("Frenzy", StringComparison.OrdinalIgnoreCase)) { _calibratedR = 249; _calibratedG = 115; _calibratedB = 22; } else { _calibratedR = 46; _calibratedG = 204; _calibratedB = 113; } }
-            _needsPriming = true; SaveCurrentSettings(); if (OnTargetColorChanged != null) try { OnTargetColorChanged(_calibratedR, _calibratedG, _calibratedB, _useCalibratedColor); } catch { } Log("Storage Hunters color preset switched to: " + _colorPreset);
+            _needsPriming = true; SaveCurrentSettings(); if (OnTargetColorChanged != null) try { OnTargetColorChanged(_calibratedR, _calibratedG, _calibratedB, _useCalibratedColor); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } Log("Storage Hunters color preset switched to: " + _colorPreset);
         }
-        public void ToggleDynamicTracking() { _dynamicTrackingEnabled = !_dynamicTrackingEnabled; SaveCurrentSettings(); if (OnDynamicTrackingToggled != null) try { OnDynamicTrackingToggled(_dynamicTrackingEnabled); } catch { } Log("Dynamic Screen Tracking " + (_dynamicTrackingEnabled ? "ENABLED" : "DISABLED")); }
+        public void ToggleDynamicTracking() { _dynamicTrackingEnabled = !_dynamicTrackingEnabled; SaveCurrentSettings(); if (OnDynamicTrackingToggled != null) try { OnDynamicTrackingToggled(_dynamicTrackingEnabled); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } Log("Dynamic Screen Tracking " + (_dynamicTrackingEnabled ? "ENABLED" : "DISABLED")); }
         public bool ScanCorridorForTarget(Func<int, int, uint> sampler, int cx, int cy, int cw, int ch, int step, out int tx, out int ty) { return TrackCorridorScanner.ScanCorridorForTarget(sampler, cx, cy, cw, ch, step, IsTargetMatch, out tx, out ty); }
         public bool SampleTargetColorAtCursor(out int r, out int g, out int b) { POINT cur; if (GetCursorPos(out cur)) return SampleColorAtPoint(cur.X, cur.Y, out r, out g, out b); r = g = b = 0; return false; }
         public static IntPtr FindRobloxClientHwnd() { return OpticalSamplingEngine.FindRobloxClientHwnd(); }
@@ -187,7 +187,7 @@ namespace ZenithOptimizer.Services
                         bool isMatch; string fMode;
                         if (EvaluateTriggerFrame(r, g, b, out isMatch, out fMode)) { _lastSnipeTime = DateTime.UtcNow; ExecuteSnipeClick(activeX, activeY, fMode); }
                         if (SniperHotkeyHandler.IsKeyDown(VK_V) && isMatch && (DateTime.UtcNow - _lastTurboClickTime).TotalMilliseconds >= 75) { _lastTurboClickTime = DateTime.UtcNow; ExecuteSnipeClick(activeX, activeY, "TURBO-HOLD"); }
-                        if ((DateTime.UtcNow - lastUiTelemetry).TotalMilliseconds >= 25) { lastUiTelemetry = DateTime.UtcNow; if (_dynamicTrackingEnabled && OnTrackPositionChanged != null) try { OnTrackPositionChanged(activeX, activeY, _hasTrackLock); } catch { } if (OnColorSampledEx != null) try { OnColorSampledEx(r, g, b, isMatch, fSrc); } catch { } if (OnColorSampled != null) try { OnColorSampled(r, g, b, isMatch); } catch { } }
+                        if ((DateTime.UtcNow - lastUiTelemetry).TotalMilliseconds >= 25) { lastUiTelemetry = DateTime.UtcNow; if (_dynamicTrackingEnabled && OnTrackPositionChanged != null) try { OnTrackPositionChanged(activeX, activeY, _hasTrackLock); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } if (OnColorSampledEx != null) try { OnColorSampledEx(r, g, b, isMatch, fSrc); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } if (OnColorSampled != null) try { OnColorSampled(r, g, b, isMatch); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
                     }
                     Thread.Sleep(1);
                 }
@@ -214,7 +214,7 @@ namespace ZenithOptimizer.Services
             else { clickX = hitX; clickY = hitY + 120; }
             DispatchMouseClick(clickX, clickY, mode);
             _successfulSnipes++;
-            if (OnSnipeFired != null) try { OnSnipeFired(clickX, clickY, _successfulSnipes); } catch { }
+            if (OnSnipeFired != null) try { OnSnipeFired(clickX, clickY, _successfulSnipes); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             Log(string.Format("[{0}] SNIPE #{1} FIRED at ({2}, {3}) via {4} ({5})", mode, _successfulSnipes, clickX, clickY, _clickMode, _clickTargetMode));
         }
 
@@ -223,7 +223,7 @@ namespace ZenithOptimizer.Services
             _timerSnipeCts = SniperWorkerEngine.TriggerAuctionTimerSnipe(_timerSnipeCts, countdownSeconds, burstCount, Log, () => ExecuteSnipeClick(_sensorPos.X, _sensorPos.Y, "TIMER-SNIPE"));
         }
 
-        private void Log(string msg) { if (OnLog != null) try { OnLog(msg); } catch { } }
+        private void Log(string msg) { if (OnLog != null) try { OnLog(msg); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
         public void Dispose() { string msg; Stop(out msg); }
     }
 }

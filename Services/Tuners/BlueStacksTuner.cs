@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -105,7 +105,7 @@ namespace ZenithOptimizer.Services.Tuners
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 using (var searcher = new ManagementObjectSearcher("SELECT VirtualizationFirmwareEnabled FROM Win32_Processor"))
                 {
@@ -140,7 +140,7 @@ namespace ZenithOptimizer.Services.Tuners
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             details = "Windows Core Isolation / VBS is inactive or running in standard coexistence mode.";
             return true;
         }
@@ -228,7 +228,7 @@ namespace ZenithOptimizer.Services.Tuners
                 string path = GetConfigPath();
                 if (File.Exists(path)) return Regex.IsMatch(File.ReadAllText(path), pattern);
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 
@@ -286,7 +286,7 @@ namespace ZenithOptimizer.Services.Tuners
             freedBytes = 0;
             try
             {
-                foreach (Process p in Process.GetProcessesByName("HD-Player")) { try { p.MinWorkingSet = (IntPtr)1000; freedBytes += 100 * 1024 * 1024; } catch { } }
+                foreach (Process p in Process.GetProcessesByName("HD-Player")) { try { p.MinWorkingSet = (IntPtr)1000; freedBytes += 100 * 1024 * 1024; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
                 message = "BlueStacks mid-session working set memory flushed & reclaimed.";
                 return true;
             }
@@ -303,7 +303,7 @@ namespace ZenithOptimizer.Services.Tuners
             {
                 foreach (string name in new[] { "HD-Player", "HD-Agent", "BstkSVC" })
                 {
-                    foreach (Process p in Process.GetProcessesByName(name)) { try { p.Kill(); } catch { } }
+                    foreach (Process p in Process.GetProcessesByName(name)) { try { p.Kill(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
                 }
                 message = "Terminated all frozen BlueStacks instances and helper daemons.";
                 return true;

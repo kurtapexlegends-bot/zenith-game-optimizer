@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
@@ -133,7 +133,7 @@ namespace ZenithOptimizer.Services.Tuners
                     return true;
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             message = "options.txt not found.";
             return false;
         }

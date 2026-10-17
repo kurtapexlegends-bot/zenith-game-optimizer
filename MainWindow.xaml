@@ -854,7 +854,7 @@
                                 <!-- Bottom Row: Quick Action Pill Deck -->
                                 <WrapPanel Grid.Row="1">
                                     <Button x:Name="BtnManualBoost" Content="Boost System Now" Style="{StaticResource AccentBtn}" Padding="16,7" FontSize="11" Click="BtnManualBoost_Click" Margin="0,0,8,0" />
-                                    <Button x:Name="BtnToggleFpsOverlay" Content="FPS Overlay [F10]" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnToggleFpsOverlay_Click" Margin="0,0,8,0" ToolTip="Toggle on-screen FPS and frametime meter [F10] • Double-click or [Ctrl+F10] to unlock &amp; drag" />
+                                    <Button x:Name="BtnToggleFpsOverlay" Content="FPS Overlay [F10]" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnToggleFpsOverlay_Click" Margin="0,0,8,0" ToolTip="Toggle on-screen FPS and frametime meter [F10] • [Ctrl+F10] to reposition" />
                                     <Button x:Name="BtnCooldownNow" Content="Cool Down Laptop" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnInstantCooldown_Click" Margin="0,0,8,0" />
                                     <Button Content="Trim Working RAM" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnPurgeRam_Click" Margin="0,0,8,0" />
                                     <Button Content="Scan Running Windows" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnDetectGames_Click" Margin="0,0,8,0" />
@@ -909,7 +909,7 @@
                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="Sort:" FontSize="11" Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center" Margin="0,0,6,0" />
                                 <ComboBox x:Name="CmbSortGames" Width="130" Height="28" Margin="0,0,10,0" SelectionChanged="CmbSortGames_SelectionChanged">
-                                    <ComboBoxItem Content="Custom / Drag" IsSelected="True" Tag="Custom" />
+                                    <ComboBoxItem Content="Custom Order" IsSelected="True" Tag="Custom" />
                                     <ComboBoxItem Content="Name (A-Z)" Tag="Name" />
                                     <ComboBoxItem Content="Favorites First" Tag="Favorites" />
                                     <ComboBoxItem Content="Active First" Tag="Active" />

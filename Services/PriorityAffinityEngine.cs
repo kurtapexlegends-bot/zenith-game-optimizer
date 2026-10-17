@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -23,23 +23,23 @@ namespace ZenithOptimizer.Services
             try
             {
                 bool hasExited = false;
-                try { hasExited = process.HasExited; } catch { }
+                try { hasExited = process.HasExited; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 if (hasExited) return false;
 
                 int pid = process.Id;
                 string pName = "";
-                try { pName = (process.ProcessName ?? "").ToLower(); } catch { }
+                try { pName = (process.ProcessName ?? "").ToLower(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 bool isEmulator = pName.Contains("hd-player") || pName.Contains("bluestacks") || pName.Contains("bstksvc");
                 bool isValorant = pName.Contains("valorant");
 
                 // 1. Save original states if not already saved
                 if (!_originalPriorities.ContainsKey(pid))
                 {
-                    try { _originalPriorities[pid] = process.PriorityClass; } catch { }
+                    try { _originalPriorities[pid] = process.PriorityClass; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
                 if (!_originalAffinities.ContainsKey(pid))
                 {
-                    try { _originalAffinities[pid] = process.ProcessorAffinity; } catch { }
+                    try { _originalAffinities[pid] = process.ProcessorAffinity; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
 
                 // 2. Dynamic Priority Scheduling
@@ -48,7 +48,7 @@ namespace ZenithOptimizer.Services
                     // Enable Windows priority boost for rapid response to input events
                     process.PriorityBoostEnabled = true;
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 if (isEmulator)
                 {
@@ -61,7 +61,7 @@ namespace ZenithOptimizer.Services
                             process.PriorityClass = ProcessPriorityClass.AboveNormal;
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                     // BlueStacks needs ALL threads for vCPUs, graphics translation, and virtualization.
                     // NEVER constrain affinity mask on emulators!
@@ -80,7 +80,7 @@ namespace ZenithOptimizer.Services
                             process.PriorityClass = ProcessPriorityClass.AboveNormal;
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                     // Deprioritize Riot Client launcher during active match
                     try
@@ -98,12 +98,12 @@ namespace ZenithOptimizer.Services
                                         rp.PriorityClass = ProcessPriorityClass.BelowNormal;
                                     }
                                 }
-                                catch { }
+                                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                                 finally { rp.Dispose(); }
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                     return true;
                 }
@@ -120,7 +120,7 @@ namespace ZenithOptimizer.Services
                     }
                     catch
                     {
-                        try { process.PriorityClass = ProcessPriorityClass.AboveNormal; } catch { }
+                        try { process.PriorityClass = ProcessPriorityClass.AboveNormal; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                 }
 
@@ -145,7 +145,7 @@ namespace ZenithOptimizer.Services
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
 
                 return true;
@@ -167,17 +167,17 @@ namespace ZenithOptimizer.Services
 
                 if (_originalPriorities.ContainsKey(pid))
                 {
-                    try { process.PriorityClass = _originalPriorities[pid]; } catch { }
+                    try { process.PriorityClass = _originalPriorities[pid]; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     _originalPriorities.Remove(pid);
                 }
 
                 if (_originalAffinities.ContainsKey(pid))
                 {
-                    try { process.ProcessorAffinity = _originalAffinities[pid]; } catch { }
+                    try { process.ProcessorAffinity = _originalAffinities[pid]; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     _originalAffinities.Remove(pid);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public void ThrottleBackgroundApps(bool throttle)
@@ -201,7 +201,7 @@ namespace ZenithOptimizer.Services
                                         p.PriorityClass = ProcessPriorityClass.BelowNormal;
                                     }
                                 }
-                                catch { }
+                                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                                 finally
                                 {
                                     p.Dispose();
@@ -209,7 +209,7 @@ namespace ZenithOptimizer.Services
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
             }
             else
@@ -226,7 +226,7 @@ namespace ZenithOptimizer.Services
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
                 _throttledProcesses.Clear();
             }

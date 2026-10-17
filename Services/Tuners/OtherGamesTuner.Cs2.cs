@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
@@ -56,7 +56,7 @@ namespace ZenithOptimizer.Services.Tuners
                             long after = p.WorkingSet64;
                             if (before > after) freedBytes += (before - after);
                         }
-                        catch { }
+                        catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         finally { p.Dispose(); }
                     }
                 }
@@ -89,7 +89,7 @@ namespace ZenithOptimizer.Services.Tuners
                             freedBytes += fi.Length;
                             fi.Delete();
                         }
-                        catch { }
+                        catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                 }
                 double mb = Math.Round((double)freedBytes / (1024 * 1024), 1);
@@ -139,7 +139,7 @@ namespace ZenithOptimizer.Services.Tuners
                 {
                     foreach (var p in procs)
                     {
-                        try { p.PriorityClass = ProcessPriorityClass.High; } catch { }
+                        try { p.PriorityClass = ProcessPriorityClass.High; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                     message = "CS2 process elevated to High priority.";
                     return true;
@@ -175,7 +175,7 @@ namespace ZenithOptimizer.Services.Tuners
                                     }
                                 }
                             }
-                            catch { }
+                            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         }
                     }
                 }

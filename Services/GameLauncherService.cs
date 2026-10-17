@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -31,7 +31,7 @@ namespace ZenithOptimizer.Services
                     return SetForegroundWindow(handle);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 
@@ -50,7 +50,7 @@ namespace ZenithOptimizer.Services
                         activeProcess = procs[0];
                         for (int i = 1; i < procs.Length; i++)
                         {
-                            try { procs[i].Dispose(); } catch { }
+                            try { procs[i].Dispose(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         }
                         return true;
                     }
@@ -58,11 +58,11 @@ namespace ZenithOptimizer.Services
                     {
                         for (int i = 0; i < procs.Length; i++)
                         {
-                            try { procs[i].Dispose(); } catch { }
+                            try { procs[i].Dispose(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             return false;
         }
@@ -118,7 +118,7 @@ namespace ZenithOptimizer.Services
                         profile.DetectedExecutablePath = null;
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
         }
 
@@ -188,7 +188,7 @@ namespace ZenithOptimizer.Services
             {
                 BringWindowToForeground(runningProc);
                 statusMessage = string.Format("✓ {0} is already active! Focused window and engaged 0.500ms low-latency mode.", profile.Name);
-                try { runningProc.Dispose(); } catch { }
+                try { runningProc.Dispose(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 return true;
             }
 

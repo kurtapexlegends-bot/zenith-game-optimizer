@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using Microsoft.Win32;
 
@@ -44,7 +44,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             _cachedCpuName = "Intel(R) Core(TM) Processor";
             return _cachedCpuName;
@@ -69,7 +69,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             _cachedGpuName = "Intel(R) Graphics";
             return _cachedGpuName;
@@ -94,7 +94,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             _cachedGameDvrDisabled = false;
             return false;
         }
@@ -153,7 +153,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             _cachedGameModeEnabled = true;
             return true; // Windows default is enabled
         }
@@ -198,7 +198,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 
@@ -258,7 +258,7 @@ namespace ZenithOptimizer.Services
                                 p.PriorityClass = ProcessPriorityClass.AboveNormal;
                             }
                         }
-                        catch { }
+                        catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         finally
                         {
                             p.Dispose();
@@ -266,7 +266,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public string GetHagsStatus()
@@ -288,7 +288,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             _cachedHagsStatus = "Standard / Balanced";
             return _cachedHagsStatus;
         }

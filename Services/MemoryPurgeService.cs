@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -70,7 +70,7 @@ namespace ZenithOptimizer.Services
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
                 return EmptyWorkingSetRaw(hwProc);
             }
@@ -215,7 +215,7 @@ namespace ZenithOptimizer.Services
                     usedPercent = Math.Round((double)memStatus.dwMemoryLoad, 0);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public long PurgeSafeBackgroundMemory()
@@ -238,7 +238,7 @@ namespace ZenithOptimizer.Services
                     freedBytes = (long)(after.ullAvailPhys - before.ullAvailPhys);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return freedBytes;
         }
@@ -262,7 +262,7 @@ namespace ZenithOptimizer.Services
                     SetProcessWorkingSetSize(current.Handle, new IntPtr(-1), new IntPtr(-1));
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public static long PurgeStandbyList()

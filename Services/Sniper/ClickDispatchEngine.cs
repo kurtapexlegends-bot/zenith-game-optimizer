@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -66,7 +66,7 @@ namespace ZenithOptimizer.Services.Sniper
             // If test click, ensure Roblox gets foreground focus so the click registers in-game
             if (mode == "TEST" && robloxHwnd != IntPtr.Zero)
             {
-                try { SetForegroundWindow(robloxHwnd); } catch { }
+                try { SetForegroundWindow(robloxHwnd); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
 
             // Direct Window Message dispatch to Roblox HWND (with WM_MOUSEMOVE preamble so GUI hover registers)
@@ -87,7 +87,7 @@ namespace ZenithOptimizer.Services.Sniper
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
 
             // Hardware OS mouse_event dispatch
@@ -117,14 +117,14 @@ namespace ZenithOptimizer.Services.Sniper
                         }
                     }
 
-                    // Only restore cursor if explicitly enabled, avoiding rapid back-and-forth camera whip
-                    if (restoreCursorAfterClick && !isHover && mode != "TEST")
+                    // Only restore cursor if explicitly enabled or if in TEST mode to prevent cursor jumping away from button
+                    if (!isHover && (restoreCursorAfterClick || mode == "TEST"))
                     {
                         Thread.Sleep(5);
                         SetCursorPos(origPos.X, origPos.Y);
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
         }
 
@@ -134,10 +134,10 @@ namespace ZenithOptimizer.Services.Sniper
             {
                 System.Threading.Tasks.Task.Run(() =>
                 {
-                    try { Console.Beep(freq, duration); } catch { }
+                    try { Console.Beep(freq, duration); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 });
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
     }
 }

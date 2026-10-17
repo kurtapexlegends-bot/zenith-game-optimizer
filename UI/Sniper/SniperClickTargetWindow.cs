@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,7 +26,7 @@ namespace ZenithOptimizer.UI.Sniper
         private const int WS_EX_NOACTIVATE = 0x08000000;
 
         private Window _window;
-        private bool _isLocked = false;
+        private bool _isLocked = true;
 
         public Window Window { get { return _window; } }
 
@@ -67,23 +67,23 @@ namespace ZenithOptimizer.UI.Sniper
                         else SetWindowLong(helper.Handle, GWL_EXSTYLE, (exStyle & ~WS_EX_TRANSPARENT & ~WS_EX_NOACTIVATE));
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             };
 
             Grid clickGrid = new Grid
             {
                 Width = 36,
                 Height = 36,
-                Background = new SolidColorBrush(Color.FromArgb(2, 56, 189, 248))
+                Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0))
             };
 
             Ellipse clickRing = new Ellipse
             {
-                Width = 32,
-                Height = 32,
+                Width = 30,
+                Height = 30,
                 Stroke = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
-                StrokeThickness = 2,
-                Fill = Brushes.Transparent,
+                StrokeThickness = 1.5,
+                Fill = new SolidColorBrush(Color.FromArgb(20, 56, 189, 248)),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 IsHitTestVisible = false
@@ -111,7 +111,7 @@ namespace ZenithOptimizer.UI.Sniper
                         Point center = _window.PointToScreen(new Point(18, 18));
                         RobloxBidSniperService.Instance.CalibrateTarget((int)Math.Round(center.X), (int)Math.Round(center.Y));
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
             };
 
@@ -126,7 +126,7 @@ namespace ZenithOptimizer.UI.Sniper
                         Point center = _window.PointToScreen(new Point(18, 18));
                         RobloxBidSniperService.Instance.CalibrateTarget((int)Math.Round(center.X), (int)Math.Round(center.Y));
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
             };
 
@@ -147,7 +147,7 @@ namespace ZenithOptimizer.UI.Sniper
                     else SetWindowLong(helper.Handle, GWL_EXSTYLE, (exStyle & ~WS_EX_TRANSPARENT & ~WS_EX_NOACTIVATE));
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public void UpdatePosition(int? targetX, int? targetY)
@@ -164,7 +164,7 @@ namespace ZenithOptimizer.UI.Sniper
 
         public void Show() { if (_window != null) _window.Show(); }
         public void Hide() { if (_window != null) _window.Hide(); }
-        public void Close() { if (_window != null) { try { _window.Close(); } catch { } _window = null; } }
+        public void Close() { if (_window != null) { try { _window.Close(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } _window = null; } }
 
         private static void GetDpi(Visual v, out double scaleX, out double scaleY)
         {

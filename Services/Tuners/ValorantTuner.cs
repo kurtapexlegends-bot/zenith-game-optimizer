@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
@@ -35,7 +35,7 @@ namespace ZenithOptimizer.Services.Tuners
                     return "Riot Vanguard Active (Kernel Protected • Direct Input)";
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return "Vanguard Service Inactive (Launch Riot Client)";
         }
 
@@ -81,7 +81,7 @@ namespace ZenithOptimizer.Services.Tuners
         {
             try
             {
-                foreach (Process p in Process.GetProcessesByName("VALORANT-Win64-Shipping")) { try { p.PriorityBoostEnabled = true; } catch { } }
+                foreach (Process p in Process.GetProcessesByName("VALORANT-Win64-Shipping")) { try { p.PriorityBoostEnabled = true; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
                 message = "Working set memory primed for match: PriorityBoost active.";
                 return true;
             }

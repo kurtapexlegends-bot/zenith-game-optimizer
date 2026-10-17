@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace ZenithOptimizer.Services
@@ -35,9 +35,7 @@ namespace ZenithOptimizer.Services
                     return Math.Round(currRes / 10000.0, 3);
                 }
             }
-            catch
-            {
-            }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return _isHighResolutionActive ? 0.500 : 15.625;
         }
 

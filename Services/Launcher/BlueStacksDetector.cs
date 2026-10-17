@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.Win32;
 
@@ -51,7 +51,7 @@ namespace ZenithOptimizer.Services.Launcher
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return false;
         }

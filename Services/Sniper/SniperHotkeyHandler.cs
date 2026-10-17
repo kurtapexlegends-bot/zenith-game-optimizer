@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace ZenithOptimizer.Services.Sniper
@@ -43,7 +43,7 @@ namespace ZenithOptimizer.Services.Sniper
                     if (ctrlDown) { UI.RobloxSniperOverlay.Instance.ToggleMarkersVisibility(); ClickDispatchEngine.PlayBeep(1350, 70); }
                     else { UI.RobloxSniperOverlay.Instance.ToggleMarkersLock(); ClickDispatchEngine.PlayBeep(1200, 70); }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             _f6WasDown = f6Down;
 
@@ -91,7 +91,7 @@ namespace ZenithOptimizer.Services.Sniper
                     if (ctrlDown) { UI.RobloxSniperOverlay.Instance.ToggleCompactMode(); ClickDispatchEngine.PlayBeep(1100, 60); }
                     else { UI.RobloxSniperOverlay.Instance.Toggle(); ClickDispatchEngine.PlayBeep(900, 60); }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             _f9WasDown = f9Down;
 
@@ -111,7 +111,7 @@ namespace ZenithOptimizer.Services.Sniper
                         ClickDispatchEngine.PlayBeep(1300, 60);
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             _f10WasDown = f10Down;
         }

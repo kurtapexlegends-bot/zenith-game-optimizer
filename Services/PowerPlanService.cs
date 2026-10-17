@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -77,7 +77,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return "High Performance";
         }
@@ -100,7 +100,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return BalancedGuid;
         }
@@ -159,7 +159,7 @@ namespace ZenithOptimizer.Services
                     return true;
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return false;
         }
@@ -184,7 +184,7 @@ namespace ZenithOptimizer.Services
                     return (r1 == 0 && r2 == 0);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 
@@ -364,10 +364,10 @@ namespace ZenithOptimizer.Services
                             if (p != null) p.WaitForExit(1500);
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 });
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         private void RunPowerCfg(string args)
@@ -376,7 +376,7 @@ namespace ZenithOptimizer.Services
             {
                 System.Threading.Tasks.Task.Run(() => RunPowerCfgInternal(args, System.Threading.CancellationToken.None));
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         private static void RunPowerCfgInternal(string args, System.Threading.CancellationToken cancellationToken)
@@ -395,7 +395,7 @@ namespace ZenithOptimizer.Services
                         {
                             if (cancellationToken.IsCancellationRequested)
                             {
-                                try { p.Kill(); } catch { }
+                                try { p.Kill(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                                 return;
                             }
                             p.WaitForExit(100);
@@ -403,7 +403,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
     }
 }

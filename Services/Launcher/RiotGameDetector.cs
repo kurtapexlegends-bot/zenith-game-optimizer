@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace ZenithOptimizer.Services.Launcher
@@ -35,7 +35,7 @@ namespace ZenithOptimizer.Services.Launcher
                         return true;
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
 
             if (File.Exists(@"C:\Riot Games\VALORANT\live\VALORANT.exe"))
@@ -77,7 +77,7 @@ namespace ZenithOptimizer.Services.Launcher
                         return true;
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
 
             return false;

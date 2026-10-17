@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Management;
 
 namespace ZenithOptimizer.Models
@@ -60,7 +60,7 @@ namespace ZenithOptimizer.Models
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 if (phys <= 0)
                 {

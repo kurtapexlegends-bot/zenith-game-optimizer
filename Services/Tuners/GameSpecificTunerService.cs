@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using ZenithOptimizer.Services.Tuners;
@@ -25,7 +25,7 @@ namespace ZenithOptimizer.Services
                     File.Copy(backupCfg, userCfg, true);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public static bool FlushSystemDns(out string message) { return TunerHelper.FlushSystemDns(out message); }

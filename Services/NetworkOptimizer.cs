@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
@@ -27,7 +27,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return "Unable to test ping. Please check your internet connection.";
         }
 
@@ -62,7 +62,7 @@ namespace ZenithOptimizer.Services
                                 if (reply.RoundtripTime > maxMs) maxMs = reply.RoundtripTime;
                             }
                         }
-                        catch { }
+                        catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                 }
 
@@ -86,7 +86,7 @@ namespace ZenithOptimizer.Services
                         avgPing, minMs, maxMs, jitterMs, packetLossPercent, rating);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return "Ping test timed out. Verify your internet connection.";
         }
@@ -121,7 +121,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 
@@ -212,9 +212,9 @@ namespace ZenithOptimizer.Services
                             {
                                 if (adapter != null)
                                 {
-                                    try { adapter.DeleteValue("TcpAckFrequency", false); } catch { }
-                                    try { adapter.DeleteValue("TCPNoDelay", false); } catch { }
-                                    try { adapter.DeleteValue("TcpDelAckTicks", false); } catch { }
+                                    try { adapter.DeleteValue("TcpAckFrequency", false); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
+                                    try { adapter.DeleteValue("TCPNoDelay", false); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
+                                    try { adapter.DeleteValue("TcpDelAckTicks", false); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                                 }
                             }
                         }

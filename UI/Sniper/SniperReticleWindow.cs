@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,12 +26,9 @@ namespace ZenithOptimizer.UI.Sniper
         private const int WS_EX_NOACTIVATE = 0x08000000;
 
         private Window _window;
-        private bool _isLocked = false;
-        private Border _corridorBox;
-        private TextBlock _corridorLabel;
-        private Border _trackLockIndicator;
+        private bool _isLocked = true;
         private Ellipse _reticleRing;
-        private Line _reticleHLine, _reticleVLine, _tickRight, _tickBottom;
+        private Border _trackLockIndicator;
 
         public Window Window { get { return _window; } }
 
@@ -48,8 +45,8 @@ namespace ZenithOptimizer.UI.Sniper
                 Background = Brushes.Transparent,
                 Topmost = true,
                 ShowInTaskbar = false,
-                Width = 320,
-                Height = 64,
+                Width = 48,
+                Height = 48,
                 Cursor = Cursors.SizeAll
             };
 
@@ -57,8 +54,8 @@ namespace ZenithOptimizer.UI.Sniper
             _window.Loaded += (s, e) =>
             {
                 GetDpi(_window, out scaleX, out scaleY);
-                _window.Left = (sniper.SensorPosition.X / scaleX) - 160;
-                _window.Top = (sniper.SensorPosition.Y / scaleY) - 32;
+                _window.Left = (sniper.SensorPosition.X / scaleX) - 24;
+                _window.Top = (sniper.SensorPosition.Y / scaleY) - 24;
                 try
                 {
                     var helper = new System.Windows.Interop.WindowInteropHelper(_window);
@@ -70,63 +67,22 @@ namespace ZenithOptimizer.UI.Sniper
                         else SetWindowLong(helper.Handle, GWL_EXSTYLE, (exStyle & ~WS_EX_TRANSPARENT & ~WS_EX_NOACTIVATE));
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             };
 
             Grid reticleGrid = new Grid
             {
-                Width = 320,
-                Height = 64,
-                Background = new SolidColorBrush(Color.FromArgb(2, 16, 185, 129))
+                Width = 48,
+                Height = 48,
+                Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0))
             };
-
-            _corridorBox = new Border
-            {
-                Width = Math.Max(260, sniper.TrackCorridorWidth),
-                Height = Math.Max(32, sniper.TrackCorridorHeight),
-                BorderBrush = new SolidColorBrush(Color.FromArgb(90, 56, 189, 248)),
-                BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(4),
-                Background = new SolidColorBrush(Color.FromArgb(10, 56, 189, 248)),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                IsHitTestVisible = false,
-                Visibility = sniper.DynamicTrackingEnabled ? Visibility.Visible : Visibility.Collapsed
-            };
-            _corridorLabel = new TextBlock
-            {
-                Text = "TRACK CORRIDOR (±130px)",
-                FontSize = 7.5,
-                FontWeight = FontWeights.Bold,
-                Foreground = new SolidColorBrush(Color.FromArgb(160, 56, 189, 248)),
-                Margin = new Thickness(4, 1, 0, 0),
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-            _corridorBox.Child = _corridorLabel;
-            reticleGrid.Children.Add(_corridorBox);
-
-            _trackLockIndicator = new Border
-            {
-                Width = 24,
-                Height = 24,
-                BorderBrush = new SolidColorBrush(Color.FromRgb(52, 211, 153)),
-                BorderThickness = new Thickness(2),
-                CornerRadius = new CornerRadius(12),
-                Background = new SolidColorBrush(Color.FromArgb(25, 52, 211, 153)),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                IsHitTestVisible = false,
-                Visibility = Visibility.Collapsed
-            };
-            reticleGrid.Children.Add(_trackLockIndicator);
 
             _reticleRing = new Ellipse
             {
-                Width = 36,
-                Height = 36,
+                Width = 32,
+                Height = 32,
                 Stroke = new SolidColorBrush(Color.FromRgb(34, 197, 94)),
-                StrokeThickness = 2,
+                StrokeThickness = 1.5,
                 Fill = Brushes.Transparent,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -134,17 +90,25 @@ namespace ZenithOptimizer.UI.Sniper
             };
             reticleGrid.Children.Add(_reticleRing);
 
-            _reticleHLine = new Line { X1 = 138, Y1 = 32, X2 = 142, Y2 = 32, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false };
-            reticleGrid.Children.Add(_reticleHLine);
+            // Crosshair ticks with open central optical corridor (Anti-Self-Blinding)
+            reticleGrid.Children.Add(new Line { X1 = 4, Y1 = 24, X2 = 8, Y2 = 24, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false });
+            reticleGrid.Children.Add(new Line { X1 = 40, Y1 = 24, X2 = 44, Y2 = 24, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false });
+            reticleGrid.Children.Add(new Line { X1 = 24, Y1 = 4, X2 = 24, Y2 = 8, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false });
+            reticleGrid.Children.Add(new Line { X1 = 24, Y1 = 40, X2 = 24, Y2 = 44, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false });
 
-            _tickRight = new Line { X1 = 178, Y1 = 32, X2 = 182, Y2 = 32, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false };
-            reticleGrid.Children.Add(_tickRight);
-
-            _reticleVLine = new Line { X1 = 160, Y1 = 10, X2 = 160, Y2 = 14, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false };
-            reticleGrid.Children.Add(_reticleVLine);
-
-            _tickBottom = new Line { X1 = 160, Y1 = 50, X2 = 160, Y2 = 54, Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)), StrokeThickness = 1.5, IsHitTestVisible = false };
-            reticleGrid.Children.Add(_tickBottom);
+            _trackLockIndicator = new Border
+            {
+                Width = 14,
+                Height = 14,
+                BorderBrush = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
+                BorderThickness = new Thickness(1.5),
+                CornerRadius = new CornerRadius(7),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                IsHitTestVisible = false,
+                Visibility = Visibility.Collapsed
+            };
+            reticleGrid.Children.Add(_trackLockIndicator);
 
             _window.LocationChanged += (s, e) =>
             {
@@ -152,10 +116,10 @@ namespace ZenithOptimizer.UI.Sniper
                 {
                     try
                     {
-                        Point center = _window.PointToScreen(new Point(160, 32));
+                        Point center = _window.PointToScreen(new Point(24, 24));
                         RobloxBidSniperService.Instance.SetSensorPosition((int)Math.Round(center.X), (int)Math.Round(center.Y));
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
             };
 
@@ -167,10 +131,10 @@ namespace ZenithOptimizer.UI.Sniper
                     try
                     {
                         _window.DragMove();
-                        Point center = _window.PointToScreen(new Point(160, 32));
+                        Point center = _window.PointToScreen(new Point(24, 24));
                         RobloxBidSniperService.Instance.SetSensorPosition((int)Math.Round(center.X), (int)Math.Round(center.Y));
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
             };
 
@@ -191,12 +155,15 @@ namespace ZenithOptimizer.UI.Sniper
                     else SetWindowLong(helper.Handle, GWL_EXSTYLE, (exStyle & ~WS_EX_TRANSPARENT & ~WS_EX_NOACTIVATE));
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public void SetReticleColor(Color c)
         {
-            if (_reticleRing != null) _reticleRing.Stroke = new SolidColorBrush(c);
+            if (_reticleRing != null)
+            {
+                _reticleRing.Stroke = new SolidColorBrush(c);
+            }
         }
 
         public void UpdatePosition(int x, int y)
@@ -204,20 +171,18 @@ namespace ZenithOptimizer.UI.Sniper
             if (_window == null) return;
             double scaleX, scaleY;
             GetDpi(_window, out scaleX, out scaleY);
-            _window.Left = (x / scaleX) - 160;
-            _window.Top = (y / scaleY) - 32;
+            _window.Left = (x / scaleX) - 24;
+            _window.Top = (y / scaleY) - 24;
         }
 
         public void UpdateCorridorState(int trackX, int trackY, bool hasLock)
         {
-            if (_trackLockIndicator == null || _corridorBox == null) return;
+            if (_trackLockIndicator == null) return;
             var sniper = RobloxBidSniperService.Instance;
-            _corridorBox.Visibility = sniper.DynamicTrackingEnabled ? Visibility.Visible : Visibility.Collapsed;
-
             if (hasLock && sniper.DynamicTrackingEnabled)
             {
                 _trackLockIndicator.Visibility = Visibility.Visible;
-                int offsetX = trackX - sniper.SensorPosition.X;
+                int offsetX = Math.Max(-20, Math.Min(20, trackX - sniper.SensorPosition.X));
                 _trackLockIndicator.Margin = new Thickness(offsetX, 0, 0, 0);
             }
             else
@@ -228,7 +193,7 @@ namespace ZenithOptimizer.UI.Sniper
 
         public void Show() { if (_window != null) _window.Show(); }
         public void Hide() { if (_window != null) _window.Hide(); }
-        public void Close() { if (_window != null) { try { _window.Close(); } catch { } _window = null; } }
+        public void Close() { if (_window != null) { try { _window.Close(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } _window = null; } }
 
         private static void GetDpi(Visual v, out double scaleX, out double scaleY)
         {

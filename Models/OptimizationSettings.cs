@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -117,7 +117,7 @@ namespace ZenithOptimizer.Models
 
             // Compact Mode Defaults
             SniperIsCompactMode = false;
-            SniperMarkersHidden = false;
+            SniperMarkersHidden = true;
         }
 
         public static string GetSettingsFilePath()
@@ -207,14 +207,14 @@ namespace ZenithOptimizer.Models
                         // If recovered from tempFile and main file is missing, restore main file
                         if (targetToRead == tempFile && !File.Exists(file))
                         {
-                            try { File.Move(tempFile, file); } catch { }
+                            try { File.Move(tempFile, file); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         }
 
                         return loaded;
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return new OptimizationSettings();
         }

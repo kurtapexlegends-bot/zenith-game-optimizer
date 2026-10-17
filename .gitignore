@@ -16,3 +16,4 @@ test_multi.ico
 *.exe.old
 *.old
 ZenithTests.exe
+*.running

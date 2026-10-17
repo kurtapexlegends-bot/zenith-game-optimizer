@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -81,7 +81,7 @@ namespace ZenithOptimizer.Services.Sniper
             Action<string> log,
             Action executeBurst)
         {
-            if (existingCts != null) { try { existingCts.Cancel(); existingCts.Dispose(); } catch { } }
+            if (existingCts != null) { try { existingCts.Cancel(); existingCts.Dispose(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
             var newCts = new CancellationTokenSource();
             var token = newCts.Token;
             Task.Run(async () =>

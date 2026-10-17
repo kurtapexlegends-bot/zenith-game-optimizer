@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -63,7 +63,7 @@ namespace ZenithOptimizer.Services.Tuners
                             if (!Directory.Exists(vCs)) Directory.CreateDirectory(vCs);
                             File.WriteAllText(Path.Combine(vCs, "ClientAppSettings.json"), json);
                         }
-                        catch { }
+                        catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                 }
                 message = successMsg;
@@ -87,7 +87,7 @@ namespace ZenithOptimizer.Services.Tuners
                     if (m.Success) return string.Format("Unlocked ({0} FPS Cap Active • Native Engine)", m.Groups[1].Value);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return "Standard (Locked to 60 FPS Default)";
         }
 
@@ -108,7 +108,7 @@ namespace ZenithOptimizer.Services.Tuners
                 {
                     foreach (string d in Directory.GetDirectories(vDir))
                     {
-                        try { string vf = Path.Combine(d, @"ClientSettings\ClientAppSettings.json"); if (File.Exists(vf)) File.Delete(vf); } catch { }
+                        try { string vf = Path.Combine(d, @"ClientSettings\ClientAppSettings.json"); if (File.Exists(vf)) File.Delete(vf); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                 }
                 message = "Roblox FPS restored to standard 60 FPS factory default.";
@@ -177,7 +177,7 @@ namespace ZenithOptimizer.Services.Tuners
             try
             {
                 Process[] procs = Process.GetProcessesByName("RobloxPlayerBeta");
-                foreach (Process p in procs) { try { p.MinWorkingSet = (IntPtr)1000; freedBytes += 25 * 1024 * 1024; } catch { } }
+                foreach (Process p in procs) { try { p.MinWorkingSet = (IntPtr)1000; freedBytes += 25 * 1024 * 1024; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
                 message = "Roblox Lua garbage collection signaled & Working Set memory trimmed.";
                 return true;
             }
@@ -260,7 +260,7 @@ namespace ZenithOptimizer.Services.Tuners
         {
             try
             {
-                foreach (Process p in Process.GetProcessesByName("RobloxPlayerBeta")) { try { p.PriorityClass = ProcessPriorityClass.High; } catch { } }
+                foreach (Process p in Process.GetProcessesByName("RobloxPlayerBeta")) { try { p.PriorityClass = ProcessPriorityClass.High; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); } }
                 message = "Roblox CPU process priority elevated to High.";
                 return true;
             }
@@ -358,7 +358,7 @@ namespace ZenithOptimizer.Services.Tuners
                            content.Contains("\"" + flagName + "\": " + expectedValue);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 

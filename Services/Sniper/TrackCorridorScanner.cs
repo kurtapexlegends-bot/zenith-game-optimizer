@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace ZenithOptimizer.Services.Sniper
 {
@@ -62,7 +62,7 @@ namespace ZenithOptimizer.Services.Sniper
                             matchCount++;
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
 
                 // If center row already yielded solid sweet-spot matches (>= 2 samples),

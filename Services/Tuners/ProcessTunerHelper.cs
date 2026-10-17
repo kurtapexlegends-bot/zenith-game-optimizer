@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using Microsoft.Win32;
 
@@ -108,7 +108,7 @@ namespace ZenithOptimizer.Services.Tuners
                         p.PriorityBoostEnabled = true;
                         count++;
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
                 message = string.Format("PriorityBoost and Working Set protection enabled for {0} ({1} active instance{2}).", processBaseName, count, count == 1 ? "" : "s");
                 return true;

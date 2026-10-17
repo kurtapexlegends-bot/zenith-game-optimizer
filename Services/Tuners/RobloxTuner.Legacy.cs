@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -84,7 +84,7 @@ namespace ZenithOptimizer.Services.Tuners
                 {
                     foreach (string f in Directory.GetFiles(crashDir, "*Roblox*.dmp"))
                     {
-                        try { var fi = new FileInfo(f); freedBytes += fi.Length; fi.Delete(); } catch { }
+                        try { var fi = new FileInfo(f); freedBytes += fi.Length; fi.Delete(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                 }
                 double mb = Math.Round((double)freedBytes / (1024 * 1024), 1);
@@ -105,7 +105,7 @@ namespace ZenithOptimizer.Services.Tuners
             {
                 foreach (var p in Process.GetProcessesByName("RobloxPlayerBeta"))
                 {
-                    try { p.Kill(); killed++; } catch { }
+                    try { p.Kill(); killed++; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
                 message = killed > 0 ? string.Format("Terminated {0} hanging background Roblox process(es).", killed) : "No stuck Roblox background processes found.";
                 return true;
@@ -147,7 +147,7 @@ namespace ZenithOptimizer.Services.Tuners
                     return string.Format("Roblox Installed: {0} Version directory(ies) found. Hyperion anti-cheat compliant.", subDirs.Length);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return "Roblox not detected in AppData\\Local.";
         }
 

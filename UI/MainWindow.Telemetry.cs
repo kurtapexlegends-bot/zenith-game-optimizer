@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -89,7 +89,7 @@ namespace ZenithOptimizer
                 }
                 _toastTimer.Start();
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public void UpdateEnginePulseBadge(string statusText, Color dotColor)
@@ -116,7 +116,7 @@ namespace ZenithOptimizer
                     StatusBadgeBorder.BeginAnimation(UIElement.OpacityProperty, fadeAnim);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         private void OnTelemetryUpdated(SystemTelemetry telem)
@@ -138,7 +138,7 @@ namespace ZenithOptimizer
                                     ? ("Zenith: " + telem.ActiveGameName) 
                                     : "Zenith Game Optimizer (Active)";
                             }
-                            catch { }
+                            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         }
 
                         if (this.Visibility != Visibility.Visible || this.WindowState == WindowState.Minimized)
@@ -248,7 +248,7 @@ namespace ZenithOptimizer
                             string errPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ZenithOptimizer", "error.log");
                             System.IO.File.AppendAllText(errPath, "[TelemetryUI] " + ex.ToString() + "\r\n");
                         }
-                        catch { }
+                        catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                 }));
             }
@@ -259,7 +259,7 @@ namespace ZenithOptimizer
                     string errPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ZenithOptimizer", "error.log");
                     System.IO.File.AppendAllText(errPath, "[TelemetryInvoke] " + ex.ToString() + "\r\n");
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
         }
 
@@ -300,7 +300,7 @@ namespace ZenithOptimizer
                     TxtEventLog.ScrollToEnd();
                 }));
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         private void BtnClearLog_Click(object sender, RoutedEventArgs e)

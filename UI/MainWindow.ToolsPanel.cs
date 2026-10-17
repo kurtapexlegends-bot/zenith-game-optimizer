@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -94,7 +94,7 @@ namespace ZenithOptimizer
                     applyActiveVisuals();
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             btn.Click += (s, e) =>
             {
@@ -166,7 +166,7 @@ namespace ZenithOptimizer
                     _monitorService.Settings.Save();
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
     }
 }

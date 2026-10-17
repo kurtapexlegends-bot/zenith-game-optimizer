@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -21,7 +21,7 @@ namespace ZenithOptimizer.Services.Tuners
                 string bak = path + ".zenith.bak";
                 if (!File.Exists(bak)) File.Copy(path, bak);
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public static bool RestoreBackup(string path, string successMsg, out string message)
@@ -132,10 +132,10 @@ namespace ZenithOptimizer.Services.Tuners
                         fi.Delete();
                         freed += len;
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return freed;
         }
 
@@ -208,7 +208,7 @@ namespace ZenithOptimizer.Services.Tuners
                 int pinned = 0;
                 foreach (var p in procs)
                 {
-                    try { p.ProcessorAffinity = (IntPtr)mask; pinned++; } catch { }
+                    try { p.ProcessorAffinity = (IntPtr)mask; pinned++; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
                 message = string.Format("Pinned {0} ({1} instance(s)) exclusively to Physical Performance Cores.", processName, pinned);
                 return true;
@@ -229,7 +229,7 @@ namespace ZenithOptimizer.Services.Tuners
                 {
                     foreach (var p in audioProcs)
                     {
-                        try { p.ProcessorAffinity = (IntPtr)2; p.PriorityClass = ProcessPriorityClass.High; } catch { }
+                        try { p.ProcessorAffinity = (IntPtr)2; p.PriorityClass = ProcessPriorityClass.High; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                     }
                     message = "AudioDG engine isolated to secondary CPU Core (Core 1) with High priority.";
                     return true;
@@ -251,7 +251,7 @@ namespace ZenithOptimizer.Services.Tuners
             Dictionary<string, object> dict = null;
             if (!string.IsNullOrWhiteSpace(content))
             {
-                try { dict = serializer.Deserialize<Dictionary<string, object>>(content); } catch { }
+                try { dict = serializer.Deserialize<Dictionary<string, object>>(content); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             if (dict == null) dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
@@ -332,7 +332,7 @@ namespace ZenithOptimizer.Services.Tuners
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 
@@ -355,7 +355,7 @@ namespace ZenithOptimizer.Services.Tuners
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return false;
         }
 

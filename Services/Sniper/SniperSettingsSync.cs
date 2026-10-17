@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using ZenithOptimizer.Models;
 
 namespace ZenithOptimizer.Services.Sniper
@@ -45,7 +45,7 @@ namespace ZenithOptimizer.Services.Sniper
                 if (!string.IsNullOrEmpty(s.SniperClickTargetMode)) setClickTargetMode(s.SniperClickTargetMode);
                 setRestoreCursor(s.SniperRestoreCursor);
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         public static void Save(OptimizationSettings s,
@@ -91,7 +91,7 @@ namespace ZenithOptimizer.Services.Sniper
                 s.SniperRestoreCursor = restoreCursor;
                 s.Save();
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
     }
 }

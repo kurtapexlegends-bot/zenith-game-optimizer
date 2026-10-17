@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -138,7 +138,7 @@ namespace ZenithOptimizer.Services.Sniper
                     return true;
                 }, IntPtr.Zero);
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return bestHwnd;
         }
@@ -177,7 +177,7 @@ namespace ZenithOptimizer.Services.Sniper
                         return true;
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             return false;
         }
@@ -305,7 +305,7 @@ namespace ZenithOptimizer.Services.Sniper
                     return GetPixel(memDc, 0, 0);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             finally
             {
                 if (oldBmp != IntPtr.Zero) SelectObject(memDc, oldBmp);
@@ -345,7 +345,7 @@ namespace ZenithOptimizer.Services.Sniper
                     return GetPixel(memDc, pt.X, pt.Y);
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             finally
             {
                 if (oldBmp != IntPtr.Zero) SelectObject(memDc, oldBmp);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -81,7 +81,7 @@ namespace ZenithOptimizer.Services.Launcher
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return null;
         }
@@ -158,7 +158,7 @@ namespace ZenithOptimizer.Services.Launcher
                                     if (!string.IsNullOrEmpty(candidate)) return candidate;
                                 }
                             }
-                            catch { }
+                            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         }
                     }
                 }
@@ -175,7 +175,7 @@ namespace ZenithOptimizer.Services.Launcher
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return detectedPath;
         }

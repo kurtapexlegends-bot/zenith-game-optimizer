@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Win32;
@@ -86,10 +86,10 @@ namespace ZenithOptimizer.Services.Launcher
                             if (Directory.Exists(p3) && !list.Contains(p3)) list.Add(p3);
                         }
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return list;
         }
 

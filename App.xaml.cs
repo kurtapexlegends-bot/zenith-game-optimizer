@@ -14,7 +14,14 @@ namespace ZenithOptimizer
             get
             {
                 string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ZenithOptimizer");
-                try { if (!Directory.Exists(dir)) Directory.CreateDirectory(dir); } catch { }
+                try
+                {
+                    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[App] Directory.CreateDirectory: " + ex.Message);
+                }
                 return Path.Combine(dir, "error.log");
             }
         }
@@ -51,13 +58,19 @@ namespace ZenithOptimizer
             {
                 ResourceAssembly = typeof(App).Assembly;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] ResourceAssembly: " + ex.Message);
+            }
 
             try
             {
                 SetCurrentProcessExplicitAppUserModelID("Zenith.GameOptimizer.Pro.v2");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] SetAppUserModelID: " + ex.Message);
+            }
 
             bool createdNew;
             try
@@ -68,8 +81,9 @@ namespace ZenithOptimizer
             {
                 createdNew = true;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine("[App] SingleInstanceMutex: " + ex.Message);
                 createdNew = false;
             }
 
@@ -92,7 +106,10 @@ namespace ZenithOptimizer
                         BringExistingInstanceToFront();
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[App] BringExistingInstanceToFront: " + ex.Message);
+                }
 
                 // Exit immediately without initializing UI or tray icon
                 Environment.Exit(0);
@@ -118,7 +135,10 @@ namespace ZenithOptimizer
                     }
                 }, null, -1, false);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] ShowWindowEvent register: " + ex.Message);
+            }
 
             AppDomain.CurrentDomain.UnhandledException += (s, args) =>
             {
@@ -126,7 +146,10 @@ namespace ZenithOptimizer
                 {
                     File.AppendAllText(ErrorLogPath, string.Format("[{0}] [AppDomain] {1}\r\n", DateTime.Now, args.ExceptionObject));
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[App] UnhandledException log failed: " + ex.Message);
+                }
             };
 
             DispatcherUnhandledException += (s, args) =>
@@ -136,7 +159,10 @@ namespace ZenithOptimizer
                     File.AppendAllText(ErrorLogPath, string.Format("[{0}] [Dispatcher] {1}\r\n", DateTime.Now, args.Exception));
                     args.Handled = true; // Prevent app shutdown
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[App] DispatcherUnhandledException log failed: " + ex.Message);
+                }
             };
 
             base.OnStartup(e);
@@ -163,7 +189,10 @@ namespace ZenithOptimizer
                     _singleInstanceMutex = null;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] OnExit cleanup: " + ex.Message);
+            }
 
             base.OnExit(e);
         }
@@ -183,7 +212,10 @@ namespace ZenithOptimizer
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] BringExistingInstanceToFront proc enumerate: " + ex.Message);
+            }
         }
     }
 }

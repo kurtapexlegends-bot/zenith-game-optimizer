@@ -97,6 +97,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\MainWindow.GameTools.Competitive.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\MainWindow.Tray.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\MainWindow.WindowChrome.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UI\Library\GameSearchFilter.cs" />
     <Compile Include="UI\Library\GameDragDropManager.cs" />
     <Compile Include="UI\Library\GameCardRenderer.cs" />
@@ -107,6 +119,7 @@
     <Compile Include="UI\Sniper\SniperHudControls.cs" />
     <Compile Include="UI\Sniper\SniperReticleWindow.cs" />
     <Compile Include="UI\Sniper\SniperClickTargetWindow.cs" />
+    <Compile Include="UI\Sniper\SniperScreenPicker.cs" />
     <Compile Include="Services\Sniper\OpticalSamplingEngine.cs" />
     <Compile Include="Services\Sniper\ColorClassifier.cs" />
     <Compile Include="Services\Sniper\TrackCorridorScanner.cs" />
@@ -115,6 +128,7 @@
     <Compile Include="Services\Sniper\SniperHotkeyHandler.cs" />
     <Compile Include="Services\Sniper\SniperWorkerEngine.cs" />
     <Compile Include="UI\FpsMeterOverlay.cs" />
+    <Compile Include="UI\FpsMeterOverlay.Window.cs" />
     <Compile Include="Models\GameProfile.cs" />
     <Compile Include="Models\SystemTelemetry.cs" />
     <Compile Include="Models\OptimizationSettings.cs" />
@@ -147,6 +161,8 @@
     <Compile Include="Services\Tuners\GameSpecificTunerService.OtherGames.cs" />
     <Compile Include="Services\Tuners\GameSpecificTunerService.CombatAndQueries.cs" />
     <Compile Include="Services\ProcessMonitorService.cs" />
+    <Compile Include="Services\ProcessMonitorService.Telemetry.cs" />
+    <Compile Include="Services\ProcessMonitorService.Optimization.cs" />
     <Compile Include="Services\Launcher\IconExtractor.cs" />
     <Compile Include="Services\Launcher\SteamGameDetector.cs" />
     <Compile Include="Services\Launcher\RiotGameDetector.cs" />

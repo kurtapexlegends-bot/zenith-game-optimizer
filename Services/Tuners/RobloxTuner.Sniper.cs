@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace ZenithOptimizer.Services.Tuners
 {
@@ -8,7 +8,7 @@ namespace ZenithOptimizer.Services.Tuners
         public bool ToggleRobloxAuctionSniper(out bool isActive, out string message)
         {
             bool ok = RobloxBidSniperService.Instance.Toggle(out isActive, out message);
-            try { if (isActive) UI.RobloxSniperOverlay.Instance.Show(); else UI.RobloxSniperOverlay.Instance.Hide(); } catch { }
+            try { if (isActive) UI.RobloxSniperOverlay.Instance.Show(); else UI.RobloxSniperOverlay.Instance.Hide(); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return ok;
         }
 

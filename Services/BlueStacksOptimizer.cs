@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -29,7 +29,7 @@ namespace ZenithOptimizer.Services
                     if (key != null) return true;
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return false;
         }
@@ -103,7 +103,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return "Native VT-x Mode";
         }
 
@@ -138,7 +138,7 @@ namespace ZenithOptimizer.Services
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 // 2. AboveNormal Process Priority & High I/O Priority in Windows IFEO (Zero Frame Stutters in 5v5)
                 try
@@ -153,7 +153,7 @@ namespace ZenithOptimizer.Services
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 // 3. Disable Fullscreen Optimizations & GameDVR Hooking (DWM bypass for zero display latency)
                 try
@@ -168,7 +168,7 @@ namespace ZenithOptimizer.Services
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 // 4. Windows Multimedia High-Precision Timer (0.500ms)
                 try
@@ -176,7 +176,7 @@ namespace ZenithOptimizer.Services
                     TimerResolutionEngine.EnforceMaxResolution();
                     results.Add("0.5ms Timer Active");
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 // 5. Standby RAM Flush (Reclaims memory without touching emulator VM RAM)
                 try
@@ -184,7 +184,7 @@ namespace ZenithOptimizer.Services
                     long freed = MemoryPurgeService.PurgeStandbyList();
                     if (freed > 0) results.Add(string.Format("Freed {0:N0} MB RAM", freed / (1024 * 1024)));
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 // 6. Network QoS Priority (DSCP 46 Expedited Forwarding for BlueStacks UDP/TCP packets)
                 try
@@ -200,7 +200,7 @@ namespace ZenithOptimizer.Services
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 // 7. Clean BlueStacks crash minidumps and stale logs without touching user data or configs
                 try
@@ -212,12 +212,12 @@ namespace ZenithOptimizer.Services
                         int cleaned = 0;
                         foreach (string file in Directory.GetFiles(logsDir, "*.log"))
                         {
-                            try { File.Delete(file); cleaned++; } catch { }
+                            try { File.Delete(file); cleaned++; } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                         }
                         if (cleaned > 0) results.Add(string.Format("Purged {0} logs", cleaned));
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 // 8. CPU Core Unparking (Zero Core Wakeup Latency for Hypervisor Threads)
                 try
@@ -229,7 +229,7 @@ namespace ZenithOptimizer.Services
                         results.Add("Cores Unparked (100% Active)");
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 message = "MLBB Zero-Drawback Optimization Active: " + string.Join(" • ", results.ToArray()) +
                           " | Controls & Custom Device 100% Preserved.";
@@ -251,12 +251,12 @@ namespace ZenithOptimizer.Services
                 {
                     Registry.LocalMachine.DeleteSubKeyTree(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\HD-Player.exe\PerfOptions", false);
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 try
                 {
                     Registry.LocalMachine.DeleteSubKeyTree(@"SOFTWARE\Policies\Microsoft\Windows\QoS\BlueStacks_MLBB", false);
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 message = "Restored Windows OS settings for BlueStacks to defaults. Controls and device profile preserved.";
                 return true;
@@ -288,7 +288,7 @@ namespace ZenithOptimizer.Services
                     return false;
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             try
             {
@@ -345,7 +345,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
 
-                try { File.Delete(scriptPath); } catch { }
+                try { File.Delete(scriptPath); } catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
                 long sizeAfterDp = new FileInfo(vhdPath).Length;
                 if (sizeBefore > sizeAfterDp)
@@ -378,7 +378,7 @@ namespace ZenithOptimizer.Services
                     return match.Groups[1].Value.Trim();
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return string.Empty;
         }
 
@@ -396,7 +396,7 @@ namespace ZenithOptimizer.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             return -1;
         }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -197,7 +197,7 @@ namespace ZenithOptimizer
 
                 BadgeLatencySaved.ToolTip = breakdown.ToString().TrimEnd();
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
         }
 
         private void ThemeAccent_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -285,7 +285,7 @@ namespace ZenithOptimizer
                 IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
                 UpdateDwmDarkMode(hwnd, isDark);
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             PopulateGameProfiles();
         }

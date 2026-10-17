@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -49,7 +49,7 @@ namespace ZenithOptimizer.Services.Launcher
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
             return null;
         }
@@ -92,7 +92,7 @@ namespace ZenithOptimizer.Services.Launcher
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             try
             {
@@ -108,7 +108,7 @@ namespace ZenithOptimizer.Services.Launcher
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return false;
         }
@@ -201,7 +201,7 @@ namespace ZenithOptimizer.Services.Launcher
                         }
                     }
                 }
-                catch { }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
             }
 
             return false;
@@ -259,7 +259,7 @@ namespace ZenithOptimizer.Services.Launcher
                     }
                 }
             }
-            catch { }
+            catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
 
             return false;
         }

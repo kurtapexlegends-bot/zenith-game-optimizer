@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -119,7 +119,7 @@ namespace ZenithOptimizer
                     {
                         added.IconImage = GameLauncherService.ExtractGameIcon(dlg.FileName);
                     }
-                    catch { }
+                    catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
                 }
                 PopulateGameProfiles();
                 Log("Added custom game profile: " + cleanName + " (" + exeName + ".exe)");
