@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Threading;
+using ZenithOptimizer.UI;
 
 namespace ZenithOptimizer.Services
 {
@@ -59,13 +60,25 @@ namespace ZenithOptimizer.Services
 
         private double _monitorRefreshRate = 60.0;
         private volatile bool _isRunning = false;
+        private volatile bool _isPaused = false;
 
         public bool IsRunning { get { return _isRunning; } }
+        public bool IsPaused { get { return _isPaused; } }
         public double CurrentFps { get; private set; }
         public double AverageFps { get; private set; }
         public double OnePercentLowFps { get; private set; }
         public double FrameTimeMs { get; private set; }
         public double MonitorRefreshRate { get { return _monitorRefreshRate; } }
+
+        public void Pause()
+        {
+            _isPaused = true;
+        }
+
+        public void Resume()
+        {
+            _isPaused = false;
+        }
 
         /// <summary>
         /// Dispatched when new FPS telemetry is calculated (currentFps, frameTimeMs, onePercentLow)
@@ -88,12 +101,18 @@ namespace ZenithOptimizer.Services
                 IntPtr hdc = GetDC(IntPtr.Zero);
                 if (hdc != IntPtr.Zero)
                 {
-                    int hz = GetDeviceCaps(hdc, VREFRESH);
-                    ReleaseDC(IntPtr.Zero, hdc);
-                    if (hz >= 30 && hz <= 480)
+                    try
                     {
-                        _monitorRefreshRate = hz;
-                        return;
+                        int hz = GetDeviceCaps(hdc, VREFRESH);
+                        if (hz >= 30 && hz <= 480)
+                        {
+                            _monitorRefreshRate = hz;
+                            return;
+                        }
+                    }
+                    finally
+                    {
+                        ReleaseDC(IntPtr.Zero, hdc);
                     }
                 }
             }
@@ -104,6 +123,7 @@ namespace ZenithOptimizer.Services
 
         public void Start()
         {
+            _isPaused = false;
             if (_isRunning) return;
 
             DetectMonitorRefreshRate();
@@ -135,6 +155,7 @@ namespace ZenithOptimizer.Services
 
         public void Stop()
         {
+            _isPaused = true;
             if (!_isRunning) return;
 
             _isRunning = false;
@@ -148,7 +169,8 @@ namespace ZenithOptimizer.Services
             {
                 try
                 {
-                    if (!_meterThread.Join(200))
+                    _meterThread.Interrupt();
+                    if (!_meterThread.Join(400))
                     {
                         _meterThread.Abort();
                     }
@@ -173,6 +195,14 @@ namespace ZenithOptimizer.Services
             {
                 try
                 {
+                    // Graceful pause/idle: when overlay is hidden or service is paused, idle quietly without calling DwmFlush
+                    if (_isPaused || !FpsMeterOverlay.Instance.IsVisible)
+                    {
+                        Thread.Sleep(200);
+                        lastTicks = Stopwatch.GetTimestamp();
+                        continue;
+                    }
+
                     // DwmFlush blocks until the next DWM compositor frame presentation / VBlank
                     int hr = DwmFlush();
 
@@ -202,6 +232,10 @@ namespace ZenithOptimizer.Services
                         Thread.Sleep(1);
                     }
                 }
+                catch (ThreadInterruptedException)
+                {
+                    break;
+                }
                 catch (ThreadAbortException)
                 {
                     break;
@@ -215,6 +249,8 @@ namespace ZenithOptimizer.Services
 
         private void OnPublishTick(object sender, EventArgs e)
         {
+            if (_isPaused || !FpsMeterOverlay.Instance.IsVisible) return;
+
             List<double> samples;
             lock (_intervalLock)
             {
@@ -230,7 +266,10 @@ namespace ZenithOptimizer.Services
                 sumAll += samples[i];
             }
             double avgAll = sumAll / samples.Count;
-            AverageFps = Math.Round(1.0 / avgAll, 0);
+            if (avgAll > 0.0001)
+            {
+                AverageFps = Math.Round(1.0 / avgAll, 0);
+            }
 
             // Smooth instantaneous FPS using last 10 samples
             int recentCount = Math.Min(10, samples.Count);
@@ -240,8 +279,11 @@ namespace ZenithOptimizer.Services
                 sumRecent += samples[i];
             }
             double avgRecent = sumRecent / recentCount;
-            CurrentFps = Math.Round(1.0 / avgRecent, 0);
-            FrameTimeMs = Math.Round(avgRecent * 1000.0, 1);
+            if (avgRecent > 0.0001)
+            {
+                CurrentFps = Math.Round(1.0 / avgRecent, 0);
+                FrameTimeMs = Math.Round(avgRecent * 1000.0, 1);
+            }
 
             // 1% Low FPS (99th percentile longest frametime)
             samples.Sort();

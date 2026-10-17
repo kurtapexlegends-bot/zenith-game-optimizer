@@ -248,11 +248,11 @@ namespace ZenithOptimizer.Services
                     }
                 }
 
-                // 3. Periodic idle memory trim (every 30s when no game is active)
+                // 3. Periodic idle memory trim (every 15s when no game is active to maintain sub-25MB working set)
                 if (_activeProfile == null)
                 {
                     _idleTrimCounter++;
-                    if (_idleTrimCounter >= 30)
+                    if (_idleTrimCounter >= 15)
                     {
                         _idleTrimCounter = 0;
                         _memoryService.TrimSelfMemory();

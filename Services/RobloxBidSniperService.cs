@@ -1405,15 +1405,26 @@ namespace ZenithOptimizer.Services
                     }
                     f9WasDown = f9Down;
 
-                    // [F10]: Toggle On-Screen FPS & Frametime Meter Overlay
+                    // [F10] combinations:
+                    // - Normal [F10]: Toggle On-Screen FPS & Frametime Meter Overlay
+                    // - [Ctrl + F10]: Lock / Unlock FPS Meter Overlay for dragging
                     bool f10Down = (GetAsyncKeyState(VK_F10) & 0x8000) != 0;
                     if (f10Down && !f10WasDown)
                     {
                         try
                         {
-                            ZenithOptimizer.UI.FpsMeterOverlay.Instance.Toggle();
-                            PlayBeep(1300, 60);
-                            Log(string.Format("On-Screen FPS Meter {0} via [F10]", ZenithOptimizer.UI.FpsMeterOverlay.Instance.IsVisible ? "ENABLED" : "DISABLED"));
+                            if (ctrlDown)
+                            {
+                                ZenithOptimizer.UI.FpsMeterOverlay.Instance.ToggleLock();
+                                PlayBeep(ZenithOptimizer.UI.FpsMeterOverlay.Instance.IsClickThrough ? 800 : 1600, 60);
+                                Log(string.Format("FPS Meter Overlay {0} via [Ctrl+F10]", ZenithOptimizer.UI.FpsMeterOverlay.Instance.IsClickThrough ? "LOCKED (Click-Through)" : "UNLOCKED (Draggable)"));
+                            }
+                            else
+                            {
+                                ZenithOptimizer.UI.FpsMeterOverlay.Instance.Toggle();
+                                PlayBeep(1300, 60);
+                                Log(string.Format("On-Screen FPS Meter {0} via [F10]", ZenithOptimizer.UI.FpsMeterOverlay.Instance.IsVisible ? "ENABLED" : "DISABLED"));
+                            }
                         }
                         catch { }
                     }

@@ -910,9 +910,14 @@ namespace ZenithOptimizer.UI
             {
                 ToggleCompactMode();
             }));
-            hotkeysPanel.Children.Add(CreateKeycapPill("F10", "FPS", "Toggle on-screen FPS and frametime meter [F10]", () =>
+            hotkeysPanel.Children.Add(CreateKeycapPill("F10", "FPS", "Toggle on-screen FPS and frametime meter [F10] • [Ctrl+F10] to Drag/Lock", () =>
             {
                 FpsMeterOverlay.Instance.Toggle();
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("Ctrl+F10", "Drag FPS", "Unlock FPS badge for free dragging across monitors or lock click-through [Ctrl+F10]", () =>
+            {
+                if (!FpsMeterOverlay.Instance.IsVisible) FpsMeterOverlay.Instance.Show();
+                FpsMeterOverlay.Instance.ToggleLock();
             }));
             hotkeysPanel.Children.Add(CreateKeycapPill("V", "Turbo", "Turbo bid click burst [V]", () =>
             {

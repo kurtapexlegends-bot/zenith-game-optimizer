@@ -304,10 +304,12 @@ namespace ZenithOptimizer
                 // Fallback: PE embedded icon inside executable
                 try
                 {
-                    var exeIcon = System.Drawing.Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    if (exeIcon != null)
+                    using (var exeIcon = System.Drawing.Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location))
                     {
-                        return new System.Drawing.Icon(exeIcon, width, height);
+                        if (exeIcon != null)
+                        {
+                            return new System.Drawing.Icon(exeIcon, width, height);
+                        }
                     }
                 }
                 catch { }
@@ -676,6 +678,10 @@ namespace ZenithOptimizer
                 {
                     ZenithOptimizer.UI.FpsMeterOverlay.Instance.Show();
                 }
+                else
+                {
+                    ZenithOptimizer.UI.FpsMeterOverlay.Instance.Initialize();
+                }
 
                 // Restore Tool Active States from Settings
                 if (_monitorService.Settings.ToolActiveStates != null)
@@ -857,6 +863,21 @@ namespace ZenithOptimizer
             }
 
             _monitorService.Settings.Save();
+        }
+
+        private void BtnToggleFpsOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            ZenithOptimizer.UI.FpsMeterOverlay.Instance.Toggle();
+            bool on = ZenithOptimizer.UI.FpsMeterOverlay.Instance.IsVisible;
+            if (BtnToggleFpsOverlay != null)
+            {
+                BtnToggleFpsOverlay.Content = on ? "FPS Overlay [Active]" : "FPS Overlay [F10]";
+            }
+            string msg = on 
+                ? "On-Screen FPS Meter Active [F10] • Double-click or [Ctrl+F10] to Drag/Lock" 
+                : "On-Screen FPS Meter Closed [F10]";
+            Log(msg);
+            ShowNotificationBanner(on ? "FPS Meter Active [F10] • Drag Ready" : "FPS Meter Closed", "emerald");
         }
 
         private void BtnPurgeRam_Click(object sender, RoutedEventArgs e)

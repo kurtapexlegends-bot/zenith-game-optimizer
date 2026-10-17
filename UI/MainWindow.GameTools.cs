@@ -152,9 +152,9 @@ namespace ZenithOptimizer
                 {
                     FpsMeterOverlay.Instance.Toggle();
                     bool fpsOn = FpsMeterOverlay.Instance.IsVisible;
-                    statusLabel.Text = fpsOn ? "On-Screen FPS & Frametime Meter Active." : "On-Screen FPS Meter Closed.";
+                    statusLabel.Text = fpsOn ? "On-Screen FPS & Frametime Meter Active [F10]. Press [Ctrl+F10] to drag/lock." : "On-Screen FPS Meter Closed.";
                     Log(statusLabel.Text);
-                }, true, "Displays high-precision on-screen FPS, frametime in milliseconds, and 1% low frame stutter telemetry [F10]",
+                }, true, "Displays high-precision on-screen FPS, frametime in milliseconds, and 1% low frame stutter telemetry [F10]. Double-click or press [Ctrl+F10] to unlock and drag badge anywhere.",
                 () => FpsMeterOverlay.Instance.IsVisible,
                 () =>
                 {
@@ -163,6 +163,25 @@ namespace ZenithOptimizer
                         FpsMeterOverlay.Instance.Toggle();
                     }
                     statusLabel.Text = "On-Screen FPS Meter Closed.";
+                    Log(statusLabel.Text);
+                }));
+
+                toolsGrid.Children.Add(CreateToolButton("FPS Meter Drag / Lock Mode [Ctrl+F10]", () =>
+                {
+                    if (!FpsMeterOverlay.Instance.IsVisible)
+                    {
+                        FpsMeterOverlay.Instance.Show();
+                    }
+                    FpsMeterOverlay.Instance.ToggleLock();
+                    bool unlocked = !FpsMeterOverlay.Instance.IsClickThrough;
+                    statusLabel.Text = unlocked ? "FPS Meter UNLOCKED: Freely drag badge anywhere across monitors. Double-click or [Ctrl+F10] to lock." : "FPS Meter LOCKED: Click-through mode active.";
+                    Log(statusLabel.Text);
+                }, false, "Unlocks the FPS badge for free mouse dragging anywhere on your screens, or locks it in click-through mode [Ctrl+F10]",
+                () => !FpsMeterOverlay.Instance.IsClickThrough,
+                () =>
+                {
+                    FpsMeterOverlay.Instance.Lock();
+                    statusLabel.Text = "FPS Meter LOCKED: Click-through mode active.";
                     Log(statusLabel.Text);
                 }));
 

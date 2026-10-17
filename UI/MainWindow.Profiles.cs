@@ -382,8 +382,8 @@ namespace ZenithOptimizer
 
             Border card = new Border();
             card.Background = (SolidColorBrush)FindResource("BgCard");
-            card.BorderBrush = new SolidColorBrush(Color.FromArgb(70, accentColor.R, accentColor.G, accentColor.B));
-            card.BorderThickness = new Thickness(3, 1, 1, 1);
+            card.BorderBrush = new SolidColorBrush(Color.FromArgb(60, accentColor.R, accentColor.G, accentColor.B));
+            card.BorderThickness = new Thickness(1);
             card.CornerRadius = new CornerRadius(10);
             card.Padding = new Thickness(14, 14, 16, 14);
             card.Margin = new Thickness(0, 0, 0, 10);
@@ -423,13 +423,13 @@ namespace ZenithOptimizer
             {
                 cardTrans.BeginAnimation(TranslateTransform.YProperty, liftAnim);
                 shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, shadowLiftAnim);
-                card.BorderBrush = new SolidColorBrush(Color.FromArgb(180, accentColor.R, accentColor.G, accentColor.B));
+                card.BorderBrush = new SolidColorBrush(Color.FromArgb(160, accentColor.R, accentColor.G, accentColor.B));
             };
             card.MouseLeave += (s, e) =>
             {
                 cardTrans.BeginAnimation(TranslateTransform.YProperty, dropAnim);
                 shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, shadowDropAnim);
-                card.BorderBrush = new SolidColorBrush(Color.FromArgb(70, accentColor.R, accentColor.G, accentColor.B));
+                card.BorderBrush = new SolidColorBrush(Color.FromArgb(60, accentColor.R, accentColor.G, accentColor.B));
             };
             card.MouseLeftButtonUp += (s, e) =>
             {

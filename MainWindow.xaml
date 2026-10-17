@@ -817,43 +817,44 @@
                                     </StackPanel>
 
                                     <!-- Live Telemetry Badges -->
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,0" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
+                                    <WrapPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,4" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Timer: " FontSize="10" Foreground="{DynamicResource TextMuted}" />
                                                 <TextBlock x:Name="TxtTimerRes" Text="0.500 ms" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
                                             </StackPanel>
                                         </Border>
-                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,0" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
+                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,4" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="CPU: " FontSize="10" Foreground="{DynamicResource TextMuted}" />
                                                 <TextBlock x:Name="TxtCpuLoad" Text="-- %" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
                                             </StackPanel>
                                         </Border>
-                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,0" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
+                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,4" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="RAM: " FontSize="10" Foreground="{DynamicResource TextMuted}" />
                                                 <TextBlock x:Name="TxtRamLoad" Text="-- %" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
                                             </StackPanel>
                                         </Border>
-                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,0" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
+                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,6,4" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Thermals: " FontSize="10" Foreground="{DynamicResource TextMuted}" />
                                                 <TextBlock x:Name="TxtThermalState" Text="Standard" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
                                             </StackPanel>
                                         </Border>
-                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
+                                        <Border Background="{DynamicResource BgSunken}" CornerRadius="6" Padding="8,4" Margin="0,0,0,4" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1">
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Power: " FontSize="10" Foreground="{DynamicResource TextMuted}" />
                                                 <TextBlock x:Name="TxtPowerPlan" Text="High Performance" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
                                             </StackPanel>
                                         </Border>
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </Grid>
 
                                 <!-- Bottom Row: Quick Action Pill Deck -->
                                 <WrapPanel Grid.Row="1">
                                     <Button x:Name="BtnManualBoost" Content="Boost System Now" Style="{StaticResource AccentBtn}" Padding="16,7" FontSize="11" Click="BtnManualBoost_Click" Margin="0,0,8,0" />
+                                    <Button x:Name="BtnToggleFpsOverlay" Content="FPS Overlay [F10]" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnToggleFpsOverlay_Click" Margin="0,0,8,0" ToolTip="Toggle on-screen FPS and frametime meter [F10] • Double-click or [Ctrl+F10] to unlock &amp; drag" />
                                     <Button x:Name="BtnCooldownNow" Content="Cool Down Laptop" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnInstantCooldown_Click" Margin="0,0,8,0" />
                                     <Button Content="Trim Working RAM" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnPurgeRam_Click" Margin="0,0,8,0" />
                                     <Button Content="Scan Running Windows" Style="{StaticResource SecondaryBtn}" Padding="14,7" FontSize="11" Click="BtnDetectGames_Click" Margin="0,0,8,0" />

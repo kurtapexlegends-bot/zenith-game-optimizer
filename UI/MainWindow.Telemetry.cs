@@ -158,6 +158,11 @@ namespace ZenithOptimizer
                                 ? "Cooldown (80%)" 
                                 : (_monitorService.PowerService.IsLaptopThermalGuardActive() ? "Thermal Guard (99%)" : "Standard");
                         }
+                        if (BtnToggleFpsOverlay != null)
+                        {
+                            bool fpsActive = ZenithOptimizer.UI.FpsMeterOverlay.Instance.IsVisible;
+                            BtnToggleFpsOverlay.Content = fpsActive ? "FPS Overlay [Active]" : "FPS Overlay [F10]";
+                        }
 
                         TxtDetectedCpu.Text = telem.CpuName;
                         TxtDetectedGpu.Text = telem.GpuName;
