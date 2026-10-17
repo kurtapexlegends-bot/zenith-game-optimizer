@@ -839,6 +839,7 @@ namespace ZenithOptimizer
             string statusMsg = string.Format("Safely trimmed {0} MB from idle background apps without touching active games.", freedMb > 0 ? freedMb.ToString() : "50+");
             TxtPurgeStatus.Text = statusMsg;
             Log(statusMsg);
+            ShowNotificationBanner(string.Format("Trimmed {0} MB idle RAM", freedMb > 0 ? freedMb.ToString() : "50+"), "emerald");
         }
 
         private void BtnRestoreDefaults_Click(object sender, RoutedEventArgs e)
@@ -889,5 +890,30 @@ namespace ZenithOptimizer
             Log(message);
         }
 
+        private void TxtSearchGames_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TxtSearchPlaceholder != null)
+            {
+                TxtSearchPlaceholder.Visibility = (TxtSearchGames != null && !string.IsNullOrEmpty(TxtSearchGames.Text))
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
+            if (BtnClearSearch != null)
+            {
+                BtnClearSearch.Visibility = (TxtSearchGames != null && !string.IsNullOrEmpty(TxtSearchGames.Text))
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+            PopulateGameProfiles();
+        }
+
+        private void BtnClearSearch_Click(object sender, RoutedEventArgs e)
+        {
+            if (TxtSearchGames != null)
+            {
+                TxtSearchGames.Text = string.Empty;
+                TxtSearchGames.Focus();
+            }
+        }
     }
 }

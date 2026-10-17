@@ -190,9 +190,9 @@ namespace ZenithOptimizer.UI
                 Background = Brushes.Transparent,
                 Topmost = true,
                 ShowInTaskbar = false,
-                Width = 530,
-                Height = 142,
-                Left = Math.Max(20, (SystemParameters.PrimaryScreenWidth - 530) / 2),
+                Width = 560,
+                Height = 148,
+                Left = Math.Max(20, (SystemParameters.PrimaryScreenWidth - 560) / 2),
                 Top = 16
             };
 
@@ -548,15 +548,20 @@ namespace ZenithOptimizer.UI
             row3Grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             row3Grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            TextBlock hotkeys = new TextBlock
+            StackPanel hotkeysPanel = new StackPanel
             {
-                Text = "[F6] Drag/Lock • [F7] Arm • [F8] Spot • [Ctrl+F8] Click • [Alt+F8] Pipette • [F9] HUD • [V] Turbo",
-                FontSize = 9,
-                Foreground = new SolidColorBrush(Color.FromRgb(100, 116, 139)),
+                Orientation = Orientation.Horizontal,
                 VerticalAlignment = VerticalAlignment.Center
             };
-            Grid.SetColumn(hotkeys, 0);
-            row3Grid.Children.Add(hotkeys);
+            hotkeysPanel.Children.Add(CreateKeycapPill("F6", "Drag/Lock", "Toggle HUD & reticle dragging vs click pass-through [F6]"));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F7", "Arm", "Toggle auto-sniper armed / standby [F7]"));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F8", "Sensor", "Set sweet-spot optical sensor coordinate to mouse [F8]"));
+            hotkeysPanel.Children.Add(CreateKeycapPill("Alt+F8", "Pipette", "Sample target RGB color under mouse cursor [Alt+F8]"));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F9", "HUD", "Toggle overlay HUD visibility [F9]"));
+            hotkeysPanel.Children.Add(CreateKeycapPill("V", "Turbo", "Turbo bid click burst [V]"));
+
+            Grid.SetColumn(hotkeysPanel, 0);
+            row3Grid.Children.Add(hotkeysPanel);
 
             _actionFlashText = new TextBlock
             {
@@ -585,8 +590,91 @@ namespace ZenithOptimizer.UI
             };
         }
 
+        private Border CreateKeycapPill(string key, string label, string tooltip)
+        {
+            StackPanel sp = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            Border keyCap = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(200, 15, 23, 42)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(90, 148, 163, 184)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(3),
+                Padding = new Thickness(3, 1, 3, 1),
+                Margin = new Thickness(0, 0, 3, 0),
+                Child = new TextBlock
+                {
+                    Text = key,
+                    FontSize = 8,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = new SolidColorBrush(Color.FromRgb(226, 232, 240)),
+                    FontFamily = new FontFamily("Consolas, Segoe UI")
+                }
+            };
+            sp.Children.Add(keyCap);
+
+            TextBlock lbl = new TextBlock
+            {
+                Text = label,
+                FontSize = 8,
+                FontWeight = FontWeights.Medium,
+                Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184)),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            sp.Children.Add(lbl);
+
+            Border pill = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(120, 30, 41, 59)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(40, 148, 163, 184)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(3),
+                Padding = new Thickness(4, 1, 5, 1),
+                Margin = new Thickness(0, 0, 4, 0),
+                Cursor = Cursors.Help,
+                ToolTip = tooltip,
+                Child = sp
+            };
+
+            pill.MouseEnter += (s, e) =>
+            {
+                pill.BorderBrush = new SolidColorBrush(Color.FromArgb(120, 56, 189, 248));
+                pill.Background = new SolidColorBrush(Color.FromArgb(180, 30, 41, 59));
+                lbl.Foreground = new SolidColorBrush(Color.FromRgb(241, 245, 249));
+            };
+            pill.MouseLeave += (s, e) =>
+            {
+                pill.BorderBrush = new SolidColorBrush(Color.FromArgb(40, 148, 163, 184));
+                pill.Background = new SolidColorBrush(Color.FromArgb(120, 30, 41, 59));
+                lbl.Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184));
+            };
+
+            return pill;
+        }
+
         private Border CreatePresetPill(string label, Color accent, Action onClick)
         {
+            StackPanel sp = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            Border dot = new Border
+            {
+                Width = 6,
+                Height = 6,
+                CornerRadius = new CornerRadius(3),
+                Background = new SolidColorBrush(accent),
+                Margin = new Thickness(0, 0, 4, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            sp.Children.Add(dot);
+
             TextBlock tb = new TextBlock
             {
                 Text = label,
@@ -595,18 +683,38 @@ namespace ZenithOptimizer.UI
                 Foreground = new SolidColorBrush(accent),
                 VerticalAlignment = VerticalAlignment.Center
             };
+            sp.Children.Add(tb);
+
             Border border = new Border
             {
                 Background = new SolidColorBrush(Color.FromArgb(140, 30, 41, 59)),
                 BorderBrush = new SolidColorBrush(Color.FromArgb(70, accent.R, accent.G, accent.B)),
                 BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(3),
-                Padding = new Thickness(5, 1, 5, 1),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(5, 1, 6, 1),
                 Margin = new Thickness(0, 0, 4, 0),
                 Cursor = Cursors.Hand,
                 ToolTip = "Click to set active Storage Hunters sweet-spot to " + label,
-                Child = tb
+                Child = sp
             };
+
+            border.MouseEnter += (s, e) =>
+            {
+                if ((border.Tag as string) != "active")
+                {
+                    border.Background = new SolidColorBrush(Color.FromArgb(200, 30, 41, 59));
+                    border.BorderBrush = new SolidColorBrush(Color.FromArgb(160, accent.R, accent.G, accent.B));
+                }
+            };
+            border.MouseLeave += (s, e) =>
+            {
+                if ((border.Tag as string) != "active")
+                {
+                    border.Background = new SolidColorBrush(Color.FromArgb(140, 30, 41, 59));
+                    border.BorderBrush = new SolidColorBrush(Color.FromArgb(70, accent.R, accent.G, accent.B));
+                }
+            };
+
             border.PreviewMouseLeftButtonDown += (s, e) =>
             {
                 e.Handled = true;
@@ -621,13 +729,34 @@ namespace ZenithOptimizer.UI
             Action<Border, bool, Color> stylePill = (b, active, color) =>
             {
                 if (b == null) return;
-                b.Background = active ? new SolidColorBrush(Color.FromArgb(200, color.R, color.G, color.B)) : new SolidColorBrush(Color.FromArgb(140, 30, 41, 59));
+                b.Tag = active ? "active" : null;
+                b.Background = active ? new SolidColorBrush(Color.FromArgb(220, color.R, color.G, color.B)) : new SolidColorBrush(Color.FromArgb(140, 30, 41, 59));
                 b.BorderBrush = active ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Color.FromArgb(70, color.R, color.G, color.B));
-                var tb = b.Child as TextBlock;
-                if (tb != null)
+
+                StackPanel sp = b.Child as StackPanel;
+                if (sp != null)
                 {
-                    tb.Foreground = active ? new SolidColorBrush(Color.FromRgb(15, 23, 42)) : new SolidColorBrush(color);
-                    tb.FontWeight = active ? FontWeights.Bold : FontWeights.SemiBold;
+                    Border dot = sp.Children.Count > 0 ? sp.Children[0] as Border : null;
+                    TextBlock tb = sp.Children.Count > 1 ? sp.Children[1] as TextBlock : null;
+
+                    if (dot != null)
+                    {
+                        dot.Background = active ? new SolidColorBrush(Color.FromRgb(15, 23, 42)) : new SolidColorBrush(color);
+                    }
+                    if (tb != null)
+                    {
+                        tb.Foreground = active ? new SolidColorBrush(Color.FromRgb(15, 23, 42)) : new SolidColorBrush(color);
+                        tb.FontWeight = active ? FontWeights.Bold : FontWeights.SemiBold;
+                    }
+                }
+                else
+                {
+                    var tb = b.Child as TextBlock;
+                    if (tb != null)
+                    {
+                        tb.Foreground = active ? new SolidColorBrush(Color.FromRgb(15, 23, 42)) : new SolidColorBrush(color);
+                        tb.FontWeight = active ? FontWeights.Bold : FontWeights.SemiBold;
+                    }
                 }
             };
 
@@ -1101,13 +1230,18 @@ namespace ZenithOptimizer.UI
 
                     if (_corridorBox != null)
                     {
-                        _corridorBox.BorderBrush = new SolidColorBrush(Color.FromArgb(180, 52, 211, 153));
-                        _corridorBox.Background = new SolidColorBrush(Color.FromArgb(22, 52, 211, 153));
+                        _corridorBox.BorderBrush = new SolidColorBrush(Color.FromArgb(220, 52, 211, 153));
+                        _corridorBox.Background = new SolidColorBrush(Color.FromArgb(30, 52, 211, 153));
                     }
                     if (_corridorLabel != null)
                     {
-                        _corridorLabel.Text = string.Format("LOCKED ({0}, {1})", activeX, activeY);
+                        _corridorLabel.Text = string.Format("🎯 SWEET-SPOT LOCKED ({0}, {1})", activeX, activeY);
                         _corridorLabel.Foreground = new SolidColorBrush(Color.FromRgb(52, 211, 153));
+                    }
+                    if (_trackBadge != null)
+                    {
+                        _trackBadge.Text = "[TRACK: LOCKED]";
+                        _trackBadge.Foreground = new SolidColorBrush(Color.FromRgb(52, 211, 153));
                     }
                 }
                 else
@@ -1125,6 +1259,13 @@ namespace ZenithOptimizer.UI
                     {
                         _corridorLabel.Text = sniper.DynamicTrackingEnabled ? "TRACK CORRIDOR (SCANNING)" : "TRACK CORRIDOR (OFF)";
                         _corridorLabel.Foreground = new SolidColorBrush(Color.FromArgb(160, 56, 189, 248));
+                    }
+                    if (_trackBadge != null)
+                    {
+                        _trackBadge.Text = sniper.DynamicTrackingEnabled ? "[TRACK: ON]" : "[TRACK: OFF]";
+                        _trackBadge.Foreground = sniper.DynamicTrackingEnabled
+                            ? new SolidColorBrush(Color.FromRgb(56, 189, 248))
+                            : new SolidColorBrush(Color.FromRgb(148, 163, 184));
                     }
                 }
 

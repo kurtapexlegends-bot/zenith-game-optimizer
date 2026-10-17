@@ -13,4 +13,6 @@ error.log
 test_multi.ico
 *.old.exe
 *_old.exe
+*.exe.old
+*.old
 ZenithTests.exe

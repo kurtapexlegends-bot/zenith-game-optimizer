@@ -104,6 +104,7 @@ namespace ZenithOptimizer
                     {
                         onDeactivate();
                         applyInactiveVisuals();
+                        ShowNotificationBanner(string.Format("{0}: Deactivated", label), "warning");
                         return;
                     }
 
@@ -115,6 +116,7 @@ namespace ZenithOptimizer
                     if (onDeactivate != null)
                     {
                         applyActiveVisuals();
+                        ShowNotificationBanner(string.Format("{0}: Activated", label), "emerald");
                     }
                     else
                     {
@@ -122,6 +124,11 @@ namespace ZenithOptimizer
                         if (!isOneShot)
                         {
                             applyActiveVisuals();
+                            ShowNotificationBanner(string.Format("{0}: Activated", label), "emerald");
+                        }
+                        else
+                        {
+                            ShowNotificationBanner(string.Format("{0}: Applied", label), "emerald");
                         }
 
                         // Action executed feedback pulse
@@ -142,7 +149,7 @@ namespace ZenithOptimizer
                 }
                 catch (Exception ex)
                 {
-                    ShowNotificationBanner("Error: " + ex.Message);
+                    ShowNotificationBanner("Error: " + ex.Message, "danger");
                 }
             };
 

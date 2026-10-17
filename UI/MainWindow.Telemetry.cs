@@ -16,7 +16,7 @@ namespace ZenithOptimizer
     {
         private System.Windows.Threading.DispatcherTimer _toastTimer;
 
-        private void ShowNotificationBanner(string message)
+        public void ShowNotificationBanner(string message, string type = "info")
         {
             try
             {
@@ -27,13 +27,37 @@ namespace ZenithOptimizer
                 ToastNotification.BorderBrush = FrozenTheme.NotificationBorder;
                 ToastText.Foreground = FrozenTheme.TextPrimary;
 
+                if (ToastDot != null)
+                {
+                    if (type == "boost" || type == "emerald" || type == "success")
+                    {
+                        ToastDot.Fill = new SolidColorBrush(Color.FromRgb(16, 185, 129));
+                    }
+                    else if (type == "cooling" || type == "cyan")
+                    {
+                        ToastDot.Fill = new SolidColorBrush(Color.FromRgb(56, 189, 248));
+                    }
+                    else if (type == "warning" || type == "amber")
+                    {
+                        ToastDot.Fill = new SolidColorBrush(Color.FromRgb(245, 158, 11));
+                    }
+                    else if (type == "danger" || type == "error")
+                    {
+                        ToastDot.Fill = new SolidColorBrush(Color.FromRgb(239, 68, 68));
+                    }
+                    else
+                    {
+                        ToastDot.Fill = FrozenTheme.StatusDotActive;
+                    }
+                }
+
                 ToastNotification.Visibility = Visibility.Visible;
 
                 var animFade = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
                 {
                     EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                 };
-                var animSlide = new DoubleAnimation(10.0, 0.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                var animSlide = new DoubleAnimation(12.0, 0.0, new Duration(TimeSpan.FromMilliseconds(180)))
                 {
                     EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                 };
@@ -64,6 +88,30 @@ namespace ZenithOptimizer
                     _toastTimer.Stop();
                 }
                 _toastTimer.Start();
+            }
+            catch { }
+        }
+
+        public void UpdateEnginePulseBadge(string statusText, Color dotColor)
+        {
+            try
+            {
+                if (TxtStatusBadge != null)
+                {
+                    TxtStatusBadge.Text = statusText;
+                }
+                if (StatusDot != null)
+                {
+                    StatusDot.Fill = new SolidColorBrush(dotColor);
+                }
+                if (StatusBadgeBorder != null)
+                {
+                    var fadeAnim = new DoubleAnimation(0.4, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    {
+                        EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                    };
+                    StatusBadgeBorder.BeginAnimation(UIElement.OpacityProperty, fadeAnim);
+                }
             }
             catch { }
         }

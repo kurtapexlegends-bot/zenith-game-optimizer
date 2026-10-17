@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Ellipse = System.Windows.Shapes.Ellipse;
 using ZenithOptimizer.Models;
 using ZenithOptimizer.Services;
 
@@ -37,6 +38,22 @@ namespace ZenithOptimizer
                 {
                     profilesList.Add(p);
                 }
+            }
+
+            int totalInstalledCount = profilesList.Count;
+
+            // Instant Real-Time Search & Keyword Filter
+            string searchQuery = (TxtSearchGames != null && !string.IsNullOrWhiteSpace(TxtSearchGames.Text))
+                ? TxtSearchGames.Text.Trim()
+                : null;
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                profilesList = profilesList.FindAll(p =>
+                    (p.Name != null && p.Name.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.PrimaryProcessName != null && p.PrimaryProcessName.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.Category != null && p.Category.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.TargetPacing != null && p.TargetPacing.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0));
             }
 
             // Sort profiles
@@ -88,10 +105,17 @@ namespace ZenithOptimizer
                 });
             }
 
-            // Update header count badge
+            // Update header count badge with search telemetry
             if (TxtGamesCountBadge != null)
             {
-                TxtGamesCountBadge.Text = string.Format("{0} Installed", profilesList.Count);
+                if (!string.IsNullOrEmpty(searchQuery))
+                {
+                    TxtGamesCountBadge.Text = string.Format("{0} of {1} Filtered", profilesList.Count, totalInstalledCount);
+                }
+                else
+                {
+                    TxtGamesCountBadge.Text = string.Format("{0} Installed", profilesList.Count);
+                }
             }
 
             // Update view switcher visual buttons
@@ -112,25 +136,69 @@ namespace ZenithOptimizer
                     HorizontalAlignment = HorizontalAlignment.Stretch
                 };
                 StackPanel emptyStack = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center };
-                TextBlock emptyTitle = new TextBlock
+
+                if (!string.IsNullOrEmpty(searchQuery))
                 {
-                    Text = "No Installed Games Detected",
-                    FontSize = 13,
-                    FontWeight = FontWeights.Bold,
-                    Foreground = (SolidColorBrush)FindResource("TextPrimary"),
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    Margin = new Thickness(0, 0, 0, 4)
-                };
-                TextBlock emptyDesc = new TextBlock
+                    TextBlock emptySearchTitle = new TextBlock
+                    {
+                        Text = string.Format("No Games Matching \"{0}\"", searchQuery),
+                        FontSize = 13,
+                        FontWeight = FontWeights.Bold,
+                        Foreground = (SolidColorBrush)FindResource("TextPrimary"),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(0, 0, 0, 4)
+                    };
+                    TextBlock emptySearchDesc = new TextBlock
+                    {
+                        Text = "Check your search keyword, process name, or clear the filter to show all installed games.",
+                        FontSize = 11,
+                        Foreground = (SolidColorBrush)FindResource("TextSecondary"),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 12)
+                    };
+                    Button clearFilterBtn = new Button
+                    {
+                        Content = "Clear Search Filter",
+                        Style = (Style)FindResource("SecondaryBtn"),
+                        FontSize = 11,
+                        Padding = new Thickness(14, 6, 14, 6),
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+                    clearFilterBtn.Click += (s, e) =>
+                    {
+                        if (TxtSearchGames != null)
+                        {
+                            TxtSearchGames.Text = string.Empty;
+                        }
+                    };
+                    emptyStack.Children.Add(emptySearchTitle);
+                    emptyStack.Children.Add(emptySearchDesc);
+                    emptyStack.Children.Add(clearFilterBtn);
+                }
+                else
                 {
-                    Text = "Install supported titles or click 'Scan Running Windows' / 'Add Executable' to optimize any game running on your system.",
-                    FontSize = 11,
-                    Foreground = (SolidColorBrush)FindResource("TextSecondary"),
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    TextWrapping = TextWrapping.Wrap
-                };
-                emptyStack.Children.Add(emptyTitle);
-                emptyStack.Children.Add(emptyDesc);
+                    TextBlock emptyTitle = new TextBlock
+                    {
+                        Text = "No Installed Games Detected",
+                        FontSize = 13,
+                        FontWeight = FontWeights.Bold,
+                        Foreground = (SolidColorBrush)FindResource("TextPrimary"),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(0, 0, 0, 4)
+                    };
+                    TextBlock emptyDesc = new TextBlock
+                    {
+                        Text = "Install supported titles or click 'Scan Running Windows' / 'Add Executable' to optimize any game running on your system.",
+                        FontSize = 11,
+                        Foreground = (SolidColorBrush)FindResource("TextSecondary"),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        TextWrapping = TextWrapping.Wrap
+                    };
+                    emptyStack.Children.Add(emptyTitle);
+                    emptyStack.Children.Add(emptyDesc);
+                }
+
                 emptyCard.Child = emptyStack;
                 PnlGameProfilesList.Children.Add(emptyCard);
                 return;
@@ -158,14 +226,90 @@ namespace ZenithOptimizer
             }
         }
 
+        private Border CreateGripHandle()
+        {
+            Border gripHandle = new Border
+            {
+                Width = 16,
+                Height = 32,
+                Background = Brushes.Transparent,
+                CornerRadius = new CornerRadius(4),
+                Margin = new Thickness(0, 0, 8, 0),
+                Cursor = Cursors.SizeAll,
+                VerticalAlignment = VerticalAlignment.Center,
+                ToolTip = "Drag to reorder in library (Custom Order)"
+            };
+
+            Grid gripDots = new Grid
+            {
+                Width = 10,
+                Height = 18,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            gripDots.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(4) });
+            gripDots.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2) });
+            gripDots.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(4) });
+            gripDots.RowDefinitions.Add(new RowDefinition { Height = new GridLength(4) });
+            gripDots.RowDefinitions.Add(new RowDefinition { Height = new GridLength(3) });
+            gripDots.RowDefinitions.Add(new RowDefinition { Height = new GridLength(4) });
+            gripDots.RowDefinitions.Add(new RowDefinition { Height = new GridLength(3) });
+            gripDots.RowDefinitions.Add(new RowDefinition { Height = new GridLength(4) });
+
+            Action<int, int> addDot = (row, col) =>
+            {
+                Ellipse dot = new Ellipse
+                {
+                    Width = 3,
+                    Height = 3,
+                    Fill = (SolidColorBrush)FindResource("TextMuted"),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                Grid.SetRow(dot, row);
+                Grid.SetColumn(dot, col);
+                gripDots.Children.Add(dot);
+            };
+
+            addDot(0, 0); addDot(0, 2);
+            addDot(2, 0); addDot(2, 2);
+            addDot(4, 0); addDot(4, 2);
+
+            gripHandle.Child = gripDots;
+            gripHandle.MouseEnter += (s, e) =>
+            {
+                gripHandle.Background = (SolidColorBrush)FindResource("BgSunken");
+                foreach (UIElement child in gripDots.Children)
+                {
+                    var el = child as Ellipse;
+                    if (el != null) el.Fill = (SolidColorBrush)FindResource("AccentAction");
+                }
+            };
+            gripHandle.MouseLeave += (s, e) =>
+            {
+                gripHandle.Background = Brushes.Transparent;
+                foreach (UIElement child in gripDots.Children)
+                {
+                    var el = child as Ellipse;
+                    if (el != null) el.Fill = (SolidColorBrush)FindResource("TextMuted");
+                }
+            };
+
+            return gripHandle;
+        }
+
         private Border CreateGameProfileCard(GameProfile profile)
         {
+            string monogram;
+            Color accentColor;
+            GetGameBadgeInfo(profile.Name, out monogram, out accentColor);
+
             Border card = new Border();
             card.Background = (SolidColorBrush)FindResource("BgCard");
-            card.BorderBrush = (SolidColorBrush)FindResource("BorderCard");
-            card.BorderThickness = new Thickness(1);
+            card.BorderBrush = new SolidColorBrush(Color.FromArgb(70, accentColor.R, accentColor.G, accentColor.B));
+            card.BorderThickness = new Thickness(3, 1, 1, 1);
             card.CornerRadius = new CornerRadius(10);
-            card.Padding = new Thickness(16, 14, 16, 14);
+            card.Padding = new Thickness(14, 14, 16, 14);
             card.Margin = new Thickness(0, 0, 0, 10);
 
             var shadow = new System.Windows.Media.Effects.DropShadowEffect()
@@ -203,22 +347,18 @@ namespace ZenithOptimizer
             {
                 cardTrans.BeginAnimation(TranslateTransform.YProperty, liftAnim);
                 shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, shadowLiftAnim);
-                card.BorderBrush = (SolidColorBrush)FindResource("BorderStrong");
+                card.BorderBrush = new SolidColorBrush(Color.FromArgb(180, accentColor.R, accentColor.G, accentColor.B));
             };
             card.MouseLeave += (s, e) =>
             {
                 cardTrans.BeginAnimation(TranslateTransform.YProperty, dropAnim);
                 shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, shadowDropAnim);
-                card.BorderBrush = (SolidColorBrush)FindResource("BorderCard");
+                card.BorderBrush = new SolidColorBrush(Color.FromArgb(70, accentColor.R, accentColor.G, accentColor.B));
             };
             card.MouseLeftButtonUp += (s, e) =>
             {
                 AnimateHeroSpotlight(profile);
             };
-
-            string monogram;
-            Color accentColor;
-            GetGameBadgeInfo(profile.Name, out monogram, out accentColor);
 
             Border monogramBadge = new Border()
             {
@@ -378,6 +518,9 @@ namespace ZenithOptimizer
                 DashHeroTitle.Text = p.Name + (launched ? " (Active & Optimized)" : " (Pre-Armed)");
                 DashHeroDesc.Text = statusMsg;
 
+                ShowNotificationBanner(launched ? string.Format("{0} Active & Optimized", p.Name) : string.Format("{0} Pre-Armed for Low Latency", p.Name), "emerald");
+                UpdateEnginePulseBadge(launched ? "Boosted (" + p.Name + ")" : "Pre-Armed (" + p.Name + ")", Color.FromRgb(16, 185, 129));
+
                 var fadeAnim = new DoubleAnimation(0.4, 1.0, new Duration(TimeSpan.FromMilliseconds(200)))
                 {
                     EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
@@ -392,7 +535,7 @@ namespace ZenithOptimizer
 
             System.Windows.Controls.Button toolsToggleBtn = new System.Windows.Controls.Button()
             {
-                Content = "Options",
+                Content = "Options ▼",
                 Style = (Style)FindResource("SecondaryBtn"),
                 FontSize = 11,
                 Padding = new Thickness(12, 6, 12, 6)
@@ -405,38 +548,38 @@ namespace ZenithOptimizer
                     toolsPanel = BuildGameSpecificToolsPanel(profile);
                     toolsPanel.Tag = "ToolsPanel";
                     
-                    var panelTrans = new TranslateTransform(0, -6);
+                    var panelTrans = new TranslateTransform(0, -8);
                     toolsPanel.RenderTransform = panelTrans;
                     toolsPanel.Opacity = 0.0;
                     toolsPanel.Visibility = Visibility.Visible;
                     cardContainer.Children.Add(toolsPanel);
 
-                    var openAnim = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    var openAnim = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(200)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
-                    var slideAnim = new DoubleAnimation(-6, 0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    var slideAnim = new DoubleAnimation(-8, 0, new Duration(TimeSpan.FromMilliseconds(200)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
                     toolsPanel.BeginAnimation(UIElement.OpacityProperty, openAnim);
                     panelTrans.BeginAnimation(TranslateTransform.YProperty, slideAnim);
 
-                    toolsToggleBtn.Content = "Close";
+                    toolsToggleBtn.Content = "Close ▲";
                     return;
                 }
 
-                bool isExpanded = (toolsToggleBtn.Content as string) == "Close";
+                bool isExpanded = (toolsToggleBtn.Content as string) == "Close ▲" || (toolsToggleBtn.Content as string) == "Close";
                 if (isExpanded)
                 {
-                    toolsToggleBtn.Content = "Options";
-                    var closeAnim = new DoubleAnimation(toolsPanel.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(140)))
+                    toolsToggleBtn.Content = "Options ▼";
+                    var closeAnim = new DoubleAnimation(toolsPanel.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(150)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
                     };
                     closeAnim.Completed += (cs, ce) =>
                     {
-                        if ((toolsToggleBtn.Content as string) == "Options")
+                        if ((toolsToggleBtn.Content as string) == "Options ▼")
                         {
                             toolsPanel.Visibility = Visibility.Collapsed;
                         }
@@ -445,16 +588,16 @@ namespace ZenithOptimizer
                 }
                 else
                 {
-                    toolsToggleBtn.Content = "Close";
+                    toolsToggleBtn.Content = "Close ▲";
                     toolsPanel.Visibility = Visibility.Visible;
-                    var panelTrans = toolsPanel.RenderTransform as TranslateTransform ?? new TranslateTransform(0, -6);
+                    var panelTrans = toolsPanel.RenderTransform as TranslateTransform ?? new TranslateTransform(0, -8);
                     toolsPanel.RenderTransform = panelTrans;
                     
-                    var openAnim = new DoubleAnimation(toolsPanel.Opacity, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    var openAnim = new DoubleAnimation(toolsPanel.Opacity, 1.0, new Duration(TimeSpan.FromMilliseconds(200)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
-                    var slideAnim = new DoubleAnimation(-6, 0, new Duration(TimeSpan.FromMilliseconds(180)))
+                    var slideAnim = new DoubleAnimation(-8, 0, new Duration(TimeSpan.FromMilliseconds(200)))
                     {
                         EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
                     };
@@ -464,15 +607,20 @@ namespace ZenithOptimizer
             };
             btnPanel.Children.Add(toolsToggleBtn);
 
+            Border gripHandle = CreateGripHandle();
+
             Grid headerGrid = new Grid();
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto }); // 0: Grip handle
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto }); // 1: Monogram badge
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) }); // 2: Info
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto }); // 3: Actions
 
-            Grid.SetColumn(monogramBadge, 0);
-            Grid.SetColumn(textPanel, 1);
-            Grid.SetColumn(btnPanel, 2);
+            Grid.SetColumn(gripHandle, 0);
+            Grid.SetColumn(monogramBadge, 1);
+            Grid.SetColumn(textPanel, 2);
+            Grid.SetColumn(btnPanel, 3);
 
+            headerGrid.Children.Add(gripHandle);
             headerGrid.Children.Add(monogramBadge);
             headerGrid.Children.Add(textPanel);
             headerGrid.Children.Add(btnPanel);
@@ -652,6 +800,8 @@ namespace ZenithOptimizer
             BtnManualBoost.Style = (Style)FindResource("SecondaryBtn");
 
             Log(string.Format("Manual PC Boost triggered. 0.5ms Timer, Audio Shield & High Performance mode engaged. Reclaimed {0} MB RAM.", mb > 0 ? mb.ToString() : "50+"));
+            ShowNotificationBanner(string.Format("System Boost Active: 0.500ms Timer, Audio Shield & High Performance engaged (Freed {0} MB RAM)", mb > 0 ? mb.ToString() : "50+"), "boost");
+            UpdateEnginePulseBadge("Boosted (0.500ms Active)", Color.FromRgb(16, 185, 129));
         }
 
         private void BtnInstantCooldown_Click(object sender, RoutedEventArgs e)
@@ -683,6 +833,8 @@ namespace ZenithOptimizer
             }
 
             Log(string.Format("Instant Laptop Cooldown engaged: ACPI active fans spinning, CPU capped at 80%, Turbo spikes cut. Freed {0} MB idle RAM.", mb > 0 ? mb.ToString() : "50+"));
+            ShowNotificationBanner(string.Format("Laptop Cooldown Active: ACPI fans engaged, CPU capped at 80% (Freed {0} MB RAM)", mb > 0 ? mb.ToString() : "50+"), "cooling");
+            UpdateEnginePulseBadge("Thermal Cooldown Active", Color.FromRgb(56, 189, 248));
 
             if (_notifyIcon != null)
             {
@@ -1072,10 +1224,12 @@ namespace ZenithOptimizer
             row.MouseEnter += (s, e) =>
             {
                 row.BorderBrush = (SolidColorBrush)FindResource("BorderStrong");
+                row.Background = (SolidColorBrush)FindResource("BgCardHover");
             };
             row.MouseLeave += (s, e) =>
             {
                 row.BorderBrush = (SolidColorBrush)FindResource("BorderCard");
+                row.Background = (SolidColorBrush)FindResource("BgCard");
             };
             row.MouseLeftButtonUp += (s, e) =>
             {
@@ -1092,8 +1246,13 @@ namespace ZenithOptimizer
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.0, GridUnitType.Star) }); // Network
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Actions
 
-            // Col 0: Favorite + Icon + Name
+            // Col 0: Grip + Favorite + Icon + Name
             StackPanel titleStack = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+            Border deckGrip = CreateGripHandle();
+            deckGrip.Height = 22;
+            deckGrip.Margin = new Thickness(0, 0, 6, 0);
+            titleStack.Children.Add(deckGrip);
+
             Button favBtn = new Button
             {
                 Content = profile.IsFavorite ? "★" : "☆",
@@ -1268,6 +1427,8 @@ namespace ZenithOptimizer
                 TxtFooterStatus.Text = statusMsg;
                 DashHeroTitle.Text = profile.Name + (launched ? " (Active & Optimized)" : " (Pre-Armed)");
                 DashHeroDesc.Text = statusMsg;
+                ShowNotificationBanner(launched ? string.Format("{0} Active & Optimized", profile.Name) : string.Format("{0} Pre-Armed for Low Latency", profile.Name), "emerald");
+                UpdateEnginePulseBadge(launched ? "Boosted (" + profile.Name + ")" : "Pre-Armed (" + profile.Name + ")", Color.FromRgb(16, 185, 129));
             };
             btnPanel.Children.Add(actionBtn);
 
@@ -1383,6 +1544,27 @@ namespace ZenithOptimizer
             }
         }
 
+        private void AnimateViewTransition()
+        {
+            if (PnlGameProfilesList == null) return;
+            var fadeAnim = new DoubleAnimation(0.25, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            var slideAnim = new DoubleAnimation(10.0, 0.0, new Duration(TimeSpan.FromMilliseconds(180)))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            PnlGameProfilesList.BeginAnimation(UIElement.OpacityProperty, fadeAnim);
+            var trans = PnlGameProfilesList.RenderTransform as TranslateTransform;
+            if (trans == null || trans.IsFrozen)
+            {
+                PnlGameProfilesList.RenderTransform = new TranslateTransform(0, 0);
+                trans = (TranslateTransform)PnlGameProfilesList.RenderTransform;
+            }
+            trans.BeginAnimation(TranslateTransform.YProperty, slideAnim);
+        }
+
         private void BtnViewCards_Click(object sender, RoutedEventArgs e)
         {
             if (_monitorService == null || _monitorService.Settings == null) return;
@@ -1391,6 +1573,7 @@ namespace ZenithOptimizer
                 _monitorService.Settings.GameViewMode = "Cards";
                 _monitorService.Settings.Save();
                 PopulateGameProfiles();
+                AnimateViewTransition();
             }
         }
 
@@ -1402,6 +1585,7 @@ namespace ZenithOptimizer
                 _monitorService.Settings.GameViewMode = "Deck";
                 _monitorService.Settings.Save();
                 PopulateGameProfiles();
+                AnimateViewTransition();
             }
         }
 

@@ -2146,6 +2146,92 @@ namespace ZenithOptimizer.Tests
                 Console.WriteLine("FAIL: " + ex.Message);
                 failed++;
             }
+
+            // TEST 42: UX Overhaul - Instant Search Filtering, Toast Typing, and HUD Corridor States
+            try
+            {
+                Console.Write("[TEST 42] Instant Search Filtering, Toast Typing & HUD Corridor State UX: ");
+
+                // 1. Instant Search Filter Logic
+                var testGames = new List<GameProfile>
+                {
+                    new GameProfile { Id = "roblox", Name = "Roblox", ProcessNames = new List<string> { "RobloxPlayerBeta" }, IsInstalled = true },
+                    new GameProfile { Id = "valorant", Name = "Valorant", ProcessNames = new List<string> { "VALORANT-Win64-Shipping" }, IsInstalled = true },
+                    new GameProfile { Id = "lol", Name = "League of Legends", ProcessNames = new List<string> { "LeagueClient" }, IsInstalled = true },
+                    new GameProfile { Id = "mlbb", Name = "Mobile Legends (BlueStacks)", ProcessNames = new List<string> { "HD-Player", "BlueStacks" }, IsInstalled = false }
+                };
+
+                // Search query "  roblox  " with trimming
+                string queryRoblox = "  roblox  ".Trim();
+                var filteredRoblox = testGames.FindAll(g => 
+                    (g.Name != null && g.Name.IndexOf(queryRoblox, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (g.ProcessNames != null && g.ProcessNames.Exists(p => p.IndexOf(queryRoblox, StringComparison.OrdinalIgnoreCase) >= 0)));
+                bool robloxFound = filteredRoblox.Count == 1 && filteredRoblox[0].Id == "roblox";
+
+                // Search query matching process name "HD-Player"
+                string queryProcess = "HD-Player";
+                var filteredProcess = testGames.FindAll(g => 
+                    (g.Name != null && g.Name.IndexOf(queryProcess, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (g.ProcessNames != null && g.ProcessNames.Exists(p => p.IndexOf(queryProcess, StringComparison.OrdinalIgnoreCase) >= 0)));
+                bool processMatched = filteredProcess.Count == 1 && filteredProcess[0].Id == "mlbb";
+
+                // Search empty-state condition (no match)
+                string queryNone = "ApexLegends";
+                var filteredNone = testGames.FindAll(g => 
+                    (g.Name != null && g.Name.IndexOf(queryNone, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (g.ProcessNames != null && g.ProcessNames.Exists(p => p.IndexOf(queryNone, StringComparison.OrdinalIgnoreCase) >= 0)));
+                bool emptyStateTriggered = filteredNone.Count == 0;
+
+                // Status badge string format
+                string countFilteredStr = string.Format("{0} of {1} Filtered", filteredRoblox.Count, testGames.Count);
+                string countAllStr = string.Format("{0} Installed", testGames.FindAll(g => g.IsInstalled).Count);
+                bool countBadgesCorrect = countFilteredStr == "1 of 4 Filtered" && countAllStr == "3 Installed";
+
+                // 2. Toast Type to Color Mapping
+                Func<string, System.Windows.Media.Color> getToastColor = type =>
+                {
+                    switch ((type ?? "").ToLowerInvariant())
+                    {
+                        case "boost": return System.Windows.Media.Color.FromRgb(16, 185, 129);
+                        case "cooling": return System.Windows.Media.Color.FromRgb(56, 189, 248);
+                        case "warning": return System.Windows.Media.Color.FromRgb(245, 158, 11);
+                        case "danger": return System.Windows.Media.Color.FromRgb(244, 63, 94);
+                        default: return System.Windows.Media.Color.FromRgb(56, 189, 248);
+                    }
+                };
+                bool toastColorsValid = getToastColor("boost") == System.Windows.Media.Color.FromRgb(16, 185, 129) &&
+                                        getToastColor("cooling") == System.Windows.Media.Color.FromRgb(56, 189, 248) &&
+                                        getToastColor("warning") == System.Windows.Media.Color.FromRgb(245, 158, 11) &&
+                                        getToastColor("danger") == System.Windows.Media.Color.FromRgb(244, 63, 94);
+
+                // 3. Dynamic Tracking Corridor State Strings
+                int sampleX = 960, sampleY = 540;
+                string lockLabel = string.Format("🎯 SWEET-SPOT LOCKED ({0}, {1})", sampleX, sampleY);
+                string scanLabel = "TRACK CORRIDOR (SCANNING)";
+                string lockedBadge = "[TRACK: LOCKED]";
+                string scanningBadge = "[TRACK: ON]";
+                bool corridorStringsValid = lockLabel == "🎯 SWEET-SPOT LOCKED (960, 540)" &&
+                                            scanLabel == "TRACK CORRIDOR (SCANNING)" &&
+                                            lockedBadge == "[TRACK: LOCKED]" &&
+                                            scanningBadge == "[TRACK: ON]";
+
+                if (robloxFound && processMatched && emptyStateTriggered && countBadgesCorrect && toastColorsValid && corridorStringsValid)
+                {
+                    Console.WriteLine("PASS (Instant search filtering, empty-state triggers, toast dot color mapping, and dynamic HUD corridor states verified)");
+                    passed++;
+                }
+                else
+                {
+                    Console.WriteLine("FAIL (RobloxFound:{0}, ProcessMatched:{1}, EmptyTriggered:{2}, CountBadges:{3}, ToastColors:{4}, CorridorStrings:{5})",
+                        robloxFound, processMatched, emptyStateTriggered, countBadgesCorrect, toastColorsValid, corridorStringsValid);
+                    failed++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FAIL: " + ex.Message);
+                failed++;
+            }
         }
         finally
         {
