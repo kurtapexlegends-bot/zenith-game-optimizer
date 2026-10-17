@@ -53,6 +53,15 @@ namespace ZenithOptimizer.Models
         public string SniperClickTargetMode { get; set; }
         public bool SniperRestoreCursor { get; set; }
 
+        // On-Screen FPS & Frametime Meter Settings
+        public bool IsFpsMeterEnabled { get; set; }
+        public int FpsMeterX { get; set; }
+        public int FpsMeterY { get; set; }
+
+        // Sniper Compact / Minimized Mode Settings
+        public bool SniperIsCompactMode { get; set; }
+        public bool SniperMarkersHidden { get; set; }
+
         public OptimizationSettings()
         {
             AutoOptimizeOnGameLaunch = true;
@@ -100,6 +109,15 @@ namespace ZenithOptimizer.Models
             SniperAuctionCountdownSeconds = 5;
             SniperClickTargetMode = "FixedTarget";
             SniperRestoreCursor = false;
+
+            // FPS Meter Defaults
+            IsFpsMeterEnabled = false;
+            FpsMeterX = -1;
+            FpsMeterY = -1;
+
+            // Compact Mode Defaults
+            SniperIsCompactMode = false;
+            SniperMarkersHidden = false;
         }
 
         public static string GetSettingsFilePath()

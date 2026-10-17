@@ -132,13 +132,47 @@ namespace ZenithOptimizer
             }
             else if (profile.Id == "roblox")
             {
+                toolsGrid.Children.Add(CreateToolButton("Zero-Drawback Roblox Engine & RAM Turbo", () =>
+                {
+                    string msg;
+                    _monitorService.GameTuner.ApplyRobloxZeroDrawbackPerformanceSuite(out msg);
+                    statusLabel.Text = "Roblox Zero-Drawback Engine & RAM Turbo Engaged (240 FPS, GPU Light Culling, Grass Stripped, RAM Streamlined).";
+                    Log(msg);
+                }, true, "Uncaps to 240 FPS, enables compute shader light culling, strips grass mesh overhead, disables texture preloading (frees 500MB+ RAM), locks 0.5ms timer and AboveNormal priority with zero visual defects",
+                () => (_toolActiveStates.ContainsKey("Zero-Drawback Roblox Engine & RAM Turbo") && _toolActiveStates["Zero-Drawback Roblox Engine & RAM Turbo"]) || _monitorService.GameTuner.IsRobloxZeroDrawbackPerformanceSuiteActive(),
+                () =>
+                {
+                    string msg;
+                    _monitorService.GameTuner.RestoreRobloxZeroDrawbackPerformanceSuite(out msg);
+                    statusLabel.Text = msg;
+                    Log(msg);
+                }));
+
+                toolsGrid.Children.Add(CreateToolButton("On-Screen FPS & Frametime Meter [F10]", () =>
+                {
+                    FpsMeterOverlay.Instance.Toggle();
+                    bool fpsOn = FpsMeterOverlay.Instance.IsVisible;
+                    statusLabel.Text = fpsOn ? "On-Screen FPS & Frametime Meter Active." : "On-Screen FPS Meter Closed.";
+                    Log(statusLabel.Text);
+                }, true, "Displays high-precision on-screen FPS, frametime in milliseconds, and 1% low frame stutter telemetry [F10]",
+                () => FpsMeterOverlay.Instance.IsVisible,
+                () =>
+                {
+                    if (FpsMeterOverlay.Instance.IsVisible)
+                    {
+                        FpsMeterOverlay.Instance.Toggle();
+                    }
+                    statusLabel.Text = "On-Screen FPS Meter Closed.";
+                    Log(statusLabel.Text);
+                }));
+
                 toolsGrid.Children.Add(CreateToolButton("Auction Sweet-Spot Sniper HUD", () =>
                 {
                     RobloxSniperOverlay.Instance.Toggle();
                     bool hudOn = RobloxSniperOverlay.Instance.IsVisible;
                     statusLabel.Text = hudOn ? "Roblox Bid Battles Sniper HUD Active." : "Roblox Sniper HUD Closed.";
                     Log(statusLabel.Text);
-                }, true, "Toggles the optical sweet-spot bid sniper HUD on top of Roblox",
+                }, true, "Toggles the optical sweet-spot bid sniper HUD on top of Roblox [F9]",
                 () => RobloxSniperOverlay.Instance.IsVisible,
                 () =>
                 {
@@ -150,14 +184,29 @@ namespace ZenithOptimizer
                     Log(statusLabel.Text);
                 }));
 
-                toolsGrid.Children.Add(CreateToolButton("Unlock 240 FPS Native Cap", () =>
+                toolsGrid.Children.Add(CreateToolButton("Sniper Compact HUD Mode [Ctrl+F9]", () =>
+                {
+                    RobloxSniperOverlay.Instance.ToggleCompactMode();
+                    bool compact = RobloxSniperOverlay.Instance.IsCompactMode;
+                    statusLabel.Text = compact ? "Sniper Compact Micro-Pill HUD Active." : "Sniper Full HUD Panel Expanded.";
+                    Log(statusLabel.Text);
+                }, true, "Toggles between ultra-compact micro-pill HUD and full control deck [Ctrl+F9]",
+                () => RobloxSniperOverlay.Instance.IsCompactMode,
+                () =>
+                {
+                    RobloxSniperOverlay.Instance.SetCompactMode(false);
+                    statusLabel.Text = "Sniper Full HUD Panel Expanded.";
+                    Log(statusLabel.Text);
+                }));
+
+                toolsGrid.Children.Add(CreateToolButton("Roblox Native In-Game FPS Display", () =>
                 {
                     string msg;
-                    _monitorService.GameTuner.UnlockRobloxFps(240, out msg);
+                    _monitorService.GameTuner.EnableNativeFpsDisplay(out msg);
                     statusLabel.Text = msg;
                     Log(msg);
-                }, true, "Applies DFIntTaskSchedulerTargetFps 240 in ClientAppSettings.json",
-                () => _toolActiveStates.ContainsKey("Unlock 240 FPS Native Cap") && _toolActiveStates["Unlock 240 FPS Native Cap"]));
+                }, true, "Enables Roblox's built-in top-right FPS counter flag in ClientAppSettings.json without external software",
+                () => _toolActiveStates.ContainsKey("Roblox Native In-Game FPS Display") && _toolActiveStates["Roblox Native In-Game FPS Display"]));
 
                 toolsGrid.Children.Add(CreateToolButton("Unlock Draw Distance & Clear Fog", () =>
                 {

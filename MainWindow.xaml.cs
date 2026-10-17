@@ -649,6 +649,10 @@ namespace ZenithOptimizer
                     string coolerMsg;
                     _monitorService.PowerService.EnableLaptopThermalGuard(out coolerMsg);
                 }
+                if (_monitorService.Settings.IsFpsMeterEnabled)
+                {
+                    ZenithOptimizer.UI.FpsMeterOverlay.Instance.Show();
+                }
 
                 // Restore Tool Active States from Settings
                 if (_monitorService.Settings.ToolActiveStates != null)

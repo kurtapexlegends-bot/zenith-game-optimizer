@@ -90,9 +90,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\RobloxSniperOverlay.cs" />
+    <Compile Include="UI\FpsMeterOverlay.cs" />
     <Compile Include="Models\GameProfile.cs" />
     <Compile Include="Models\SystemTelemetry.cs" />
     <Compile Include="Models\OptimizationSettings.cs" />
+    <Compile Include="Services\FpsMeterService.cs" />
     <Compile Include="Services\TimerResolutionEngine.cs" />
     <Compile Include="Services\PriorityAffinityEngine.cs" />
     <Compile Include="Services\MemoryPurgeService.cs" />

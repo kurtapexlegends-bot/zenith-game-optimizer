@@ -82,6 +82,7 @@ namespace ZenithOptimizer.Services
         public const int VK_F7 = 0x76;
         public const int VK_F8 = 0x77;
         public const int VK_F9 = 0x78;
+        public const int VK_F10 = 0x79;
         public const int VK_V = 0x56;
 
         private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
@@ -1282,19 +1283,33 @@ namespace ZenithOptimizer.Services
                 bool f7WasDown = false;
                 bool f8WasDown = false;
                 bool f9WasDown = false;
+                bool f10WasDown = false;
                 DateTime lastUiTelemetryTime = DateTime.MinValue;
 
                 while (_isRunning)
                 {
                     // 1. Hotkey checks
-                    // [F6]: Toggle Overlay Draggable vs Locked Pass-Through
+                    bool ctrlDown = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
+                    bool altDown = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
+
+                    // [F6] combinations:
+                    // - Normal [F6]: Toggle Overlay Draggable vs Locked Pass-Through
+                    // - [Ctrl + F6]: Toggle Reticle / Target Rings Visibility On/Off
                     bool f6Down = (GetAsyncKeyState(VK_F6) & 0x8000) != 0;
                     if (f6Down && !f6WasDown)
                     {
                         try
                         {
-                            ZenithOptimizer.UI.RobloxSniperOverlay.Instance.ToggleMarkersLock();
-                            PlayBeep(1200, 70);
+                            if (ctrlDown)
+                            {
+                                ZenithOptimizer.UI.RobloxSniperOverlay.Instance.ToggleMarkersVisibility();
+                                PlayBeep(1350, 70);
+                            }
+                            else
+                            {
+                                ZenithOptimizer.UI.RobloxSniperOverlay.Instance.ToggleMarkersLock();
+                                PlayBeep(1200, 70);
+                            }
                         }
                         catch { }
                     }
@@ -1303,8 +1318,6 @@ namespace ZenithOptimizer.Services
                     // [F7] combinations:
                     // - Normal [F7]: Toggle Arm / Disarm
                     // - [Ctrl + F7]: Toggle Dynamic Screen Tracking
-                    bool ctrlDown = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
-                    bool altDown = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
                     bool f7Down = (GetAsyncKeyState(VK_F7) & 0x8000) != 0;
                     if (f7Down && !f7WasDown)
                     {
@@ -1369,18 +1382,42 @@ namespace ZenithOptimizer.Services
                     }
                     f8WasDown = f8Down;
 
-                    // [F9]: Toggle Gaming HUD Overlay visibility
+                    // [F9] combinations:
+                    // - Normal [F9]: Toggle Gaming HUD Overlay visibility
+                    // - [Ctrl + F9]: Toggle Compact Micro-Pill vs Full HUD Mode
                     bool f9Down = (GetAsyncKeyState(VK_F9) & 0x8000) != 0;
                     if (f9Down && !f9WasDown)
                     {
                         try
                         {
-                            ZenithOptimizer.UI.RobloxSniperOverlay.Instance.Toggle();
-                            PlayBeep(900, 60);
+                            if (ctrlDown)
+                            {
+                                ZenithOptimizer.UI.RobloxSniperOverlay.Instance.ToggleCompactMode();
+                                PlayBeep(1100, 60);
+                            }
+                            else
+                            {
+                                ZenithOptimizer.UI.RobloxSniperOverlay.Instance.Toggle();
+                                PlayBeep(900, 60);
+                            }
                         }
                         catch { }
                     }
                     f9WasDown = f9Down;
+
+                    // [F10]: Toggle On-Screen FPS & Frametime Meter Overlay
+                    bool f10Down = (GetAsyncKeyState(VK_F10) & 0x8000) != 0;
+                    if (f10Down && !f10WasDown)
+                    {
+                        try
+                        {
+                            ZenithOptimizer.UI.FpsMeterOverlay.Instance.Toggle();
+                            PlayBeep(1300, 60);
+                            Log(string.Format("On-Screen FPS Meter {0} via [F10]", ZenithOptimizer.UI.FpsMeterOverlay.Instance.IsVisible ? "ENABLED" : "DISABLED"));
+                        }
+                        catch { }
+                    }
+                    f10WasDown = f10Down;
 
                     // 2. Window Filtering: Check if Roblox is active OR global mode is enabled OR user is on Zenith HUD
                     bool isTargetWindowActive = _globalMode;

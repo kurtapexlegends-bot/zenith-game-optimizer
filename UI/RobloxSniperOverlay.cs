@@ -98,13 +98,137 @@ namespace ZenithOptimizer.UI
         private DispatcherTimer _flashResetTimer;
         private bool _isReticleLocked = false;
 
+        private bool _isCompactMode = false;
+        private bool _areMarkersHidden = false;
+        private StackPanel _row1Panel;
+        private StackPanel _row2Panel;
+        private Grid _row3Grid;
+        private Border _compactToggleBorder;
+        private TextBlock _compactToggleBtn;
+        private Border _compactColorDot;
+        private TextBlock _compactColorIndicator;
+        private Border _markersToggleBorder;
+        private TextBlock _markersToggleBtn;
+
         private bool _isVisible = false;
         public bool IsVisible { get { return _isVisible; } }
         public bool IsReticleLocked { get { return _isReticleLocked; } }
+        public bool IsCompactMode { get { return _isCompactMode; } }
+        public bool AreMarkersHidden { get { return _areMarkersHidden; } }
 
         public void ToggleMarkersLock()
         {
             SetMarkersClickThrough(!_isReticleLocked);
+        }
+
+        public void ToggleCompactMode()
+        {
+            SetCompactMode(!_isCompactMode);
+        }
+
+        public void SetCompactMode(bool compact)
+        {
+            if (Application.Current == null) return;
+            Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                _isCompactMode = compact;
+                ApplyCompactModeLayout();
+                try
+                {
+                    var s = ZenithOptimizer.Models.OptimizationSettings.Load();
+                    if (s != null)
+                    {
+                        s.SniperIsCompactMode = _isCompactMode;
+                        s.Save();
+                    }
+                }
+                catch { }
+                FlashActionText(_isCompactMode ? "COMPACT HUD" : "EXPANDED HUD", Color.FromRgb(56, 189, 248));
+            }));
+        }
+
+        public void ToggleMarkersVisibility()
+        {
+            SetMarkersVisibility(_areMarkersHidden);
+        }
+
+        public void SetMarkersVisibility(bool visible)
+        {
+            if (Application.Current == null) return;
+            Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                _areMarkersHidden = !visible;
+                if (_reticleWindow != null)
+                {
+                    if (_areMarkersHidden) _reticleWindow.Hide();
+                    else if (_isVisible) _reticleWindow.Show();
+                }
+                if (_clickTargetWindow != null)
+                {
+                    if (_areMarkersHidden) _clickTargetWindow.Hide();
+                    else if (_isVisible) _clickTargetWindow.Show();
+                }
+
+                if (_markersToggleBtn != null)
+                {
+                    _markersToggleBtn.Text = _areMarkersHidden ? "[RINGS: OFF]" : "[RINGS: ON]";
+                    _markersToggleBtn.Foreground = _areMarkersHidden
+                        ? new SolidColorBrush(Color.FromRgb(148, 163, 184))
+                        : new SolidColorBrush(Color.FromRgb(52, 211, 153));
+                }
+
+                try
+                {
+                    var s = ZenithOptimizer.Models.OptimizationSettings.Load();
+                    if (s != null)
+                    {
+                        s.SniperMarkersHidden = _areMarkersHidden;
+                        s.Save();
+                    }
+                }
+                catch { }
+                FlashActionText(_areMarkersHidden ? "RINGS HIDDEN" : "RINGS VISIBLE", Color.FromRgb(250, 204, 21));
+            }));
+        }
+
+        private void ApplyCompactModeLayout()
+        {
+            if (_hudWindow == null) return;
+
+            if (_isCompactMode)
+            {
+                if (_row1Panel != null) _row1Panel.Visibility = Visibility.Collapsed;
+                if (_row2Panel != null) _row2Panel.Visibility = Visibility.Collapsed;
+                if (_row3Grid != null) _row3Grid.Visibility = Visibility.Collapsed;
+                if (_hudCard != null) _hudCard.Padding = new Thickness(8, 4, 8, 4);
+
+                if (_lockBadgeBorder != null) _lockBadgeBorder.Visibility = Visibility.Collapsed;
+                if (_targetModeBadgeBorder != null) _targetModeBadgeBorder.Visibility = Visibility.Collapsed;
+
+                if (_compactToggleBtn != null) _compactToggleBtn.Text = "▾";
+                if (_compactToggleBorder != null) _compactToggleBorder.ToolTip = "Expand Full HUD Panel [Ctrl+F9]";
+                if (_compactColorDot != null) _compactColorDot.Visibility = Visibility.Visible;
+                if (_compactColorIndicator != null) _compactColorIndicator.Visibility = Visibility.Visible;
+
+                _hudWindow.Width = 510;
+            }
+            else
+            {
+                if (_row1Panel != null) _row1Panel.Visibility = Visibility.Visible;
+                if (_row2Panel != null) _row2Panel.Visibility = Visibility.Visible;
+                if (_row3Grid != null) _row3Grid.Visibility = Visibility.Visible;
+                if (_hudCard != null) _hudCard.Padding = new Thickness(12, 8, 12, 8);
+
+                if (_lockBadgeBorder != null) _lockBadgeBorder.Visibility = Visibility.Visible;
+                if (_targetModeBadgeBorder != null) _targetModeBadgeBorder.Visibility = Visibility.Visible;
+
+                if (_compactToggleBtn != null) _compactToggleBtn.Text = "▴";
+                if (_compactToggleBorder != null) _compactToggleBorder.ToolTip = "Collapse to Compact Micro-Pill [Ctrl+F9]";
+                if (_compactColorDot != null) _compactColorDot.Visibility = Visibility.Collapsed;
+                if (_compactColorIndicator != null) _compactColorIndicator.Visibility = Visibility.Collapsed;
+
+                _hudWindow.Width = 680;
+            }
         }
 
         public void Initialize()
@@ -115,9 +239,22 @@ namespace ZenithOptimizer.UI
             {
                 if (_hudWindow != null) return;
 
+                try
+                {
+                    var s = ZenithOptimizer.Models.OptimizationSettings.Load();
+                    if (s != null)
+                    {
+                        _isCompactMode = s.SniperIsCompactMode;
+                        _areMarkersHidden = s.SniperMarkersHidden;
+                    }
+                }
+                catch { }
+
                 CreateHudWindow();
                 CreateReticleWindow();
                 CreateClickTargetWindow();
+
+                ApplyCompactModeLayout();
 
                 // Wire up events from RobloxBidSniperService
                 var service = RobloxBidSniperService.Instance;
@@ -144,10 +281,13 @@ namespace ZenithOptimizer.UI
                 if (_hudWindow != null)
                 {
                     _hudWindow.Show();
-                    _reticleWindow.Show();
-                    if (_clickTargetWindow != null)
+                    if (!_areMarkersHidden)
                     {
-                        _clickTargetWindow.Show();
+                        _reticleWindow.Show();
+                        if (_clickTargetWindow != null)
+                        {
+                            _clickTargetWindow.Show();
+                        }
                     }
                     _isVisible = true;
                     UpdateDisplay();
@@ -156,12 +296,15 @@ namespace ZenithOptimizer.UI
                     {
                         var hHud = new System.Windows.Interop.WindowInteropHelper(_hudWindow).Handle;
                         if (hHud != IntPtr.Zero) SetWindowPos(hHud, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
-                        var hRet = new System.Windows.Interop.WindowInteropHelper(_reticleWindow).Handle;
-                        if (hRet != IntPtr.Zero) SetWindowPos(hRet, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
-                        if (_clickTargetWindow != null)
+                        if (!_areMarkersHidden)
                         {
-                            var hClk = new System.Windows.Interop.WindowInteropHelper(_clickTargetWindow).Handle;
-                            if (hClk != IntPtr.Zero) SetWindowPos(hClk, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+                            var hRet = new System.Windows.Interop.WindowInteropHelper(_reticleWindow).Handle;
+                            if (hRet != IntPtr.Zero) SetWindowPos(hRet, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+                            if (_clickTargetWindow != null)
+                            {
+                                var hClk = new System.Windows.Interop.WindowInteropHelper(_clickTargetWindow).Handle;
+                                if (hClk != IntPtr.Zero) SetWindowPos(hClk, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+                            }
                         }
                     }
                     catch { }
@@ -217,8 +360,8 @@ namespace ZenithOptimizer.UI
                 Background = Brushes.Transparent,
                 Topmost = true,
                 ShowInTaskbar = false,
-                Width = 680,
-                Height = 152,
+                SizeToContent = SizeToContent.Height,
+                Width = _isCompactMode ? 510 : 680,
                 Left = Math.Max(20, (SystemParameters.PrimaryScreenWidth - 680) / 2),
                 Top = 16
             };
@@ -245,7 +388,7 @@ namespace ZenithOptimizer.UI
                 BorderBrush = new SolidColorBrush(Color.FromRgb(16, 185, 129)), // Emerald accent
                 BorderThickness = new Thickness(1.5),
                 CornerRadius = new CornerRadius(8),
-                Padding = new Thickness(12, 8, 12, 8),
+                Padding = _isCompactMode ? new Thickness(8, 4, 8, 4) : new Thickness(12, 8, 12, 8),
                 Effect = new System.Windows.Media.Effects.DropShadowEffect
                 {
                     Color = Colors.Black,
@@ -262,15 +405,17 @@ namespace ZenithOptimizer.UI
             mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-            // Row 0: Header with title, click-thru lock, mode badge, bid target mode, live status badge, and close button
+            // Row 0: Header with title, click-thru lock, mode badge, bid target mode, live status badge, markers toggle, compact toggle, and close button
             Grid headerGrid = new Grid();
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // 0: Title panel
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 1: Lock badge
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 2: Mode badge
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 3: Target mode badge
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 4: Track badge
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 5: Status badge
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 6: Markers toggle
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 7: Compact toggle
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 8: Close button
 
             headerGrid.MouseLeftButtonDown += (s, e) =>
             {
@@ -311,8 +456,30 @@ namespace ZenithOptimizer.UI
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(4, 0, 0, 0)
             };
+            _compactColorDot = new Border
+            {
+                Width = 8,
+                Height = 8,
+                CornerRadius = new CornerRadius(4),
+                Background = new SolidColorBrush(Color.FromRgb(34, 197, 94)),
+                Margin = new Thickness(6, 0, 4, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                Visibility = _isCompactMode ? Visibility.Visible : Visibility.Collapsed
+            };
+            _compactColorIndicator = new TextBlock
+            {
+                Text = "Green",
+                FontSize = 9.5,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = new SolidColorBrush(Color.FromRgb(34, 197, 94)),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 4, 0),
+                Visibility = _isCompactMode ? Visibility.Visible : Visibility.Collapsed
+            };
             titlePanel.Children.Add(title);
             titlePanel.Children.Add(dragGrip);
+            titlePanel.Children.Add(_compactColorDot);
+            titlePanel.Children.Add(_compactColorIndicator);
             Grid.SetColumn(titlePanel, 0);
             headerGrid.Children.Add(titlePanel);
 
@@ -338,6 +505,7 @@ namespace ZenithOptimizer.UI
                 Margin = new Thickness(4, 0, 4, 0),
                 Cursor = Cursors.Hand,
                 ToolTip = "Click to toggle: [DRAGGABLE] (move HUD & markers) / [PASS-THROUGH] (clicks pass to Roblox)",
+                Visibility = _isCompactMode ? Visibility.Collapsed : Visibility.Visible,
                 Child = _lockBadge
             };
             _lockBadgeBorder.PreviewMouseLeftButtonDown += (s, e) =>
@@ -366,6 +534,7 @@ namespace ZenithOptimizer.UI
                 Margin = new Thickness(4, 0, 4, 0),
                 Cursor = Cursors.Hand,
                 ToolTip = "Click to cycle trigger mode: Auto -> Edge -> Continuous -> Disruption -> Turbo",
+                Visibility = _isCompactMode ? Visibility.Collapsed : Visibility.Visible,
                 Child = _modeBadge
             };
             modeBorder.PreviewMouseLeftButtonDown += (s, e) =>
@@ -406,6 +575,7 @@ namespace ZenithOptimizer.UI
                 Margin = new Thickness(4, 0, 4, 0),
                 Cursor = Cursors.Hand,
                 ToolTip = "Click to toggle Bid Targeting: [BID: TARGET] (clicks calibrated BID ring) / [BID: HOVER] (clicks at mouse cursor)",
+                Visibility = _isCompactMode ? Visibility.Collapsed : Visibility.Visible,
                 Child = _targetModeBadge
             };
             _targetModeBadgeBorder.PreviewMouseLeftButtonDown += (s, e) =>
@@ -468,7 +638,7 @@ namespace ZenithOptimizer.UI
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(4),
                 Padding = new Thickness(6, 2, 6, 2),
-                Margin = new Thickness(4, 0, 6, 0),
+                Margin = new Thickness(4, 0, 4, 0),
                 Cursor = Cursors.Hand,
                 ToolTip = "Click to toggle Armed / Standby [F7]",
                 Child = _statusBadge
@@ -483,6 +653,69 @@ namespace ZenithOptimizer.UI
             Grid.SetColumn(statusBorder, 5);
             headerGrid.Children.Add(statusBorder);
 
+            // Column 6: Markers / Rings Visibility Toggle
+            _markersToggleBtn = new TextBlock
+            {
+                Text = _areMarkersHidden ? "[RINGS: OFF]" : "[RINGS: ON]",
+                FontSize = 9.5,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = _areMarkersHidden
+                    ? new SolidColorBrush(Color.FromRgb(148, 163, 184))
+                    : new SolidColorBrush(Color.FromRgb(52, 211, 153)),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _markersToggleBorder = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(160, 30, 41, 59)),
+                BorderBrush = _areMarkersHidden
+                    ? new SolidColorBrush(Color.FromArgb(60, 255, 255, 255))
+                    : new SolidColorBrush(Color.FromArgb(80, 52, 211, 153)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(6, 2, 6, 2),
+                Margin = new Thickness(4, 0, 4, 0),
+                Cursor = Cursors.Hand,
+                ToolTip = "Toggle Reticle & Target Rings on screen [Ctrl+F6]",
+                Child = _markersToggleBtn
+            };
+            _markersToggleBorder.PreviewMouseLeftButtonDown += (s, e) =>
+            {
+                e.Handled = true;
+                ToggleMarkersVisibility();
+            };
+            Grid.SetColumn(_markersToggleBorder, 6);
+            headerGrid.Children.Add(_markersToggleBorder);
+
+            // Column 7: Compact Mode Expand/Collapse Toggle
+            _compactToggleBtn = new TextBlock
+            {
+                Text = _isCompactMode ? "▾" : "▴",
+                FontSize = 11,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _compactToggleBorder = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(160, 30, 41, 59)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 56, 189, 248)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(6, 2, 6, 2),
+                Margin = new Thickness(4, 0, 4, 0),
+                Cursor = Cursors.Hand,
+                ToolTip = _isCompactMode ? "Expand Full HUD Panel [Ctrl+F9]" : "Collapse to Compact Micro-Pill [Ctrl+F9]",
+                Child = _compactToggleBtn
+            };
+            _compactToggleBorder.PreviewMouseLeftButtonDown += (s, e) =>
+            {
+                e.Handled = true;
+                ToggleCompactMode();
+            };
+            Grid.SetColumn(_compactToggleBorder, 7);
+            headerGrid.Children.Add(_compactToggleBorder);
+
+            // Column 8: Close Button
             TextBlock closeBtn = new TextBlock
             {
                 Text = "✕",
@@ -507,14 +740,20 @@ namespace ZenithOptimizer.UI
                 e.Handled = true;
                 Hide();
             };
-            Grid.SetColumn(closeBorder, 6);
+            Grid.SetColumn(closeBorder, 8);
             headerGrid.Children.Add(closeBorder);
 
             Grid.SetRow(headerGrid, 0);
             mainGrid.Children.Add(headerGrid);
 
             // Row 1: Real-time telemetry, color swatch, coordinates
-            StackPanel row1 = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 3) };
+            StackPanel row1 = new StackPanel 
+            { 
+                Orientation = Orientation.Horizontal, 
+                Margin = new Thickness(0, 4, 0, 3),
+                Visibility = _isCompactMode ? Visibility.Collapsed : Visibility.Visible
+            };
+            _row1Panel = row1;
 
             _colorSwatch = new Border
             {
@@ -553,7 +792,13 @@ namespace ZenithOptimizer.UI
             mainGrid.Children.Add(row1);
 
             // Row 2: Storage Hunters Sweet-Spot Color Presets
-            StackPanel presetRow = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 3) };
+            StackPanel presetRow = new StackPanel 
+            { 
+                Orientation = Orientation.Horizontal, 
+                Margin = new Thickness(0, 2, 0, 3),
+                Visibility = _isCompactMode ? Visibility.Collapsed : Visibility.Visible
+            };
+            _row2Panel = presetRow;
             TextBlock presetLbl = new TextBlock
             {
                 Text = "Sweet-Spot:",
@@ -615,7 +860,11 @@ namespace ZenithOptimizer.UI
             mainGrid.Children.Add(presetRow);
 
             // Row 3: Hotkey reminders and action flash
-            Grid row3Grid = new Grid();
+            Grid row3Grid = new Grid
+            {
+                Visibility = _isCompactMode ? Visibility.Collapsed : Visibility.Visible
+            };
+            _row3Grid = row3Grid;
             row3Grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             row3Grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
@@ -628,6 +877,10 @@ namespace ZenithOptimizer.UI
             {
                 ToggleMarkersLock();
                 FlashActionText(_isReticleLocked ? "LOCK ENGAGED" : "DRAGGABLE", Color.FromRgb(250, 204, 21));
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("Ctrl+F6", "Rings", "Toggle reticle & target rings on-screen visibility [Ctrl+F6]", () =>
+            {
+                ToggleMarkersVisibility();
             }));
             hotkeysPanel.Children.Add(CreateKeycapPill("F7", "Arm", "Toggle auto-sniper armed / standby [F7]", () =>
             {
@@ -652,6 +905,14 @@ namespace ZenithOptimizer.UI
             hotkeysPanel.Children.Add(CreateKeycapPill("F9", "HUD", "Toggle overlay HUD visibility [F9]", () =>
             {
                 Hide();
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("Ctrl+F9", "Compact", "Toggle compact micro-pill vs full HUD panel [Ctrl+F9]", () =>
+            {
+                ToggleCompactMode();
+            }));
+            hotkeysPanel.Children.Add(CreateKeycapPill("F10", "FPS", "Toggle on-screen FPS and frametime meter [F10]", () =>
+            {
+                FpsMeterOverlay.Instance.Toggle();
             }));
             hotkeysPanel.Children.Add(CreateKeycapPill("V", "Turbo", "Turbo bid click burst [V]", () =>
             {
@@ -1275,8 +1536,21 @@ namespace ZenithOptimizer.UI
             {
                 _colorSwatch.Background = new SolidColorBrush(Color.FromRgb((byte)r, (byte)g, (byte)b));
 
+                if (_compactColorDot != null)
+                {
+                    _compactColorDot.Background = new SolidColorBrush(Color.FromRgb((byte)r, (byte)g, (byte)b));
+                }
+
                 var sniper = RobloxBidSniperService.Instance;
                 string triggerName = sniper.TriggerMode;
+
+                if (_compactColorIndicator != null)
+                {
+                    _compactColorIndicator.Text = isMatch ? "LOCKED" : (sniper.ColorPreset ?? "Sweet-Spot");
+                    _compactColorIndicator.Foreground = isMatch
+                        ? new SolidColorBrush(Color.FromRgb(34, 197, 94))
+                        : new SolidColorBrush(Color.FromRgb(148, 163, 184));
+                }
 
                 _colorText.Text = string.Format("#{0:X2}{1:X2}{2:X2} [{3} • {4}] • {5}", 
                     r, g, b, 

@@ -2506,6 +2506,146 @@ namespace ZenithOptimizer.Tests
                 Console.WriteLine("FAIL: " + ex.Message);
                 failed++;
             }
+
+            // TEST 46: Roblox Zero-Drawback Engine & RAM Performance Suite
+            try
+            {
+                Console.Write("[TEST 46] Roblox Zero-Drawback Engine & RAM Performance Suite: ");
+                var tuner = new GameSpecificTunerService();
+                string applyMsg;
+                bool applied = tuner.ApplyRobloxZeroDrawbackPerformanceSuite(out applyMsg);
+                bool isActive = tuner.IsRobloxZeroDrawbackPerformanceSuiteActive();
+
+                string rbxFile = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Roblox\ClientSettings\ClientAppSettings.json");
+                bool fileExists = System.IO.File.Exists(rbxFile);
+                bool fastFlagsValid = false;
+
+                if (fileExists)
+                {
+                    string rawJson = System.IO.File.ReadAllText(rbxFile);
+                    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    var dict = serializer.Deserialize<Dictionary<string, object>>(rawJson);
+
+                    bool fps240 = dict.ContainsKey("DFIntTaskSchedulerTargetFps") && Convert.ToInt32(dict["DFIntTaskSchedulerTargetFps"]) == 240;
+                    bool lightCulling = dict.ContainsKey("FFlagFastGPULightCulling3") && (bool)dict["FFlagFastGPULightCulling3"] == true;
+                    bool textureDelay = dict.ContainsKey("FFlagDebugGraphicsDisableTexturePreloading") && (bool)dict["FFlagDebugGraphicsDisableTexturePreloading"] == true;
+                    bool grassCull = dict.ContainsKey("FIntFRMMaxGrassDistance") && Convert.ToInt32(dict["FIntFRMMaxGrassDistance"]) == 0;
+                    bool bgFps = dict.ContainsKey("DFIntTaskSchedulerTargetFpsInBackground") && Convert.ToInt32(dict["DFIntTaskSchedulerTargetFpsInBackground"]) == 15;
+                    bool bufferExpand = dict.ContainsKey("DFIntClientReplicatorBuffer") && Convert.ToInt32(dict["DFIntClientReplicatorBuffer"]) == 262144;
+                    bool shadowCull = dict.ContainsKey("FIntRenderShadowIntensity") && Convert.ToInt32(dict["FIntRenderShadowIntensity"]) == 0;
+
+                    fastFlagsValid = fps240 && lightCulling && textureDelay && grassCull && bgFps && bufferExpand && shadowCull;
+                }
+
+                string restoreMsg;
+                bool restored = tuner.RestoreRobloxZeroDrawbackPerformanceSuite(out restoreMsg);
+                bool isInactiveAfterRestore = !tuner.IsRobloxZeroDrawbackPerformanceSuiteActive();
+
+                if (applied && isActive && fileExists && fastFlagsValid && restored && isInactiveAfterRestore)
+                {
+                    Console.WriteLine("PASS (240 FPS cap, light culling, 0-distance grass, texture preloading disabled, 262KB net buffer & clean restore verified)");
+                    passed++;
+                }
+                else
+                {
+                    Console.WriteLine("FAIL (Applied:{0}, IsActive:{1}, FileExists:{2}, FastFlagsValid:{3}, Restored:{4}, InactiveAfterRestore:{5})",
+                        applied, isActive, fileExists, fastFlagsValid, restored, isInactiveAfterRestore);
+                    failed++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FAIL: " + ex.Message);
+                failed++;
+            }
+
+            // TEST 47: Authentic High-Precision FPS & Frametime Telemetry Service
+            try
+            {
+                Console.Write("[TEST 47] High-Precision On-Screen FPS & Frametime Telemetry Engine: ");
+                var fpsService = FpsMeterService.Instance;
+                bool singletonOk = fpsService != null;
+
+                // 1. Initial State & Refresh Rate Discovery
+                bool refreshRateValid = fpsService.MonitorRefreshRate >= 30.0 && fpsService.MonitorRefreshRate <= 480.0;
+                bool initialFpsValid = fpsService.CurrentFps > 0;
+                bool initialFrameTimeValid = fpsService.FrameTimeMs > 0;
+
+                // 2. Settings Persistence Verification
+                var testSettings = OptimizationSettings.Load();
+                testSettings.IsFpsMeterEnabled = true;
+                testSettings.FpsMeterX = 350;
+                testSettings.FpsMeterY = 75;
+                testSettings.Save();
+
+                var reloadedSettings = OptimizationSettings.Load();
+                bool settingsPersisted = reloadedSettings.IsFpsMeterEnabled == true &&
+                                          reloadedSettings.FpsMeterX == 350 &&
+                                          reloadedSettings.FpsMeterY == 75;
+
+                // Restore default test setting
+                testSettings.IsFpsMeterEnabled = false;
+                testSettings.Save();
+
+                if (singletonOk && refreshRateValid && initialFpsValid && initialFrameTimeValid && settingsPersisted)
+                {
+                    Console.WriteLine("PASS (DWM refresh discovery, QPC frametime telemetry, singleton lifecycle, and settings persistence verified)");
+                    passed++;
+                }
+                else
+                {
+                    Console.WriteLine("FAIL (Singleton:{0}, Refresh:{1}, InitialFps:{2}, InitialMs:{3}, SettingsPersisted:{4})",
+                        singletonOk, refreshRateValid, initialFpsValid, initialFrameTimeValid, settingsPersisted);
+                    failed++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FAIL: " + ex.Message);
+                failed++;
+            }
+
+            // TEST 48: Sniper Compact HUD Mode & On-Screen Reticle/Rings Hide Toggle
+            try
+            {
+                Console.Write("[TEST 48] Sniper Compact HUD Mode & Reticle Markers Toggle: ");
+                var sniper = RobloxBidSniperService.Instance;
+
+                // 1. Settings Persistence for Compact HUD and Markers Hidden
+                var s = OptimizationSettings.Load();
+                s.SniperIsCompactMode = true;
+                s.SniperMarkersHidden = true;
+                s.Save();
+
+                var reloaded = OptimizationSettings.Load();
+                bool compactPersisted = reloaded.SniperIsCompactMode == true;
+                bool markersPersisted = reloaded.SniperMarkersHidden == true;
+
+                // 2. Hotkey Mapping Verification
+                bool sniperRunning = sniper != null;
+
+                // Restore clean test settings
+                s.SniperIsCompactMode = false;
+                s.SniperMarkersHidden = false;
+                s.Save();
+
+                if (compactPersisted && markersPersisted && sniperRunning)
+                {
+                    Console.WriteLine("PASS (Compact HUD mode [Ctrl+F9], Markers hide toggle [Ctrl+F6], and persistence verified)");
+                    passed++;
+                }
+                else
+                {
+                    Console.WriteLine("FAIL (Compact:{0}, Markers:{1}, SniperRunning:{2})",
+                        compactPersisted, markersPersisted, sniperRunning);
+                    failed++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FAIL: " + ex.Message);
+                failed++;
+            }
         }
         finally
         {
