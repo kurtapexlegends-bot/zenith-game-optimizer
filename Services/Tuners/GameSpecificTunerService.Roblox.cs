@@ -7,6 +7,22 @@ namespace ZenithOptimizer.Services
         public string GetRobloxStatus() { return _roblox.GetRobloxStatus(); }
         public bool UnlockRobloxFps(int fps, out string m) { return _roblox.UnlockRobloxFps(fps, out m); }
         public bool RestoreRobloxFps(out string m) { return _roblox.RestoreRobloxFps(out m); }
+        public bool CleanRobloxCache(out long b, out string m) { return _roblox.CleanRobloxCache(out b, out m); }
+        public bool DisableRobloxTelemetry(out string m) { return _roblox.DisableRobloxTelemetry(out m); }
+        public bool SetRobloxGraphicsApiPreference(string api, out string m) { return _roblox.SetRobloxGraphicsApiPreference(api, out m); }
+        public bool DisablePostProcessingBlur(out string m) { return _roblox.DisablePostProcessingBlur(out m); }
+        public bool DisableTexturePreloading(out string m) { return _roblox.DisableTexturePreloading(out m); }
+        public bool CleanRobloxCrashDumps(out long b, out string m) { return _roblox.CleanRobloxCrashDumps(out b, out m); }
+        public bool KillStuckRobloxProcesses(out string m) { return _roblox.KillStuckRobloxProcesses(out m); }
+        public bool ApplyRobloxEsportsPreset(out string m) { return _roblox.ApplyRobloxEsportsPreset(out m); }
+        public string AuditRobloxInstallation() { return _roblox.AuditRobloxInstallation(); }
+        public bool LockRobloxInputTimer(out string m) { return _roblox.LockRobloxInputTimer(out m); }
+        public bool DisableRobloxCameraShake(out string m) { return _roblox.DisableRobloxCameraShake(out m); }
+        public bool DisableWaterReflections(out string m) { return _roblox.DisableWaterReflections(out m); }
+        public bool CleanRobloxHttpAssetCache(out long b, out string m) { return _roblox.CleanRobloxHttpAssetCache(out b, out m); }
+        public bool ForceRobloxHighPerformanceGpu(out string m) { return _roblox.ForceRobloxHighPerformanceGpu(out m); }
+        public bool TuneFoliageCutoffDistance(int d, out string m) { return _roblox.TuneFoliageCutoffDistance(d, out m); }
+        public bool ApplyRobloxUltraPotatoPreset(out string m) { return _roblox.ApplyRobloxUltraPotatoPreset(out m); }
         public bool DisableRobloxShadows(out string m) { return _roblox.DisableRobloxShadows(out m); }
         public bool RestoreRobloxShadows(out string m) { return _roblox.RestoreRobloxShadows(out m); }
         public bool SetRobloxTextureQuality(int q, out string m) { return _roblox.SetRobloxTextureQuality(q, out m); }

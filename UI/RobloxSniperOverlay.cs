@@ -59,6 +59,15 @@ namespace ZenithOptimizer.UI
             catch { }
         }
 
+        public void Initialize()
+        {
+            if (Application.Current == null) return;
+            Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                if (_hud.Window == null) InitializeWindows();
+            }));
+        }
+
         public void ToggleMarkersLock() { SetMarkersClickThrough(!_isReticleLocked); }
 
         public void ToggleCompactMode() { SetCompactMode(!_isCompactMode); }

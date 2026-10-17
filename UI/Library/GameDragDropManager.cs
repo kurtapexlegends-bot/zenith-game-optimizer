@@ -112,6 +112,9 @@ namespace ZenithOptimizer.UI.Library
                 }
             }
 
+            if (!string.IsNullOrEmpty(sourceId) && !order.Contains(sourceId)) order.Add(sourceId);
+            if (!string.IsNullOrEmpty(targetId) && !order.Contains(targetId)) order.Add(targetId);
+
             int srcIdx = order.IndexOf(sourceId);
             int tgtIdx = order.IndexOf(targetId);
             if (srcIdx >= 0 && tgtIdx >= 0 && srcIdx != tgtIdx)

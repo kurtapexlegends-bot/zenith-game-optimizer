@@ -5,7 +5,7 @@ using Microsoft.Win32;
 
 namespace ZenithOptimizer.Services.Tuners
 {
-    public class OtherGamesTuner : IGameTuner
+    public partial class OtherGamesTuner : IGameTuner
     {
         public string GameId { get { return "other"; } }
         public string GameName { get { return "Multi-Title Esports (CS2 / Minecraft / Apex / Dota / Fortnite / Genshin)"; } }

@@ -7,6 +7,22 @@ namespace ZenithOptimizer.Services
         public string GetCs2LaunchOptions() { return _otherGames.GetCs2LaunchOptions(); }
         public string GetCs2AutoExecEsports() { return _otherGames.GetCs2AutoExecEsports(); }
         public string GetCs2SafetyStatus() { return _otherGames.GetCs2SafetyStatus(); }
+        public bool DeployAutoExecToCs2(out string m) { return _otherGames.DeployAutoExecToCs2(out m); }
+        public bool PurgeSteamWebHelperRam(out long b, out string m) { return _otherGames.PurgeSteamWebHelperRam(out b, out m); }
+        public bool CleanCs2CrashReports(out long b, out string m) { return _otherGames.CleanCs2CrashReports(out b, out m); }
+        public bool LockCs2SubTickTimer(out string m) { return _otherGames.LockCs2SubTickTimer(out m); }
+        public string GetCs2AudioMixaheadTip() { return _otherGames.GetCs2AudioMixaheadTip(); }
+        public string GetNoJoyFlagTip() { return _otherGames.GetNoJoyFlagTip(); }
+        public string GetFpsMaxZeroTip() { return _otherGames.GetFpsMaxZeroTip(); }
+        public string GetNoVidFlagTip() { return _otherGames.GetNoVidFlagTip(); }
+        public bool PrioritizeCs2Process(out string m) { return _otherGames.PrioritizeCs2Process(out m); }
+        public bool SetCs2NetworkPriority(out string m) { return _otherGames.SetCs2NetworkPriority(out m); }
+        public bool ApplyCs2TournamentPreset(out string m) { return _otherGames.ApplyCs2TournamentPreset(out m); }
+        public bool CleanSteamShaderCache(out long b, out string m) { return _otherGames.CleanSteamShaderCache(out b, out m); }
+        public bool DeployCs2PracticeConfig(out string m) { return _otherGames.DeployCs2PracticeConfig(out m); }
+        public bool DeploySubTickJumpThrowAlias(out string m) { return _otherGames.DeploySubTickJumpThrowAlias(out m); }
+        public bool PurgeCs2ShaderCache(out long b, out string m) { return _otherGames.PurgeCs2ShaderCache(out b, out m); }
+        public bool CleanCs2PanoramaUiCache(out long b, out string m) { return _otherGames.CleanCs2PanoramaUiCache(out b, out m); }
         public bool ForceCs2HighPerformanceGpu(out string m) { return _otherGames.ForceCs2HighPerformanceGpu(out m); }
         public bool DisableFullscreenOptimizationsForCs2(out string m) { return _otherGames.DisableFullscreenOptimizationsForCs2(out m); }
         public bool OptimizeNetworkMtuValidation(out string m) { return _otherGames.OptimizeNetworkMtuValidation(out m); }
