@@ -153,10 +153,10 @@ namespace ZenithOptimizer.UI.Sniper
             Action<string, Color> flashActionText)
         {
             StackPanel hotkeysPanel = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-            hotkeysPanel.Children.Add(CreateKeycapPill("F7", "Arm", "Toggle auto-sniper armed / standby [F7]", () =>
+            hotkeysPanel.Children.Add(CreateKeycapPill("F7", "Arm/Stop", "Toggle auto-sniper Armed vs Standby Stop [F7 or ESC]", () =>
             {
                 var s = RobloxBidSniperService.Instance; s.IsArmed = !s.IsArmed;
-                flashActionText(s.IsArmed ? "ARMED" : "STANDBY", s.IsArmed ? Color.FromRgb(52, 211, 153) : Color.FromRgb(148, 163, 184));
+                flashActionText(s.IsArmed ? "SNIPER ARMED" : "SNIPER STOPPED", s.IsArmed ? Color.FromRgb(52, 211, 153) : Color.FromRgb(239, 68, 68));
             }));
             hotkeysPanel.Children.Add(CreateKeycapPill("F8", "Sensor", "Set sweet-spot optical sensor coordinate to mouse [F8]", () =>
             {

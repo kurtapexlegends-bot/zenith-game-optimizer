@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace ZenithOptimizer.Services.Sniper
@@ -10,6 +10,7 @@ namespace ZenithOptimizer.Services.Sniper
 
         private const int VK_CONTROL = 0x11;
         private const int VK_MENU = 0x12;
+        public const int VK_ESCAPE = 0x1B;
         public const int VK_F6 = 0x75;
         public const int VK_F7 = 0x76;
         public const int VK_F8 = 0x77;
@@ -17,6 +18,7 @@ namespace ZenithOptimizer.Services.Sniper
         public const int VK_F10 = 0x79;
         public const int VK_V = 0x56;
 
+        private bool _escWasDown = false;
         private bool _f6WasDown = false;
         private bool _f7WasDown = false;
         private bool _f8WasDown = false;
@@ -34,6 +36,17 @@ namespace ZenithOptimizer.Services.Sniper
 
             bool ctrlDown = IsKeyDown(VK_CONTROL);
             bool altDown = IsKeyDown(VK_MENU);
+
+            bool escDown = IsKeyDown(VK_ESCAPE);
+            if (escDown && !_escWasDown)
+            {
+                if (sniper.IsArmed)
+                {
+                    sniper.IsArmed = false;
+                    ClickDispatchEngine.PlayBeep(450, 80);
+                }
+            }
+            _escWasDown = escDown;
 
             bool f6Down = IsKeyDown(VK_F6);
             if (f6Down && !_f6WasDown)

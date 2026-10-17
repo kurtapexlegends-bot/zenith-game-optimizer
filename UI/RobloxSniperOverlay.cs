@@ -209,7 +209,7 @@ namespace ZenithOptimizer.UI
         private void OnArmedChanged(bool isArmed)
         {
             if (!_isVisible || Application.Current == null) return;
-            Application.Current.Dispatcher.InvokeAsync(() => _hud.FlashActionText(isArmed ? "SNIPER ARMED" : "SNIPER STANDBY", isArmed ? Color.FromRgb(52, 211, 153) : Color.FromRgb(148, 163, 184)));
+            Application.Current.Dispatcher.InvokeAsync(() => _hud.FlashActionText(isArmed ? "SNIPER ARMED" : "SNIPER STOPPED", isArmed ? Color.FromRgb(52, 211, 153) : Color.FromRgb(239, 68, 68)));
         }
 
         private void OnSnipeFired(int clickX, int clickY, int hitCount)

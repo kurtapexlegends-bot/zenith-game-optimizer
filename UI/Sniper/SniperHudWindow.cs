@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -115,8 +115,8 @@ namespace ZenithOptimizer.UI.Sniper
             Grid.SetColumn(titlePanel, 0); headerGrid.Children.Add(titlePanel);
 
             // Center Hero Status Button
-            _statusBadge = new TextBlock { Text = "[ARMED • READY]", FontSize = 10, FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Color.FromRgb(52, 211, 153)), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-            _statusBadgeBorder = new Border { Background = new SolidColorBrush(Color.FromArgb(200, 6, 78, 59)), BorderBrush = new SolidColorBrush(Color.FromRgb(16, 185, 129)), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(5), Padding = new Thickness(10, 3, 10, 3), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Cursor = Cursors.Hand, Child = _statusBadge };
+            _statusBadge = new TextBlock { Text = "[ARMED • CLICK/ESC TO STOP]", FontSize = 9.5, FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Color.FromRgb(52, 211, 153)), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            _statusBadgeBorder = new Border { Background = new SolidColorBrush(Color.FromArgb(200, 6, 78, 59)), BorderBrush = new SolidColorBrush(Color.FromRgb(16, 185, 129)), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(5), Padding = new Thickness(9, 3, 9, 3), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Cursor = Cursors.Hand, ToolTip = "Click or press F7 / ESC to STOP / Disarm", Child = _statusBadge };
             _statusBadgeBorder.PreviewMouseLeftButtonDown += (s, e) => { e.Handled = true; var sn = RobloxBidSniperService.Instance; sn.IsArmed = !sn.IsArmed; };
             Grid.SetColumn(_statusBadgeBorder, 1); headerGrid.Children.Add(_statusBadgeBorder);
 
@@ -296,10 +296,11 @@ namespace ZenithOptimizer.UI.Sniper
             if (_bidPosText != null) _bidPosText.Text = sn.ClickTargetMode == "Hover" ? "Target: Mouse Hover" : (sn.CalibratedClickPosition.HasValue ? string.Format("Target: ({0}, {1})", sn.CalibratedClickPosition.Value.X, sn.CalibratedClickPosition.Value.Y) : "Target: Auto (+120px)");
             if (!_isPickerActive && _statusBadge != null && _statusBadgeBorder != null)
             {
-                _statusBadge.Text = sn.IsArmed ? (isMatch ? "[READY TO SNIPE!]" : "[ARMED • READY]") : "[STANDBY • F7]";
+                _statusBadge.Text = sn.IsArmed ? (isMatch ? "[MATCH! CLICK/ESC TO STOP]" : "[ARMED • CLICK/ESC TO STOP]") : "[STANDBY • CLICK/F7 TO ARM]";
                 _statusBadge.Foreground = sn.IsArmed ? new SolidColorBrush(Color.FromRgb(52, 211, 153)) : new SolidColorBrush(Color.FromRgb(148, 163, 184));
                 _statusBadgeBorder.Background = sn.IsArmed ? new SolidColorBrush(Color.FromArgb(200, 6, 78, 59)) : new SolidColorBrush(Color.FromArgb(160, 30, 41, 59));
                 _statusBadgeBorder.BorderBrush = sn.IsArmed ? new SolidColorBrush(Color.FromRgb(16, 185, 129)) : new SolidColorBrush(Color.FromArgb(60, 255, 255, 255));
+                _statusBadgeBorder.ToolTip = sn.IsArmed ? "Click or press F7 / ESC to STOP / Disarm" : "Click or press F7 to ARM auto-sniper";
                 _hudCard.BorderBrush = sn.IsArmed ? new SolidColorBrush(Color.FromRgb(16, 185, 129)) : new SolidColorBrush(Color.FromRgb(71, 85, 105));
             }
         }
