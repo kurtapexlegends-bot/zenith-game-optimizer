@@ -24,6 +24,15 @@ namespace ZenithOptimizer
         private static Mutex _singleInstanceMutex;
         private static EventWaitHandle _showWindowEvent;
         private static RegisteredWaitHandle _registeredWaitHandle;
+        public const string ShowWindowMessageName = "ZenithGameOptimizer_ShowWindow_Message";
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern uint RegisterWindowMessage(string lpString);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        public static readonly IntPtr HWND_BROADCAST = new IntPtr(0xffff);
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -69,7 +78,9 @@ namespace ZenithOptimizer
                 // Another instance of Zenith is already running!
                 try
                 {
-                    // Signal the primary instance to restore and show its window
+                    uint showMsg = RegisterWindowMessage(ShowWindowMessageName);
+                    PostMessage(HWND_BROADCAST, showMsg, IntPtr.Zero, IntPtr.Zero);
+
                     EventWaitHandle evt;
                     if (EventWaitHandle.TryOpenExisting(EventName, out evt))
                     {
@@ -78,7 +89,6 @@ namespace ZenithOptimizer
                     }
                     else
                     {
-                        // Fallback: Bring main window to front via process handle
                         BringExistingInstanceToFront();
                     }
                 }

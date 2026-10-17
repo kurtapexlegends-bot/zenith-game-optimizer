@@ -219,6 +219,10 @@ namespace ZenithOptimizer
         private static extern bool DestroyIcon(IntPtr hIcon);
 
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        private static extern bool ChangeWindowMessageFilter(uint message, uint dwFlag);
+        private const uint MSGFLT_ADD = 1;
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
@@ -351,6 +355,25 @@ namespace ZenithOptimizer
                 if (source != null && source.CompositionTarget != null)
                 {
                     source.CompositionTarget.BackgroundColor = System.Windows.Media.Colors.Transparent;
+                }
+
+                if (source != null)
+                {
+                    try
+                    {
+                        uint showMsg = App.RegisterWindowMessage(App.ShowWindowMessageName);
+                        ChangeWindowMessageFilter(showMsg, MSGFLT_ADD);
+                        source.AddHook((IntPtr h, int m, IntPtr w, IntPtr l, ref bool handled) =>
+                        {
+                            if ((uint)m == showMsg)
+                            {
+                                Dispatcher.BeginInvoke((Action)(() => RestoreFromTray()));
+                                handled = true;
+                            }
+                            return IntPtr.Zero;
+                        });
+                    }
+                    catch { }
                 }
 
                 MARGINS margins = new MARGINS { cxLeftWidth = -1, cxRightWidth = -1, cyTopHeight = -1, cyBottomHeight = -1 };
