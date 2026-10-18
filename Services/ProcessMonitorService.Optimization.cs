@@ -54,6 +54,22 @@ namespace ZenithOptimizer.Services
                 _memoryService.PurgeSafeBackgroundMemory();
             }
 
+            // 8. Auto Default Game-Specific Zero-Drawback Engine (Automated by default, no manual tools needed)
+            if (profile != null && (profile.Id == "roblox" || (process != null && process.ProcessName.IndexOf("RobloxPlayer", StringComparison.OrdinalIgnoreCase) >= 0)))
+            {
+                try
+                {
+                    string robloxMsg;
+                    var rbxTuner = new Tuners.RobloxTuner();
+                    rbxTuner.ApplyRobloxZeroDrawbackPerformanceSuite(out robloxMsg);
+                    rbxTuner.ElevateRobloxCpuPriority(out robloxMsg);
+                    rbxTuner.EnforceDiscreteGpuForRoblox(out robloxMsg);
+                    rbxTuner.DisableRobloxPowerThrottling(out robloxMsg);
+                    if (LogMessage != null) LogMessage("Roblox Default Zero-Drawback Performance Suite applied automatically.");
+                }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
+            }
+
             if (LogMessage != null)
             {
                 LogMessage(string.Format("Optimization engaged: {0} (PID {1}). 0.5ms Timer active.", profile.Name, process.Id));

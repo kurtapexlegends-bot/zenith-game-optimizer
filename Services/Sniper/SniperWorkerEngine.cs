@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -72,6 +73,62 @@ namespace ZenithOptimizer.Services.Sniper
             if (!mode.Equals("Disruption", StringComparison.OrdinalIgnoreCase) && !focalMatch) shouldFire = false;
             wasInSweetSpot = focalMatch;
             return shouldFire;
+        }
+
+        public static void ProcessSniperScan(
+            int sx, int sy,
+            bool dynamicTrackingEnabled,
+            int corridorWidth, int corridorHeight, int scanStep,
+            Func<int, int, uint> pixelSampler,
+            Func<int, int, int, bool> isTargetMatch,
+            ref bool hasTrackLock,
+            ref DateTime lastTrackLockTime,
+            ref RobloxBidSniperService.POINT? currentTrackedPos,
+            out int activeX, out int activeY,
+            out bool isInsideSweetSpot,
+            out int r, out int g, out int b,
+            out string captureSource,
+            uint[] dibBuffer = null)
+        {
+            int zoneLeft = sx, zoneRight = sx, needleX = sx;
+            isInsideSweetSpot = false;
+
+            if (dynamicTrackingEnabled)
+            {
+                if (dibBuffer != null && dibBuffer.Length >= corridorWidth * corridorHeight)
+                {
+                    TrackCorridorScanner.ScanStorageHuntersMeter(
+                        dibBuffer, sx, sy, corridorWidth, corridorHeight,
+                        isTargetMatch,
+                        out zoneLeft, out zoneRight, out needleX, out isInsideSweetSpot);
+                }
+                else
+                {
+                    TrackCorridorScanner.ScanStorageHuntersMeter(
+                        pixelSampler, sx, sy, corridorWidth, corridorHeight, scanStep,
+                        isTargetMatch,
+                        out zoneLeft, out zoneRight, out needleX, out isInsideSweetSpot);
+                }
+
+                hasTrackLock = (zoneRight > zoneLeft);
+                if (hasTrackLock)
+                {
+                    currentTrackedPos = new RobloxBidSniperService.POINT { X = (zoneLeft + zoneRight) / 2, Y = sy };
+                    lastTrackLockTime = DateTime.UtcNow;
+                }
+            }
+            else
+            {
+                hasTrackLock = false;
+            }
+
+            activeX = hasTrackLock ? needleX : sx;
+            activeY = sy;
+            uint pix = pixelSampler != null ? pixelSampler(activeX, activeY) : 0xFFFFFFFF;
+            captureSource = dibBuffer != null ? "Roblox DIB" : "Auto DC";
+            r = (int)(pix & 0xFF);
+            g = (int)((pix >> 8) & 0xFF);
+            b = (int)((pix >> 16) & 0xFF);
         }
 
         public static CancellationTokenSource TriggerAuctionTimerSnipe(

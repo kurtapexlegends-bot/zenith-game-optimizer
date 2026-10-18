@@ -62,6 +62,22 @@ namespace ZenithOptimizer
             {
                 Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() => _monitorService.MemoryService.TrimSelfMemory()));
             });
+
+            // Ensure Roblox Zero-Drawback Performance Suite is configured by default
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                try
+                {
+                    string robloxDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Roblox");
+                    if (Directory.Exists(robloxDir))
+                    {
+                        string msg;
+                        var rbxTuner = new Services.Tuners.RobloxTuner();
+                        rbxTuner.ApplyRobloxZeroDrawbackPerformanceSuite(out msg);
+                    }
+                }
+                catch (Exception exDiag) { System.Diagnostics.Debug.WriteLine(exDiag.Message); }
+            });
         }
 
         private void UpdateInitialStates()

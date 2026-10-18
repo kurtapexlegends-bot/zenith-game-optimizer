@@ -63,20 +63,9 @@ namespace ZenithOptimizer.UI
                 Application.Current.Dispatcher.Invoke((Action)(() => { if (_hud.Window == null) InitializeWindows(); }));
         }
 
-        public void ToggleMarkersLock()
-        {
-            SetMarkersClickThrough(!_isReticleLocked);
-        }
-
-        public void ToggleCompactMode()
-        {
-            SetCompactMode(!_isCompactMode);
-        }
-
-        public void ToggleMarkersVisibility()
-        {
-            SetMarkersVisibility(_areMarkersHidden);
-        }
+        public void ToggleMarkersLock() { SetMarkersClickThrough(!_isReticleLocked); }
+        public void ToggleCompactMode() { SetCompactMode(!_isCompactMode); }
+        public void ToggleMarkersVisibility() { SetMarkersVisibility(_areMarkersHidden); }
 
         public void SetCompactMode(bool compact)
         {
@@ -168,8 +157,7 @@ namespace ZenithOptimizer.UI
 
         public void FlashActionText(string text, Color color)
         {
-            if (Application.Current != null)
-                Application.Current.Dispatcher.Invoke((Action)(() => _hud.FlashActionText(text, color)));
+            if (Application.Current != null) Application.Current.Dispatcher.Invoke((Action)(() => _hud.FlashActionText(text, color)));
         }
 
         private void InitializeWindows()
@@ -228,20 +216,9 @@ namespace ZenithOptimizer.UI
             });
         }
 
-        private void OnSensorPositionChanged(int x, int y)
-        {
-            if (Application.Current != null) Application.Current.Dispatcher.InvokeAsync(() => _reticle.UpdatePosition(x, y));
-        }
-
-        private void OnClickTargetChanged(int? x, int? y)
-        {
-            if (Application.Current != null) Application.Current.Dispatcher.InvokeAsync(() => _clickTarget.UpdatePosition(x, y));
-        }
-
-        private void OnTrackPositionChanged(int trackX, int trackY, bool hasLock)
-        {
-            if (Application.Current != null) Application.Current.Dispatcher.InvokeAsync(() => _reticle.UpdateCorridorState(trackX, trackY, hasLock));
-        }
+        private void OnSensorPositionChanged(int x, int y) { if (Application.Current != null) Application.Current.Dispatcher.InvokeAsync(() => _reticle.UpdatePosition(x, y)); }
+        private void OnClickTargetChanged(int? x, int? y) { if (Application.Current != null) Application.Current.Dispatcher.InvokeAsync(() => _clickTarget.UpdatePosition(x, y)); }
+        private void OnTrackPositionChanged(int trackX, int trackY, bool hasLock) { if (Application.Current != null) Application.Current.Dispatcher.InvokeAsync(() => _reticle.UpdateCorridorState(trackX, trackY, hasLock)); }
 
         public void Dispose()
         {

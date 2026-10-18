@@ -122,6 +122,7 @@
     <Compile Include="UI\Sniper\SniperScreenPicker.cs" />
     <Compile Include="Services\Sniper\OpticalSamplingEngine.cs" />
     <Compile Include="Services\Sniper\ColorClassifier.cs" />
+    <Compile Include="Services\Sniper\CorridorDibCapture.cs" />
     <Compile Include="Services\Sniper\TrackCorridorScanner.cs" />
     <Compile Include="Services\Sniper\ClickDispatchEngine.cs" />
     <Compile Include="Services\Sniper\SniperSettingsSync.cs" />

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using ZenithOptimizer.Services;
 
@@ -149,11 +150,45 @@ namespace ZenithOptimizer
             }
         }
 
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        private const int SW_RESTORE = 9;
+        private const int SW_SHOW = 5;
+
         public void RestoreFromTray()
         {
-            this.Show();
-            this.WindowState = WindowState.Normal;
-            this.Activate();
+            try
+            {
+                if (this.Visibility != Visibility.Visible)
+                {
+                    this.Show();
+                }
+                if (this.WindowState == WindowState.Minimized)
+                {
+                    this.WindowState = WindowState.Normal;
+                }
+                this.Activate();
+                this.Topmost = true;
+                this.Topmost = false;
+                this.Focus();
+
+                var helper = new System.Windows.Interop.WindowInteropHelper(this);
+                if (helper.Handle != IntPtr.Zero)
+                {
+                    ShowWindow(helper.Handle, SW_SHOW);
+                    ShowWindow(helper.Handle, SW_RESTORE);
+                    SetForegroundWindow(helper.Handle);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[MainWindow.Tray] RestoreFromTray error: " + ex.Message);
+            }
+
             _monitorService.TriggerTelemetryRefresh();
         }
 
@@ -190,14 +225,16 @@ namespace ZenithOptimizer
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!_isExplicitExit)
+            // If explicit exit, or if user disabled MinimizeToSystemTray in settings, exit cleanly
+            bool shouldMinimize = _monitorService != null && _monitorService.Settings != null && _monitorService.Settings.MinimizeToSystemTray;
+            if (!_isExplicitExit && shouldMinimize)
             {
                 e.Cancel = true;
                 this.Hide();
                 if (_notifyIcon != null)
                 {
                     _notifyIcon.ShowBalloonTip(1500, "Zenith Game Optimizer", 
-                        "Zenith is running quietly in the system tray. Right-click the tray icon to exit anytime.", 
+                        "Zenith is running quietly in the system tray. Double-click tray icon or open app to restore.", 
                         System.Windows.Forms.ToolTipIcon.None);
                 }
                 _monitorService.MemoryService.TrimSelfMemory();

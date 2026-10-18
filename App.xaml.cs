@@ -47,10 +47,26 @@ namespace ZenithOptimizer
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool AllowSetForegroundWindow(int dwProcessId);
+        private const int ASFW_ANY = -1;
+
+        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern int GetWindowText(IntPtr hWnd, System.Text.StringBuilder lpString, int nMaxCount);
+
         [DllImport("shell32.dll", SetLastError = true)]
         private static extern int SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
         private const int SW_RESTORE = 9;
+        private const int SW_SHOW = 5;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -89,9 +105,12 @@ namespace ZenithOptimizer
 
             if (!createdNew)
             {
-                // Another instance of Zenith is already running!
+                // Another instance of Zenith is registered with the mutex
+                bool restored = false;
                 try
                 {
+                    AllowSetForegroundWindow(ASFW_ANY);
+
                     uint showMsg = RegisterWindowMessage(ShowWindowMessageName);
                     PostMessage(HWND_BROADCAST, showMsg, IntPtr.Zero, IntPtr.Zero);
 
@@ -101,9 +120,17 @@ namespace ZenithOptimizer
                         evt.Set();
                         evt.Close();
                     }
-                    else
+
+                    restored = BringExistingInstanceToFront();
+                    if (!restored)
                     {
-                        BringExistingInstanceToFront();
+                        // Wait briefly up to 300ms for background process tray restore
+                        for (int attempt = 0; attempt < 6; attempt++)
+                        {
+                            Thread.Sleep(50);
+                            restored = BringExistingInstanceToFront();
+                            if (restored) break;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -111,9 +138,46 @@ namespace ZenithOptimizer
                     Debug.WriteLine("[App] BringExistingInstanceToFront: " + ex.Message);
                 }
 
-                // Exit immediately without initializing UI or tray icon
-                Environment.Exit(0);
-                return;
+                if (restored)
+                {
+                    // Existing instance window was found and restored to front! Exit duplicate.
+                    Environment.Exit(0);
+                    return;
+                }
+
+                // If we get here, an existing instance holds the mutex or process name, BUT HAS NO WINDOW!
+                // It is a headless or orphaned zombie process.
+                // Self-Healing: Terminate the headless zombie process so the user is NEVER locked out!
+                try
+                {
+                    Process cur = Process.GetCurrentProcess();
+                    foreach (Process p in Process.GetProcessesByName(cur.ProcessName))
+                    {
+                        if (p.Id != cur.Id)
+                        {
+                            try
+                            {
+                                p.Kill();
+                                p.WaitForExit(800);
+                            }
+                            catch (Exception exKill)
+                            {
+                                Debug.WriteLine("[App] Kill zombie: " + exKill.Message);
+                            }
+                        }
+                    }
+
+                    // Release old mutex handle and reacquire clean ownership
+                    if (_singleInstanceMutex != null)
+                    {
+                        try { _singleInstanceMutex.Close(); } catch { }
+                    }
+                    _singleInstanceMutex = new Mutex(true, MutexName, out createdNew);
+                }
+                catch (Exception exRecover)
+                {
+                    Debug.WriteLine("[App] Zombie recovery: " + exRecover.Message);
+                }
             }
 
             // Primary instance: Create named event to listen for subsequent launches
@@ -127,9 +191,22 @@ namespace ZenithOptimizer
                         Current.Dispatcher.BeginInvoke((Action)(() =>
                         {
                             MainWindow mw = Current.MainWindow as MainWindow;
+                            if (mw == null)
+                            {
+                                foreach (Window w in Current.Windows)
+                                {
+                                    if (w is MainWindow) { mw = (MainWindow)w; break; }
+                                }
+                            }
                             if (mw != null)
                             {
                                 mw.RestoreFromTray();
+                            }
+                            else
+                            {
+                                mw = new MainWindow();
+                                Current.MainWindow = mw;
+                                mw.Show();
                             }
                         }));
                     }
@@ -197,18 +274,64 @@ namespace ZenithOptimizer
             base.OnExit(e);
         }
 
-        private static void BringExistingInstanceToFront()
+        private static bool BringExistingInstanceToFront()
         {
+            bool broughtToFront = false;
             try
             {
                 Process current = Process.GetCurrentProcess();
                 foreach (Process proc in Process.GetProcessesByName(current.ProcessName))
                 {
-                    if (proc.Id != current.Id && proc.MainWindowHandle != IntPtr.Zero)
+                    if (proc.Id == current.Id) continue;
+
+                    // If existing process is frozen / not responding, kill it immediately!
+                    if (!proc.Responding)
                     {
+                        try { proc.Kill(); } catch { }
+                        continue;
+                    }
+
+                    AllowSetForegroundWindow(proc.Id);
+
+                    if (proc.MainWindowHandle != IntPtr.Zero)
+                    {
+                        ShowWindow(proc.MainWindowHandle, SW_SHOW);
                         ShowWindow(proc.MainWindowHandle, SW_RESTORE);
                         SetForegroundWindow(proc.MainWindowHandle);
+                        broughtToFront = true;
                         break;
+                    }
+                    else
+                    {
+                        // Window is hidden in tray: enumerate top-level windows of the process
+                        uint targetPid = (uint)proc.Id;
+                        IntPtr foundHwnd = IntPtr.Zero;
+                        EnumWindows((hWnd, lParam) =>
+                        {
+                            uint pid;
+                            GetWindowThreadProcessId(hWnd, out pid);
+                            if (pid == targetPid)
+                            {
+                                System.Text.StringBuilder sb = new System.Text.StringBuilder(256);
+                                GetWindowText(hWnd, sb, 256);
+                                string title = sb.ToString();
+                                if (!string.IsNullOrEmpty(title) && title.IndexOf("Zenith", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    foundHwnd = hWnd;
+                                    return false; // stop enumeration
+                                }
+                            }
+                            return true;
+                        }, IntPtr.Zero);
+
+                        if (foundHwnd != IntPtr.Zero)
+                        {
+                            ShowWindow(foundHwnd, SW_SHOW);
+                            ShowWindow(foundHwnd, SW_RESTORE);
+                            SetForegroundWindow(foundHwnd);
+                            broughtToFront = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -216,6 +339,7 @@ namespace ZenithOptimizer
             {
                 Debug.WriteLine("[App] BringExistingInstanceToFront proc enumerate: " + ex.Message);
             }
+            return broughtToFront;
         }
     }
 }
